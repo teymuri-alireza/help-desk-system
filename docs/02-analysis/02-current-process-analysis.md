@@ -8,7 +8,7 @@
 
 فرآیند فعلی عمدتاً مبتنی بر ارتباطات مستقیم و مدیریت دستی درخواست‌ها بوده و فاقد یک بستر متمرکز برای ثبت، پیگیری و مدیریت چرخه عمر درخواست‌های پشتیبانی است.
 
-نمودار فرآیند فعلی [As-Is Process Diagram](./diagrams/as-is/current-process.png) به‌منظور نمایش تصویری مراحل فوق در بخش نمودارهای پروژه ارائه شده است.
+نمودار فرآیند فعلی [As-Is Process Diagram](https://github.com/teymuri-alireza/help-desk-system/blob/docs/document-analysis-phase/diagrams/as-is/current-process.png) به‌منظور نمایش تصویری مراحل فوق در بخش نمودارهای پروژه ارائه شده است.
 
 ## نقاط ضعف فرآیند فعلی
 
