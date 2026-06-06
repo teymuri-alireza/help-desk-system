@@ -1,0 +1,136 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="Page-1" id="_1MhAXMJUA_gHcwj40X-">
+    <mxGraphModel dx="1414" dy="759" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" background="light-dark(#FFFFFF,#FFFFFF)" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="2gRaSosngUHuNTobLDum-28" edge="1" parent="1" source="2gRaSosngUHuNTobLDum-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeColor=light-dark(#000000,#000000);endArrow=none;endFill=0;strokeWidth=2;" target="2gRaSosngUHuNTobLDum-7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="2gRaSosngUHuNTobLDum-1" parent="1" style="swimlane;fontStyle=1;align=center;verticalAlign=middle;childLayout=stackLayout;horizontal=1;startSize=29;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;html=1;whiteSpace=wrap;strokeColor=light-dark(#000000,#000000);swimlaneFillColor=none;fillColor=light-dark(#FFFFFF,#000000);gradientColor=none;fontColor=light-dark(#000000,#FFFFFF);" value="User" vertex="1">
+          <mxGeometry height="97" width="140" x="74" y="107" as="geometry" />
+        </mxCell>
+        <mxCell id="2gRaSosngUHuNTobLDum-3" parent="2gRaSosngUHuNTobLDum-1" style="text;html=1;strokeColor=none;fillColor=light-dark(#FFFFFF,transparent);align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;swimlaneFillColor=none;gradientColor=none;fontColor=light-dark(#000000,#000000);" value="شناسه&lt;div&gt;نام و نام خوانوادگی&lt;/div&gt;&lt;div&gt;شماره کاربری&lt;/div&gt;&lt;div&gt;نقش کاربری&lt;/div&gt;" vertex="1">
+          <mxGeometry height="68" width="140" y="29" as="geometry" />
+        </mxCell>
+        <mxCell id="2gRaSosngUHuNTobLDum-7" parent="1" style="swimlane;fontStyle=1;align=center;verticalAlign=middle;childLayout=stackLayout;horizontal=1;startSize=29;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;html=1;whiteSpace=wrap;strokeColor=light-dark(#000000,#000000);swimlaneFillColor=none;fillColor=light-dark(#FFFFFF,#000000);gradientColor=none;fontColor=light-dark(#000000,#FFFFFF);" value="Ticket" vertex="1">
+          <mxGeometry height="116" width="140" x="74" y="311" as="geometry" />
+        </mxCell>
+        <mxCell id="2gRaSosngUHuNTobLDum-9" parent="2gRaSosngUHuNTobLDum-7" style="text;html=1;strokeColor=none;fillColor=light-dark(#FFFFFF,transparent);align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;swimlaneFillColor=none;gradientColor=none;fontColor=light-dark(#000000,#000000);" value="شناسه&lt;div&gt;عنوان&lt;/div&gt;&lt;div&gt;وضعیت&lt;/div&gt;&lt;div&gt;اولویت&lt;/div&gt;&lt;div&gt;تاریخ ثبت&lt;/div&gt;" vertex="1">
+          <mxGeometry height="87" width="140" y="29" as="geometry" />
+        </mxCell>
+        <mxCell id="2gRaSosngUHuNTobLDum-10" parent="1" style="swimlane;fontStyle=1;align=center;verticalAlign=middle;childLayout=stackLayout;horizontal=1;startSize=29;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;html=1;whiteSpace=wrap;strokeColor=light-dark(#000000,#000000);swimlaneFillColor=none;fillColor=light-dark(#FFFFFF,#000000);gradientColor=none;fontColor=light-dark(#000000,#FFFFFF);" value="Response" vertex="1">
+          <mxGeometry height="98" width="140" x="404" y="354" as="geometry" />
+        </mxCell>
+        <mxCell id="2gRaSosngUHuNTobLDum-12" parent="2gRaSosngUHuNTobLDum-10" style="text;html=1;strokeColor=none;fillColor=light-dark(#FFFFFF,transparent);align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;swimlaneFillColor=none;gradientColor=none;fontColor=light-dark(#000000,#000000);" value="شناسه&lt;div&gt;متن&lt;/div&gt;&lt;div&gt;تاریخ ثبت پاسخ&lt;/div&gt;" vertex="1">
+          <mxGeometry height="69" width="140" y="29" as="geometry" />
+        </mxCell>
+        <mxCell id="2gRaSosngUHuNTobLDum-13" parent="1" style="swimlane;fontStyle=1;align=center;verticalAlign=middle;childLayout=stackLayout;horizontal=1;startSize=29;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;html=1;whiteSpace=wrap;strokeColor=light-dark(#000000,#000000);swimlaneFillColor=none;fillColor=light-dark(#FFFFFF,#000000);gradientColor=none;fontColor=light-dark(#000000,#FFFFFF);" value="Category" vertex="1">
+          <mxGeometry height="70" width="140" x="74" y="580" as="geometry" />
+        </mxCell>
+        <mxCell id="2gRaSosngUHuNTobLDum-15" parent="2gRaSosngUHuNTobLDum-13" style="text;html=1;strokeColor=none;fillColor=light-dark(#FFFFFF,transparent);align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;swimlaneFillColor=none;gradientColor=none;fontColor=light-dark(#000000,#000000);" value="شناسه&lt;div&gt;نام دسته بندی&lt;/div&gt;" vertex="1">
+          <mxGeometry height="41" width="140" y="29" as="geometry" />
+        </mxCell>
+        <mxCell id="2gRaSosngUHuNTobLDum-16" parent="1" style="swimlane;fontStyle=1;align=center;verticalAlign=middle;childLayout=stackLayout;horizontal=1;startSize=29;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;html=1;whiteSpace=wrap;strokeColor=light-dark(#000000,#000000);swimlaneFillColor=none;fillColor=light-dark(#FFFFFF,#000000);gradientColor=none;fontColor=light-dark(#000000,#FFFFFF);" value="Department" vertex="1">
+          <mxGeometry height="69" width="140" x="365" y="580" as="geometry" />
+        </mxCell>
+        <mxCell id="2gRaSosngUHuNTobLDum-18" parent="2gRaSosngUHuNTobLDum-16" style="text;html=1;strokeColor=none;fillColor=light-dark(#FFFFFF,transparent);align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;swimlaneFillColor=none;gradientColor=none;fontColor=light-dark(#000000,#000000);" value="شناسه&lt;div&gt;نام واحد&lt;/div&gt;" vertex="1">
+          <mxGeometry height="40" width="140" y="29" as="geometry" />
+        </mxCell>
+        <mxCell id="2gRaSosngUHuNTobLDum-19" parent="1" style="swimlane;fontStyle=1;align=center;verticalAlign=middle;childLayout=stackLayout;horizontal=1;startSize=29;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;html=1;whiteSpace=wrap;strokeColor=light-dark(#000000,#000000);swimlaneFillColor=none;fillColor=light-dark(#FFFFFF,#000000);gradientColor=none;fontColor=light-dark(#000000,#FFFFFF);" value="Attachment" vertex="1">
+          <mxGeometry height="89" width="140" x="650" y="580" as="geometry" />
+        </mxCell>
+        <mxCell id="2gRaSosngUHuNTobLDum-21" parent="2gRaSosngUHuNTobLDum-19" style="text;html=1;strokeColor=none;fillColor=light-dark(#FFFFFF,transparent);align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;swimlaneFillColor=none;gradientColor=none;fontColor=light-dark(#000000,#000000);" value="شناسه&lt;div&gt;نام فایل&lt;/div&gt;&lt;div&gt;نوع فایل&lt;/div&gt;" vertex="1">
+          <mxGeometry height="60" width="140" y="29" as="geometry" />
+        </mxCell>
+        <mxCell id="2gRaSosngUHuNTobLDum-22" parent="1" style="swimlane;fontStyle=1;align=center;verticalAlign=middle;childLayout=stackLayout;horizontal=1;startSize=29;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;html=1;whiteSpace=wrap;strokeColor=light-dark(#000000,#000000);swimlaneFillColor=none;fillColor=light-dark(#FFFFFF,#000000);gradientColor=none;fontColor=light-dark(#000000,#FFFFFF);" value="Notification" vertex="1">
+          <mxGeometry height="108" width="140" x="595" y="107" as="geometry" />
+        </mxCell>
+        <mxCell id="2gRaSosngUHuNTobLDum-24" parent="2gRaSosngUHuNTobLDum-22" style="text;html=1;strokeColor=none;fillColor=light-dark(#FFFFFF,transparent);align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;swimlaneFillColor=none;gradientColor=none;fontColor=light-dark(#000000,#000000);" value="شناسه&lt;div&gt;عنوان&lt;/div&gt;&lt;div&gt;متن&lt;/div&gt;&lt;div&gt;تاریخ ایجاد&lt;/div&gt;&lt;div&gt;وضعیت مشاهده&lt;/div&gt;" vertex="1">
+          <mxGeometry height="79" width="140" y="29" as="geometry" />
+        </mxCell>
+        <mxCell id="2gRaSosngUHuNTobLDum-29" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;font style=&quot;font-size: 16px; color: light-dark(rgb(0, 0, 0), rgb(0, 0, 0));&quot;&gt;۱&lt;/font&gt;" vertex="1">
+          <mxGeometry height="30" width="60" x="149" y="206" as="geometry" />
+        </mxCell>
+        <mxCell id="2gRaSosngUHuNTobLDum-31" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;font style=&quot;color: light-dark(rgb(0, 0, 0), rgb(0, 0, 0));&quot;&gt;&lt;span style=&quot;font-size: 16px;&quot;&gt;*&lt;/span&gt;&lt;/font&gt;" vertex="1">
+          <mxGeometry height="30" width="60" x="149" y="283" as="geometry" />
+        </mxCell>
+        <mxCell id="2gRaSosngUHuNTobLDum-32" edge="1" parent="1" source="2gRaSosngUHuNTobLDum-10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;strokeColor=light-dark(#000000,#000000);endArrow=none;endFill=0;strokeWidth=2;" target="2gRaSosngUHuNTobLDum-7">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="323" y="186" as="sourcePoint" />
+            <mxPoint x="323" y="335" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="2gRaSosngUHuNTobLDum-33" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;font style=&quot;color: light-dark(rgb(0, 0, 0), rgb(0, 0, 0));&quot;&gt;&lt;span style=&quot;font-size: 16px;&quot;&gt;*&lt;/span&gt;&lt;/font&gt;" vertex="1">
+          <mxGeometry height="30" width="60" x="339" y="363" as="geometry" />
+        </mxCell>
+        <mxCell id="2gRaSosngUHuNTobLDum-34" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;font style=&quot;font-size: 16px; color: light-dark(rgb(0, 0, 0), rgb(0, 0, 0));&quot;&gt;۱&lt;/font&gt;" vertex="1">
+          <mxGeometry height="30" width="60" x="207" y="325" as="geometry" />
+        </mxCell>
+        <mxCell id="2gRaSosngUHuNTobLDum-36" edge="1" parent="1" source="2gRaSosngUHuNTobLDum-10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;strokeColor=light-dark(#000000,#000000);endArrow=none;endFill=0;strokeWidth=2;" target="2gRaSosngUHuNTobLDum-1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="463" y="155" as="sourcePoint" />
+            <mxPoint x="313" y="156" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="2gRaSosngUHuNTobLDum-38" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;font style=&quot;color: light-dark(rgb(0, 0, 0), rgb(0, 0, 0));&quot;&gt;&lt;span style=&quot;font-size: 16px;&quot;&gt;*&lt;/span&gt;&lt;/font&gt;" vertex="1">
+          <mxGeometry height="30" width="60" x="430" y="316" as="geometry" />
+        </mxCell>
+        <mxCell id="2gRaSosngUHuNTobLDum-40" edge="1" parent="1" source="2gRaSosngUHuNTobLDum-13" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;strokeColor=light-dark(#000000,#000000);endArrow=none;endFill=0;strokeWidth=2;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" target="2gRaSosngUHuNTobLDum-7">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="282" y="516" as="sourcePoint" />
+            <mxPoint x="184" y="483" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="2gRaSosngUHuNTobLDum-41" edge="1" parent="1" source="2gRaSosngUHuNTobLDum-16" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;strokeColor=light-dark(#000000,#000000);endArrow=none;endFill=0;strokeWidth=2;entryPerimeter=0;" target="2gRaSosngUHuNTobLDum-9">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="744" y="590" as="sourcePoint" />
+            <mxPoint x="594" y="591" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="2gRaSosngUHuNTobLDum-42" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;font style=&quot;font-size: 16px; color: light-dark(rgb(0, 0, 0), rgb(0, 0, 0));&quot;&gt;۱&lt;/font&gt;" vertex="1">
+          <mxGeometry height="30" width="60" x="438" y="541" as="geometry" />
+        </mxCell>
+        <mxCell id="2gRaSosngUHuNTobLDum-45" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;font style=&quot;font-size: 16px; color: light-dark(rgb(0, 0, 0), rgb(0, 0, 0));&quot;&gt;۱&lt;/font&gt;" vertex="1">
+          <mxGeometry height="30" width="60" x="80" y="546" as="geometry" />
+        </mxCell>
+        <mxCell id="2gRaSosngUHuNTobLDum-46" edge="1" parent="1" source="2gRaSosngUHuNTobLDum-22" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeColor=light-dark(#000000,#000000);endArrow=none;endFill=0;strokeWidth=2;" target="2gRaSosngUHuNTobLDum-1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="504" y="285.5" as="sourcePoint" />
+            <mxPoint x="284" y="88.5" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="2gRaSosngUHuNTobLDum-47" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;font style=&quot;color: light-dark(rgb(0, 0, 0), rgb(0, 0, 0));&quot;&gt;&lt;span style=&quot;font-size: 16px;&quot;&gt;*&lt;/span&gt;&lt;/font&gt;" vertex="1">
+          <mxGeometry height="30" width="60" x="670" y="69" as="geometry" />
+        </mxCell>
+        <mxCell id="2gRaSosngUHuNTobLDum-48" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;font style=&quot;font-size: 16px; color: light-dark(rgb(0, 0, 0), rgb(0, 0, 0));&quot;&gt;۱&lt;/font&gt;" vertex="1">
+          <mxGeometry height="30" width="60" x="77" y="69" as="geometry" />
+        </mxCell>
+        <mxCell id="2gRaSosngUHuNTobLDum-49" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;font style=&quot;font-size: 16px; color: light-dark(rgb(0, 0, 0), rgb(0, 0, 0));&quot;&gt;۱&lt;/font&gt;" vertex="1">
+          <mxGeometry height="30" width="60" x="218" y="163" as="geometry" />
+        </mxCell>
+        <mxCell id="2gRaSosngUHuNTobLDum-50" edge="1" parent="1" source="2gRaSosngUHuNTobLDum-19" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;strokeColor=light-dark(#000000,#000000);endArrow=none;endFill=0;strokeWidth=2;" target="2gRaSosngUHuNTobLDum-7">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="935" y="448" as="sourcePoint" />
+            <mxPoint x="645" y="320" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="2gRaSosngUHuNTobLDum-51" edge="1" parent="1" source="2gRaSosngUHuNTobLDum-19" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;strokeColor=light-dark(#000000,#000000);endArrow=none;endFill=0;strokeWidth=2;" target="2gRaSosngUHuNTobLDum-10">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="945" y="464" as="sourcePoint" />
+            <mxPoint x="659" y="335" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="2gRaSosngUHuNTobLDum-52" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;font style=&quot;color: light-dark(rgb(0, 0, 0), rgb(0, 0, 0));&quot;&gt;&lt;span style=&quot;font-size: 16px;&quot;&gt;*&lt;/span&gt;&lt;/font&gt;" vertex="1">
+          <mxGeometry height="30" width="60" x="726" y="539" as="geometry" />
+        </mxCell>
+        <mxCell id="2gRaSosngUHuNTobLDum-55" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;font style=&quot;color: light-dark(rgb(0, 0, 0), rgb(0, 0, 0));&quot;&gt;&lt;span style=&quot;font-size: 16px;&quot;&gt;*&lt;/span&gt;&lt;/font&gt;" vertex="1">
+          <mxGeometry height="30" width="60" x="646" y="539" as="geometry" />
+        </mxCell>
+        <mxCell id="2gRaSosngUHuNTobLDum-57" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;font style=&quot;color: light-dark(rgb(0, 0, 0), rgb(0, 0, 0)); font-size: 19px;&quot;&gt;&lt;b style=&quot;&quot;&gt;:تعاریف&lt;/b&gt;&lt;/font&gt;&lt;div&gt;&lt;font color=&quot;#000000&quot;&gt;&lt;span style=&quot;font-size: 16px;&quot;&gt;&lt;br&gt;&lt;/span&gt;&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;ul data-line=&quot;40&quot; class=&quot;code-line&quot; dir=&quot;auto&quot; style=&quot;margin-top: 0px; margin-bottom: 0.7em; color: rgb(247, 241, 255); font-family: -apple-system, BlinkMacSystemFont, &amp;quot;Segoe WPC&amp;quot;, &amp;quot;Segoe UI&amp;quot;, system-ui, Ubuntu, &amp;quot;Droid Sans&amp;quot;, sans-serif; font-size: 14px; text-align: start;&quot;&gt;&lt;li data-line=&quot;40&quot; class=&quot;code-line&quot; dir=&quot;auto&quot;&gt;هر User می‌تواند چندین Ticket ثبت کند.&lt;/li&gt;&lt;li data-line=&quot;41&quot; class=&quot;code-line&quot; dir=&quot;auto&quot;&gt;هر Ticket توسط یک User ایجاد می‌شود.&lt;/li&gt;&lt;li data-line=&quot;42&quot; class=&quot;code-line&quot; dir=&quot;auto&quot;&gt;هر Ticket می‌تواند شامل چندین Response باشد.&lt;/li&gt;&lt;li data-line=&quot;43&quot; class=&quot;code-line&quot; dir=&quot;auto&quot;&gt;هر Response به یک Ticket تعلق دارد.&lt;/li&gt;&lt;li data-line=&quot;44&quot; class=&quot;code-line&quot; dir=&quot;auto&quot;&gt;هر Response توسط یک User ثبت می‌شود.&lt;/li&gt;&lt;li data-line=&quot;45&quot; class=&quot;code-line&quot; dir=&quot;auto&quot;&gt;هر Ticket در یک Category قرار می‌گیرد.&lt;/li&gt;&lt;li data-line=&quot;46&quot; class=&quot;code-line&quot; dir=&quot;auto&quot;&gt;هر Ticket می‌تواند به یک Department ارجاع داده شود.&lt;/li&gt;&lt;li data-line=&quot;47&quot; class=&quot;code-line&quot; dir=&quot;auto&quot;&gt;هر Ticket می‌تواند دارای چندین Attachment باشد.&lt;/li&gt;&lt;li data-line=&quot;48&quot; class=&quot;code-line&quot; dir=&quot;auto&quot;&gt;هر Response می‌تواند دارای چندین Attachment باشد.&lt;/li&gt;&lt;li data-line=&quot;49&quot; class=&quot;code-line&quot; dir=&quot;auto&quot;&gt;هر User می‌تواند چندین Notification دریافت کند.&lt;/li&gt;&lt;li data-line=&quot;50&quot; class=&quot;code-line&quot; dir=&quot;auto&quot;&gt;هر Notification به یک User مرتبط است.&lt;/li&gt;&lt;/ul&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="232" width="544" x="590" y="232" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
