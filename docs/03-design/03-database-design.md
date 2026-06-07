@@ -49,6 +49,7 @@ updated_at
 creator_id
 category_id
 department_id
+assigned_to
 ```
 
 ### توضیحات
@@ -58,6 +59,7 @@ department_id
 * `department_id` : واحد مسئول رسیدگی
 * `status` : وضعیت فعلی تیکت
 * `priority` : سطح اولویت تیکت
+* `assigned_to`: شناسه کارشناس مربوطه
 
 ## جدول Response
 
@@ -113,6 +115,7 @@ Attachment
 id
 ticket_id
 creator_id
+response_id
 file_name
 file_type
 path
@@ -123,6 +126,7 @@ created_at
 
 * `ticket_id` : تیکت مرتبط با فایل
 * `creator_id` : بارگذاری‌کننده فایل
+* `response_id`: پاسخ مرتبط با فایل (درصورت نیاز)
 * `file_name` : نام فایل
 * `file_type` : نوع فایل
 * `path` : مسیر ذخیره‌سازی فایل
@@ -139,7 +143,7 @@ receiver_id
 creator_id
 title
 text
-seen
+is_read
 created_at
 ```
 
@@ -149,4 +153,4 @@ created_at
 * `creator_id` : ایجادکننده اعلان
 * `title` : عنوان اعلان
 * `text` : متن اعلان
-* `seen` : وضعیت مشاهده اعلان
+* `is_read` : وضعیت مشاهده اعلان
