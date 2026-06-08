@@ -1,2 +1,9 @@
+# pycache files
+__pycache__/
+*.py[cod]
+
 # Python Virtual Environment
 *env*/
+
+# SQLite database
+*.db
