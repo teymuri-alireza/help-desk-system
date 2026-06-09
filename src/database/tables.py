@@ -9,7 +9,7 @@ class Role(Enum):
     STUDENT = "Student"
     EMPLOYEE = "Employee"
     IT_EXPERT = "IT Expert"
-    HELP_DESK_MANAGER= "Help Desk Manager"
+    HELP_DESK_MANAGER = "Help Desk Manager"
     IT_MANAGER = "IT Manager"
     SYSTEM_ADMIN = "System Admin"
 
