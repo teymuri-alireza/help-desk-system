@@ -1,7 +1,7 @@
 from enum import Enum
 from datetime import datetime
 from sqlalchemy import String, Integer, ForeignKey, Enum as SQLEnum, DateTime, Text, Boolean
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from src.database.base import Base
 
 
@@ -45,6 +45,12 @@ class User(Base):
     status: Mapped[str] = mapped_column(SQLEnum(UserStatus), default=UserStatus.ACTIVE, nullable=False, index=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=False), default=datetime.now, nullable=False)
 
+    created_tickets = relationship("Ticket", foreign_keys="Ticket.creator_id", back_populates="creator")
+    assigned_tickets = relationship("Ticket", foreign_keys="Ticket.assigned_to", back_populates="assignee")
+    responses = relationship("Response", back_populates="creator")
+    received_notifications = relationship("Notification", foreign_keys="Notification.receiver_id", back_populates="receiver")
+    created_notifications = relationship("Notification", foreign_keys="Notification.creator_id", back_populates="creator")
+
 
 class Ticket(Base):
     __tablename__ = "tickets"
@@ -61,6 +67,13 @@ class Ticket(Base):
     department_id: Mapped[int] = mapped_column(ForeignKey("departments.id"), nullable=True)
     assigned_to: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=True)
 
+    creator = relationship("User", foreign_keys=[creator_id], back_populates="created_tickets")
+    assignee = relationship("User", foreign_keys=[assigned_to], back_populates="assigned_tickets")
+    category = relationship("Category", back_populates="tickets")
+    department = relationship("Department", back_populates="tickets")
+    responses = relationship("Response", back_populates="ticket", cascade="all, delete-orphan")
+    attachments = relationship("Attachment", back_populates="ticket")
+
 
 class Response(Base):
     __tablename__ = "responses"
@@ -72,6 +85,11 @@ class Response(Base):
     text: Mapped[str] = mapped_column(Text, nullable=False)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=False), default=datetime.now, nullable=False)
 
+    creator = relationship("User", back_populates="responses")
+    ticket = relationship("Ticket", back_populates="responses")
+    parent = relationship("Response", remote_side=[id], back_populates="children")
+    children = relationship("Response", back_populates="parent", cascade="all, delete-orphan")
+    attachments = relationship("Attachment", back_populates="response")
 
 class Category(Base):
     __tablename__ = "categories"
@@ -79,6 +97,7 @@ class Category(Base):
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True, index=True)
     name: Mapped[str] = mapped_column(String, nullable=False, unique=True)
 
+    tickets = relationship("Ticket", back_populates="category")
 
 class Department(Base):
     __tablename__ = "departments"
@@ -86,6 +105,7 @@ class Department(Base):
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True, index=True)
     name: Mapped[str] = mapped_column(String, nullable=False, unique=True)
 
+    tickets = relationship("Ticket", back_populates="department")
 
 class Attachment(Base):
     __tablename__ = "attachments"
@@ -99,6 +119,9 @@ class Attachment(Base):
     path: Mapped[str] = mapped_column(String, nullable=False)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=False), default=datetime.now, nullable=False)
 
+    ticket = relationship("Ticket", back_populates="attachments")
+    response = relationship("Response", back_populates="attachments")
+    creator = relationship("User")
 
 class Notification(Base):
     __tablename__ = "notifications"
@@ -110,3 +133,6 @@ class Notification(Base):
     text: Mapped[str] = mapped_column(Text, nullable=False)
     is_read: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=False), default=datetime.now, nullable=False)
+
+    receiver = relationship("User", foreign_keys=[receiver_id], back_populates="received_notifications")
+    creator = relationship("User", foreign_keys=[creator_id], back_populates="created_notifications")
