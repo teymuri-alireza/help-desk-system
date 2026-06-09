@@ -16,7 +16,7 @@ def new_ticket():
     return {"response": "New Ticket Page"}
 
 @router.post("/{ticket_id}/assign")
-def assing_ticket():
+def assign_ticket():
     return {"response": "Assign Ticket Page"}
 
 @router.patch("/{ticket_id}")
