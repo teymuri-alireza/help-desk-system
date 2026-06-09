@@ -14,7 +14,6 @@ User
 id
 name
 username
-user_id
 email
 role
 status
@@ -25,8 +24,7 @@ created_at
 
 * `id` : شناسه یکتای کاربر
 * `name` : نام و نام خانوادگی
-* `username` : نام کاربری
-* `user_id` : شماره دانشجویی یا شماره کارمندی
+* `username` : شماره دانشجویی/ کارمندی یا نام کاربری
 * `email` : پست الکترونیکی
 * `role` : نقش کاربر در سامانه
 * `status` : وضعیت حساب کاربری
