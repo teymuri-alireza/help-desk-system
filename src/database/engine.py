@@ -3,7 +3,7 @@ from sqlalchemy.orm import sessionmaker, Session
 from src.database.base import Base
 
 
-class DatabaseEngine():
+class DatabaseEngine:
     """
     Encapsulate database engine creation and initialization logic.
 
