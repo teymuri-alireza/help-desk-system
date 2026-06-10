@@ -1,0 +1,231 @@
+@import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Vazirmatn', sans-serif;
+    background-color: #f4f6f9;
+    color: #1f2937;
+    line-height: 1.8;
+}
+
+/* Navbar */
+
+.navbar {
+    background-color: #0f2747;
+    color: white;
+    padding: 15px 7%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.logo h2 {
+    font-size: 1.4rem;
+}
+
+.nav-links {
+    display: flex;
+    list-style: none;
+    gap: 25px;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: white;
+    transition: 0.3s;
+}
+
+.nav-links a:hover {
+    color: #d4af37;
+}
+
+.auth-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.btn {
+    text-decoration: none;
+    padding: 10px 18px;
+    border-radius: 6px;
+    transition: 0.3s;
+    font-weight: 500;
+}
+
+.login-btn {
+    background: transparent;
+    color: white;
+    border: 1px solid white;
+}
+
+.login-btn:hover {
+    background: white;
+    color: #0f2747;
+}
+
+.register-btn {
+    background: #d4af37;
+    color: #0f2747;
+}
+
+.register-btn:hover {
+    opacity: 0.9;
+}
+
+/* Hero */
+
+.hero {
+    min-height: 80vh;
+    background: linear-gradient(
+        rgba(15, 39, 71, 0.88),
+        rgba(15, 39, 71, 0.88)
+    );
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 40px;
+    color: white;
+}
+
+.hero-content {
+    max-width: 800px;
+}
+
+.hero h1 {
+    font-size: 3rem;
+    margin-bottom: 20px;
+}
+
+.hero p {
+    font-size: 1.1rem;
+    margin-bottom: 30px;
+}
+
+.hero-actions {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.primary-btn {
+    background: #d4af37;
+    color: #0f2747;
+}
+
+.secondary-btn {
+    border: 1px solid white;
+    color: white;
+}
+
+.secondary-btn:hover {
+    background: white;
+    color: #0f2747;
+}
+
+/* Stats */
+
+.stats {
+    padding: 60px 8%;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+}
+
+.stat-card {
+    background: white;
+    padding: 30px;
+    text-align: center;
+    border-radius: 10px;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+}
+
+.stat-card h2 {
+    color: #0f2747;
+    margin-bottom: 10px;
+}
+
+/* About */
+
+.about {
+    padding: 70px 10%;
+    text-align: center;
+    background: white;
+}
+
+.about h2 {
+    color: #0f2747;
+    margin-bottom: 20px;
+    font-size: 2rem;
+}
+
+/* News */
+
+.news {
+    padding: 70px 8%;
+}
+
+.news h2 {
+    text-align: center;
+    color: #0f2747;
+    margin-bottom: 40px;
+}
+
+.news-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 25px;
+}
+
+.news-card {
+    background: white;
+    padding: 25px;
+    border-right: 5px solid #d4af37;
+    border-radius: 8px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+}
+
+.news-card h3 {
+    color: #0f2747;
+    margin-bottom: 10px;
+}
+
+/* Footer */
+
+footer {
+    background: #0f2747;
+    color: white;
+    text-align: center;
+    padding: 20px;
+    margin-top: 50px;
+}
+
+/* Responsive */
+
+@media (max-width: 900px) {
+
+    .navbar {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .nav-links {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .hero h1 {
+        font-size: 2rem;
+    }
+
+    .hero-actions {
+        flex-direction: column;
+        align-items: center;
+    }
+}
