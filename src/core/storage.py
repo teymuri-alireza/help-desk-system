@@ -65,16 +65,21 @@ class StorageEngine:
             found_ticket = session.query(Ticket).filter_by(Ticket.id==ticket_id).one_or_none()
             return found_ticket
 
-    def insert_ticket(self, ticket: Ticket) -> None:
+    def insert_ticket(self, ticket: Ticket) -> bool:
         """
         Insert a new ticket into the database.
 
         Args:
             ticket: The Ticket object to insert.
+
+        Returns:
+            bool: True if ticket was inserted, False if error occured.
         """
         with self.session_factory() as session:
             session.add(ticket)
             session.commit()
+            return True
+        return False
 
     def update_ticket(self, ticket: Ticket) -> bool:
         """

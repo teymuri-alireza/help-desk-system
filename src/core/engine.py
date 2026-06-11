@@ -41,7 +41,7 @@ class HelpDeskCore:
         elif action == "login":
             return self.storage.validate_user(username)
 
-    def ticket_api(self, action: str, ticket: Ticket, ticket_id: int) -> list[Ticket] | Ticket | None:
+    def ticket_api(self, action: str, ticket: Ticket, ticket_id: int) -> list[Ticket] | Ticket | bool:
         """
         Handle ticket operations.
 
@@ -53,10 +53,11 @@ class HelpDeskCore:
         **Note:** Updating ticket is not implemented yet.
 
         Returns:
-            list[Ticket] | Ticket | None: List of tickets for "list" action, single ticket for "find" action, None otherwise.
+            list[Ticket] | Ticket | bool: List of tickets for "list" action, single ticket for "find" action,
+                and boolean for "new" and "update" actions, indicating it was successful or not.
         """
         if action == "new":
-            self.storage.insert_ticket(ticket)
+            return self.storage.insert_ticket(ticket)
         elif action == "list":
             return self.storage.list_tickets()
         elif action == "find":
