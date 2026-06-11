@@ -60,7 +60,7 @@ class HelpDeskCore:
         elif action == "list":
             return self.storage.list_tickets()
         elif action == "find":
-            return self.storage.find_ticket()
+            return self.storage.find_ticket(ticket_id)
         elif action == "update":
             return self.storage.update_ticket(ticket)
 
