@@ -135,7 +135,9 @@ class StorageEngine:
             list[Notification]: List of Notification objects for the user.
         """
         with self.session_factory() as session:
-            not_read_notifications = session.query(Notification).filter_by(Notification.receiver_id==user_id).all()
+            not_read_notifications = session.query(Notification).filter_by(
+                Notification.receiver_id==user_id, Notification.is_read==False
+                ).all()
             return not_read_notifications
 
     def list_users(self) -> list[User]:
