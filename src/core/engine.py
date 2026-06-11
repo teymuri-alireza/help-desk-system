@@ -50,8 +50,6 @@ class HelpDeskCore:
             ticket (Ticket): Ticket object for new ticket creation.
             ticket_id (int): ID of the ticket for find or update operations.
 
-        **Note:** Updating ticket is not implemented yet.
-
         Returns:
             list[Ticket] | Ticket | bool: List of tickets for "list" action, single ticket for "find" action,
                 and boolean for "new" and "update" actions, indicating it was successful or not.
