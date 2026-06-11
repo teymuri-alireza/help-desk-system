@@ -35,7 +35,7 @@ class StorageEngine:
             bool: True if user exists, otherwise False.
         """
         with self.session_factory() as session:
-            found_user = session.query(User).filter_by(User.username==username).one_or_none()
+            found_user = session.query(User).filter(User.username==username).one_or_none()
             if found_user is not None:
                 return True
             return False
@@ -62,7 +62,7 @@ class StorageEngine:
             Ticket|None: Ticket object if found, otherwise None.
         """
         with self.session_factory() as session:
-            found_ticket = session.query(Ticket).filter_by(Ticket.id==ticket_id).one_or_none()
+            found_ticket = session.query(Ticket).filter(Ticket.id==ticket_id).one_or_none()
             return found_ticket
 
     def insert_ticket(self, ticket: Ticket) -> bool:
@@ -92,7 +92,7 @@ class StorageEngine:
             bool: True if ticket was updated, False if ticket not found.
         """
         with self.session_factory() as session:
-            old_ticket = session.query(Ticket).filter_by(Ticket.id==ticket.id).one_or_none()
+            old_ticket = session.query(Ticket).filter(Ticket.id==ticket.id).one_or_none()
             if old_ticket is not None:
                 session.merge(ticket)
                 session.commit()
@@ -110,7 +110,7 @@ class StorageEngine:
             list[Response]: List of Response objects for the ticket.
         """
         with self.session_factory() as session:
-            found_ticket = session.query(Ticket).filter_by(Ticket.id==ticket_id).one_or_none()
+            found_ticket = session.query(Ticket).filter(Ticket.id==ticket_id).one_or_none()
             return found_ticket.responses
 
     def insert_response(self, response: Response) -> None:
@@ -135,7 +135,7 @@ class StorageEngine:
             list[Notification]: List of Notification objects for the user.
         """
         with self.session_factory() as session:
-            not_read_notifications = session.query(Notification).filter_by(
+            not_read_notifications = session.query(Notification).filter(
                 Notification.receiver_id==user_id, Notification.is_read==False
                 ).all()
             return not_read_notifications
@@ -162,7 +162,7 @@ class StorageEngine:
             User|None: User object if found, None otherwise.
         """
         with self.session_factory() as session:
-            found_user = session.query(User).filter_by(User.id==user_id).one_or_none()
+            found_user = session.query(User).filter(User.id==user_id).one_or_none()
             return found_user
 
     def update_user(self, user: User) -> bool:
@@ -176,7 +176,7 @@ class StorageEngine:
             bool: True if user was updated, False if user not found.
         """
         with self.session_factory() as session:
-            found_user = session.query(User).filter_by(User.id==user.id).one_or_none()
+            found_user = session.query(User).filter(User.id==user.id).one_or_none()
             if found_user is not None:
                 session.merge(user)
                 session.commit()
