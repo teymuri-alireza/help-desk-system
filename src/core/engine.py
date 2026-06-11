@@ -62,8 +62,7 @@ class HelpDeskCore:
         elif action == "find":
             return self.storage.find_ticket()
         elif action == "update":
-            # Updating ticket is not implemented yet
-            pass
+            return self.storage.update_ticket(ticket)
 
     def response_api(self, action: str, response: Response) -> list[Response]:
         """

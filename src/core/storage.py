@@ -76,11 +76,23 @@ class StorageEngine:
             session.add(ticket)
             session.commit()
 
-    def update_ticket(self, ticket: Ticket) -> None:
+    def update_ticket(self, ticket: Ticket) -> bool:
         """
-        This functions is not complete yet.
+        Update an existing ticket in the database.
+
+        Args:
+            ticket: The Ticket object with updated values.
+
+        Returns:
+            bool: True if ticket was updated, False if ticket not found.
         """
-        pass
+        with self.session_factory() as session:
+            old_ticket = session.query(Ticket).filter_by(Ticket.id==ticket.id).one_or_none()
+            if old_ticket is not None:
+                session.merge(ticket)
+                session.commit()
+                return True
+            return False
 
     def list_responses(self, ticket_id: int) -> list[Response]:
         """
