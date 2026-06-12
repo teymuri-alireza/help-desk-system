@@ -3,16 +3,15 @@ from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from fastapi_swagger import patch_fastapi
-from pathlib import Path
 from src.server.routes.auth import router as auth_router
 from src.server.routes.tickets import router as tickets_router
 from src.server.routes.responses import router as responses_router
 from src.server.routes.dashboard import router as dashboard_router
 from src.server.routes.users import router as users_router
 from src.server.routes.notifications import router as notifications_router
+from src.server.dependencies import get_static_path
 
-STATIC_DIR = Path(__file__).parent / "static"
-TEMPLATES_DIR = Path(__file__).parent / "templates"
+TEMPLATES_DIR, STATIC_DIR = get_static_path()
 
 # Patch FastAPI to serve Swagger UI locally
 app = FastAPI(docs_url=None, swagger_ui_oauth2_redirect_url=None)
