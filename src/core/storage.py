@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session, sessionmaker
 from src.database.tables import User, Ticket, Response, Notification
-
+from sqlalchemy.orm import joinedload
 class StorageEngine:
     """
     Database storage engine for managing database tables.
@@ -48,7 +48,7 @@ class StorageEngine:
             list[Ticket]: List of all Ticket objects.
         """
         with self.session_factory() as session:
-            tickets = session.query(Ticket).all()
+            tickets = session.query(Ticket).options(joinedload(Ticket.creator)).all()
             return tickets
 
     def find_ticket(self, ticket_id: int) -> Ticket | None:
