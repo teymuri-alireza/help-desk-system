@@ -21,7 +21,7 @@ class HelpDeskCore:
 
         self.storage = StorageEngine(self.session_factory)
 
-    def admin_api(self, action: str, user_id: int, user: User) -> list[User] | User | bool:
+    def admin_api(self, action: str, user_id: int = None, user: User = None) -> list[User] | User | bool:
         """
         Handle administrative operations on users.
 
@@ -41,7 +41,7 @@ class HelpDeskCore:
         elif action == "update_user":
             return self.storage.update_user(user)
 
-    def authentication_api(self, action: str, user: User, username: str) -> bool | None:
+    def authentication_api(self, action: str, user: User = None, username: str = None) -> bool | None:
         """
         Handle authentication operations.
 
@@ -61,7 +61,7 @@ class HelpDeskCore:
         elif action == "login":
             return self.storage.validate_user(username)
 
-    def ticket_api(self, action: str, ticket: Ticket, ticket_id: int) -> list[Ticket] | Ticket | bool:
+    def ticket_api(self, action: str, ticket: Ticket = None, ticket_id: int = None) -> list[Ticket] | Ticket | bool:
         """
         Handle ticket operations.
 
