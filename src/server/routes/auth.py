@@ -14,7 +14,8 @@ temp_session = {}
 # Serve the authentication page
 @router.get("")
 def authentication(request: Request):
-    return templates.TemplateResponse(request=request, name="auth.html")
+    error = temp_session.pop("error", None)
+    return templates.TemplateResponse(request=request, name="auth.html", context={"request": request, "error": error})
 
 # API endpoints
 # Authentication
