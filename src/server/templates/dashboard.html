@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>داشبورد | دانشگاه دانش و فناوری</title>
+    <link rel="stylesheet" href="static/css/user_dashboard.css">
+</head>
+<body>
+
+<header>
+    <nav class="navbar">
+        <div class="logo">
+            <h2>دانشگاه دانش و فناوری</h2>
+        </div>
+
+        <ul class="nav-links">
+            <li><a href="/">صفحه اصلی</a></li>
+            <li><a>داشبورد</a></li>
+            <li><a>تیکت‌ها</a></li>
+            <li><a>اعلان‌ها</a></li>
+            <li><a>خروج</a></li>
+        </ul>
+
+        <div></div> <!-- Empty div to balance nav bar position -->
+    </nav>
+</header>
+
+<main class="dashboard">
+
+    <section class="page-title">
+        <h1>پنل کاربری</h1>
+        <p>مدیریت درخواست‌ها، مشاهده پاسخ‌ها و اطلاعات کاربران</p>
+    </section>
+
+    <!-- Ticket Form -->
+    <section class="card">
+
+        <div class="section-header">
+            <h2>ثبت تیکت جدید</h2>
+        </div>
+
+        <form class="ticket-form" action="/ticket/create" method="POST" enctype="multipart/form-data">
+
+            <div class="form-group">
+                <label>عنوان تیکت</label>
+
+                <input type="text" name="title" required placeholder="عنوان درخواست">
+            </div>
+
+            <div class="form-group">
+                <label>توضیحات</label>
+
+                <textarea name="description" rows="6" required placeholder="جزئیات درخواست خود را وارد کنید"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>آپلود فایل</label>
+
+                <input type="file" name="attachment">
+            </div>
+
+            <button class="submit-btn" type="submit">ثبت تیکت</button>
+
+        </form>
+
+    </section>
+
+
+    <!-- Ticket Replies -->
+    <section class="card">
+
+        <div class="section-header">
+            <h2>پاسخ‌های تیکت</h2>
+        </div>
+
+        <div class="ticket-list">
+
+            <div class="ticket-item">
+
+                <div class="ticket-meta">
+                    <span>#1024</span>
+                    <span class="status answered">پاسخ داده شده</span>
+                </div>
+
+                <h3>درخواست فعال‌سازی سامانه آموزشی</h3>
+
+                <div class="ticket-reply">
+                    <strong>پاسخ پشتیبانی:</strong>
+                    <p>
+                        درخواست شما بررسی شد و دسترسی
+                        سامانه فعال گردید.
+                    </p>
+                </div>
+
+            </div>
+
+            <div class="ticket-item">
+
+                <div class="ticket-meta">
+                    <span>#1021</span>
+
+                    <span class="status pending">
+                        در انتظار پاسخ
+                    </span>
+                </div>
+
+                <h3>مشکل ورود به پنل</h3>
+
+                <div class="ticket-reply">
+                    <strong>آخرین وضعیت:</strong>
+                    <p>
+                        درخواست ثبت شده و در صف بررسی قرار دارد.
+                    </p>
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- Users -->
+    <section class="card">
+
+        <div class="section-header">
+            <h2>کاربران سامانه</h2>
+        </div>
+
+        <div class="table-wrapper">
+
+            <table>
+                <thead>
+                <tr>
+                    <th>نام</th>
+                    <th>ایمیل</th>
+                    <th>نقش</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>علی محمدی</td>
+                    <td>ali@university.edu</td>
+                    <td>
+                        <span class="role admin">
+                            مدیر
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>زهرا احمدی</td>
+                    <td>zahra@university.edu</td>
+                    <td>
+                        <span class="role support">
+                            پشتیبان
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>محمد رضایی</td>
+                    <td>m.rezaei@university.edu</td>
+                    <td>
+                        <span class="role student">
+                            دانشجو
+                        </span>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+        </div>
+
+    </section>
+
+</main>
+
+</body>
+</html>
