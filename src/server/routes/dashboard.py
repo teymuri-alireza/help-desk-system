@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Request, status
+from fastapi import APIRouter, Request, status, Response
 from fastapi.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
 from src.server.dependencies import get_static_path, get_helpdesk, get_current_user
@@ -10,7 +10,7 @@ router = APIRouter(prefix="/dashboard", tags=["dashboard"])
 
 
 @router.get("")
-def dashboard(request: Request):
+def dashboard(request: Request, response: Response):
     try:
         user_username = get_current_user(request=request)
     except:
@@ -20,13 +20,23 @@ def dashboard(request: Request):
     found_user = helpdesk.admin_api(action="find_user_by_username", username=user_username)
 
     if found_user is not None:
-
+        flash_message = request.cookies.get("flash_message")
         users_list = helpdesk.admin_api(action="list_users")
         tickets_list = helpdesk.ticket_api(action="list")
-        return templates.TemplateResponse(
+        response = templates.TemplateResponse(
             request=request,
             name="dashboard.html",
-            context={"request": request, "users_list": users_list, "tickets_list": tickets_list, "user_username": found_user.username, "user_id": found_user.id}
+            context={
+                "request": request,
+                "users_list": users_list,
+                "tickets_list": tickets_list, 
+                "user_username": found_user.username, 
+                "user_id": found_user.id, 
+                "flash_message": flash_message
+                }
             )
+        response.delete_cookie("flash_message")
+        return response
+
     else:
         return {"response": "not found"}
