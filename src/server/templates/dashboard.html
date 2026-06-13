@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>داشبورد | دانشگاه دانش و فناوری</title>
-    <link rel="stylesheet" href="static/css/user_dashboard.css">
+    <link rel="stylesheet" href="static/css/dashboard.css">
 </head>
 <body>
 
@@ -40,23 +40,25 @@
             <h2>ثبت تیکت جدید</h2>
         </div>
 
-        <form class="ticket-form" action="/ticket/create" method="POST" enctype="multipart/form-data">
+        <form class="ticket-form" action="/tickets" method="POST" enctype="multipart/form-data">
 
             <div class="form-group">
                 <label>عنوان تیکت</label>
-
                 <input type="text" name="title" required placeholder="عنوان درخواست">
             </div>
 
             <div class="form-group">
                 <label>توضیحات</label>
-
                 <textarea name="description" rows="6" required placeholder="جزئیات درخواست خود را وارد کنید"></textarea>
+            </div>
+
+            <div>
+                <!-- The hardcoded creator_id value will be replaced with sessions -->
+                <input name="creator_id" value="1" hidden>
             </div>
 
             <div class="form-group">
                 <label>آپلود فایل</label>
-
                 <input type="file" name="attachment">
             </div>
 
@@ -67,54 +69,35 @@
     </section>
 
 
-    <!-- Ticket Replies -->
+    <!-- Tickets List -->
     <section class="card">
 
         <div class="section-header">
-            <h2>پاسخ‌های تیکت</h2>
+            <h2>لیست تیکت‌ها</h2>
         </div>
 
-        <div class="ticket-list">
+        <div class="table-wrapper">
 
-            <div class="ticket-item">
-
-                <div class="ticket-meta">
-                    <span>#1024</span>
-                    <span class="status answered">پاسخ داده شده</span>
-                </div>
-
-                <h3>درخواست فعال‌سازی سامانه آموزشی</h3>
-
-                <div class="ticket-reply">
-                    <strong>پاسخ پشتیبانی:</strong>
-                    <p>
-                        درخواست شما بررسی شد و دسترسی
-                        سامانه فعال گردید.
-                    </p>
-                </div>
-
-            </div>
-
-            <div class="ticket-item">
-
-                <div class="ticket-meta">
-                    <span>#1021</span>
-
-                    <span class="status pending">
-                        در انتظار پاسخ
-                    </span>
-                </div>
-
-                <h3>مشکل ورود به پنل</h3>
-
-                <div class="ticket-reply">
-                    <strong>آخرین وضعیت:</strong>
-                    <p>
-                        درخواست ثبت شده و در صف بررسی قرار دارد.
-                    </p>
-                </div>
-
-            </div>
+            <table>
+                <thead>
+                <tr>
+                    <th>شناسه</th>
+                    <th>عنوان</th>
+                    <th>توضیحات</th>
+                    <th>نام کاربری سازنده</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for ticket in tickets_list %}
+                    <tr>
+                        <td>{{ ticket.id }}</td>
+                        <td>{{ ticket.title }}</td>
+                        <td>{{ ticket.description }}</td>
+                        <td>{{ ticket.creator.username }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
 
         </div>
 
@@ -132,40 +115,24 @@
 
             <table>
                 <thead>
-                <tr>
-                    <th>نام</th>
-                    <th>ایمیل</th>
-                    <th>نقش</th>
-                </tr>
+                    <tr>
+                        <th># id</th>
+                        <th>نام کاربری</th>
+                        <th>نام</th>
+                        <th>ایمیل</th>
+                        <th>نقش</th>
+                    </tr>
                 </thead>
                 <tbody>
-                <tr>
-                    <td>علی محمدی</td>
-                    <td>ali@university.edu</td>
-                    <td>
-                        <span class="role admin">
-                            مدیر
-                        </span>
-                    </td>
-                </tr>
-                <tr>
-                    <td>زهرا احمدی</td>
-                    <td>zahra@university.edu</td>
-                    <td>
-                        <span class="role support">
-                            پشتیبان
-                        </span>
-                    </td>
-                </tr>
-                <tr>
-                    <td>محمد رضایی</td>
-                    <td>m.rezaei@university.edu</td>
-                    <td>
-                        <span class="role student">
-                            دانشجو
-                        </span>
-                    </td>
-                </tr>
+                {% for user in users_list %}
+                    <tr>
+                        <td>{{ user.id }}</td>
+                        <td>{{ user.username }}</td>
+                        <td>{{ user.name }}</td>
+                        <td>{{ user.email }}</td>
+                        <td>{{ user.role.value }}</td>
+                    </tr>
+                {% endfor %}
                 </tbody>
             </table>
 

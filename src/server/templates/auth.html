@@ -54,6 +54,13 @@
                     <div class="form-group">
                         <label for="login-email">نام کاربری (شماره دانشجویی یا شماره کارمندی)</label>
                         <input type="text" id="login-email" name="username" required placeholder="نام کاربری یا ایمیل خود را وارد کنید">
+
+                        {% if error %}
+                            <p style="justify-self: center;" class="warning-text">
+                                {{ error }}
+                            </p>
+                        {% endif %}
+
                     </div>
 
                     <button type="submit" class="submit-btn">
