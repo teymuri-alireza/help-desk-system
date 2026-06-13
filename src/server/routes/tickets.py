@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Request, Form, status, UploadFile
 from fastapi.responses import RedirectResponse
 from src.server.dependencies import get_static_path, get_helpdesk
-from src.database.tables import Ticket, Attachment
+from src.database.tables import Ticket, Attachment, Notification
 
 STATIC_DIR = get_static_path()[1]
 
@@ -39,6 +39,8 @@ def new_ticket(
     helpdesk = get_helpdesk()
     is_created = helpdesk.ticket_api(action="new", ticket=ticket)
     if is_created:
+        notification = Notification(receiver_id=creator_id, title="تیکت جدید ثبت شد", text=f"عنوان تیکت: {title}")
+        helpdesk.notification_api(action="new", notification=notification)
         return RedirectResponse(url="/dashboard", status_code=status.HTTP_303_SEE_OTHER)
     else:
         # Placeholder for error, this functionality will be implemented later

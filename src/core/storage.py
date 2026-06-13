@@ -124,21 +124,53 @@ class StorageEngine:
             session.add(response)
             session.commit()
 
-    def list_notifications(self, user_id: int) -> list[Notification]:
+    def insert_notification(self, notification: Notification) -> None:
         """
-        Retrieve all notifications for a user.
+        Insert a new notification into the database.
+
+        Args:
+            notification: The Notification object to insert.
+        """
+        with self.session_factory() as session:
+            session.add(notification)
+            session.commit()
+
+    def update_notification(self, notification_id: int, is_read: bool) -> None:
+        """
+        Update the read status of a notification.
+
+        Args:
+            notification_id: The notification ID to update.
+            is_read: The new read status value.
+        """
+        with self.session_factory() as session:
+            old_notification = session.query(Notification).filter(Notification.id==notification_id).one_or_none()
+            if old_notification is not None:
+                old_notification.is_read = is_read
+                session.commit()
+
+    def list_notifications(self, user_id: int, unread: bool = True) -> list[Notification]:
+        """
+        Retrieve notifications for a user.
 
         Args:
             user_id: The user ID to retrieve notifications for.
+            unread: If True, retrieve only unread notifications; if False,
+                retrieve all notifications.
 
         Returns:
             list[Notification]: List of Notification objects for the user.
         """
         with self.session_factory() as session:
-            not_read_notifications = session.query(Notification).filter(
-                Notification.receiver_id==user_id, Notification.is_read==False
-                ).all()
-            return not_read_notifications
+            if unread:
+                fetched_notifications = session.query(Notification).filter(
+                    Notification.receiver_id==user_id, Notification.is_read==False
+                    ).all()
+            else:
+                fetched_notifications = session.query(Notification).filter(
+                    Notification.receiver_id==user_id).order_by(Notification.id.desc()).all()
+
+            return fetched_notifications
 
     def list_users(self) -> list[User]:
         """

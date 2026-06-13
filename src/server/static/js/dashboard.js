@@ -1,0 +1,85 @@
+async function loadNotifications() {
+  const notificationsMenu = document.getElementById('notifications-menu');
+
+  try {
+    const response = await fetch('/notifications');
+
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}`);
+    }
+
+    const data = await response.json();
+    const notifications = Array.isArray(data.response)
+      ? data.response
+      : [];
+
+    notificationsMenu.replaceChildren();
+
+    if (notifications.length === 0) {
+      // Show "No notifications" message
+      const emptyMessage = document.createElement('div');
+      emptyMessage.className = 'notification-empty';
+      emptyMessage.textContent = 'هیچ اعلان جدیدی وجود ندارد';
+      notificationsMenu.appendChild(emptyMessage);
+    } else {
+
+      for (const notification of notifications) {
+        const item = document.createElement('div');
+        item.className = 'notification-item';
+
+        const title = document.createElement('div');
+        title.className = 'notification-title';
+        title.textContent = notification.title ?? '';
+
+        const text = document.createElement('div');
+        text.className = 'notification-text';
+        text.textContent = notification.text ?? '';
+
+        const button = document.createElement('button');
+        button.className = 'notification-btn';
+        button.dataset.id = notification.id;
+        button.textContent = 'مشاهده شد';
+
+        item.append(title, text, button);
+        notificationsMenu.appendChild(item);
+      }
+    }
+  } catch (error) {
+    console.error('Failed to load notifications:', error);
+  }
+}
+
+document
+  .getElementById('notifications-menu')
+  .addEventListener('click', async (e) => {
+    const btn = e.target.closest('.notification-btn');
+    if (!btn) return;
+
+    btn.disabled = true;
+
+    try {
+      const response = await fetch('/notifications', {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          notification_id: btn.dataset.id,
+          is_read: true
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
+      }
+
+      // Refresh the UI
+      loadNotifications()
+
+    } catch (error) {
+      console.error('Failed to update notification:', error);
+      btn.disabled = false;
+    }
+  });
+
+loadNotifications();

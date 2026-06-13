@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اعلان‌ها | دانشگاه دانش و فناوری</title>
+    <link rel="stylesheet" href="{{ url_for('static', path='css/notifications.css') }}">
+</head>
+<body>
+
+<header>
+    <nav class="navbar">
+
+        <div class="logo">
+            <h2>دانشگاه دانش و فناوری</h2>
+        </div>
+
+        <ul class="nav-links">
+            <li><a href="/">صفحه اصلی</a></li>
+            <li><a href="/dashboard">داشبورد</a></li>
+            <li><a href="/notifications/all">اعلان‌ها</a></li>
+            <li><a>خروج</a></li>
+        </ul>
+
+        <div></div>
+
+    </nav>
+</header>
+
+<main class="notifications-page">
+    <section class="page-header">
+        <h1>تمامی اعلان‌ها</h1>
+
+        <p>
+            در این بخش تمامی اعلان‌های سامانه اعم از خوانده‌شده و
+            خوانده‌نشده قابل مشاهده هستند.
+        </p>
+    </section>
+
+    <section class="notifications-list">
+        {% for notification in notifications_list %}
+            <article class="notification-card {% if not notification.is_read %}unread{% endif %}">
+                <div class="notification-top">
+                    <span class="notification-date">
+                        ایجاد شده در {{ notification.created_at }}
+                    </span>
+                </div>
+                <h3>{{ notification.title }}</h3>
+                <p>{{ notification.text }}</p>
+
+                    {% if notification.is_read %}
+                        <div class="notification-status read">
+                            خوانده شده
+                        </div>
+                    {% else %}
+                        <div class="notification-status unread">
+                            خوانده‌نشده
+                        </div>
+                    {% endif %}
+            </article>
+        {% endfor %}
+    </section>
+</main>
+</body>
+</html>
