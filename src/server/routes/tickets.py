@@ -25,16 +25,17 @@ def new_ticket(
     creator_id: int = Form(...),
     ):
     ticket = Ticket(title=title, description=description, creator_id=creator_id)
-    upload = Attachment(
-        file_name=attachment.filename, 
-        file_type=attachment.content_type, 
-        ticket_id=ticket.id, 
-        creator_id=ticket.creator_id, 
-        path=f"{STATIC_DIR}/upload"
-        )
-    content = attachment.file.read()
-    with open(f"{upload.path}/{upload.file_name}", "wb") as file:
-        file.write(content)
+    if attachment.size != 0:
+        upload = Attachment(
+            file_name=attachment.filename, 
+            file_type=attachment.content_type, 
+            ticket_id=ticket.id, 
+            creator_id=ticket.creator_id, 
+            path=f"{STATIC_DIR}/upload"
+            )
+        content = attachment.file.read()
+        with open(f"{upload.path}/{upload.file_name}", "wb") as file:
+            file.write(content)
 
     helpdesk = get_helpdesk()
     is_created = helpdesk.ticket_api(action="new", ticket=ticket)
