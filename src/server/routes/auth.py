@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Request, Form, status
+from fastapi import APIRouter, Request, Response, Form, status
 from fastapi.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
 from src.server.dependencies import get_static_path, get_helpdesk, create_access_token, get_current_user
@@ -46,6 +46,16 @@ def log_in(request: Request, username: str = Form(...)):
         global temp_session
         temp_session["error"] = "کاربر یافت نشد"
         return RedirectResponse(url="/auth", status_code=status.HTTP_303_SEE_OTHER)
+
+@router.get("/logout")
+def log_out(response: Response):
+    response = RedirectResponse(
+        url="/",
+        status_code=status.HTTP_303_SEE_OTHER
+    )
+    response.delete_cookie("access_token")
+
+    return response
 
 # Session management
 @router.get("/me")
