@@ -2,6 +2,7 @@ from fastapi import APIRouter, Request, Response, Form, status
 from fastapi.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
 from src.server.dependencies import get_static_path, get_helpdesk, create_access_token, get_current_user
+from src.database.tables import User, Role, Notification
 
 TEMPLATES_DIR = get_static_path()[0]
 templates = Jinja2Templates(directory=TEMPLATES_DIR)
@@ -19,12 +20,12 @@ def authentication(request: Request):
         if logged_in_user:
             return RedirectResponse(url="/dashboard", status_code=status.HTTP_303_SEE_OTHER)
     except:
-        error = temp_session.pop("error", None)
+        login_error = temp_session.pop("login_error", None)
         signup_error = temp_session.pop("signup_error", None)
         return templates.TemplateResponse(
             request=request, 
             name="auth.html", 
-            context={"request": request, "signup_error": signup_error, "error": error})
+            context={"request": request, "signup_error": signup_error, "login_error": login_error})
 
 # API endpoints
 # Authentication
@@ -73,7 +74,7 @@ def log_in(request: Request, username: str = Form(...)):
         return response
     else:
         global temp_session
-        temp_session["error"] = "کاربر یافت نشد"
+        temp_session["login_error"] = "کاربر یافت نشد"
         return RedirectResponse(url="/auth", status_code=status.HTTP_303_SEE_OTHER)
 
 @router.get("/logout")
