@@ -52,14 +52,11 @@ class HelpDeskCore:
             user (User): User object for signup operations.
             username (str): Username for login validation.
 
-        **Note:** The sign up option is not implemented yet
-
         Returns:
             bool: Boolean indicating if user validation is successful, False otherwise.
         """
         if action == "signup":
-            # Sign up option is not implemented yet.
-            pass
+            self.storage.insert_user(user)
         elif action == "login":
             return self.storage.validate_user(username)
 
