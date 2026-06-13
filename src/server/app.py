@@ -10,7 +10,7 @@ from src.server.routes.responses import router as responses_router
 from src.server.routes.dashboard import router as dashboard_router
 from src.server.routes.users import router as users_router
 from src.server.routes.notifications import router as notifications_router
-from src.server.dependencies import get_static_path, set_helpdesk
+from src.server.dependencies import get_static_path, set_helpdesk, get_helpdesk, get_current_user
 from src.core.engine import HelpDeskCore
 
 TEMPLATES_DIR, STATIC_DIR = get_static_path()
@@ -33,7 +33,17 @@ app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 # Home Page
 @app.get("/", response_class=HTMLResponse)
 def root(request: Request):
-    return templates.TemplateResponse(request=request, name="home.html")
+    context = None
+    try:
+        user_username = get_current_user(request=request)
+
+        helpdesk = get_helpdesk()
+        logged_in_user = helpdesk.admin_api(action="find_user_by_username", username=user_username)
+        context = {"user": logged_in_user}
+    except:
+        # Use default value for context
+        pass
+    return templates.TemplateResponse(request=request, name="home.html", context=context)
 
 app.include_router(auth_router)
 app.include_router(tickets_router)
