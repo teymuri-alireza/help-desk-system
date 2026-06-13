@@ -53,6 +53,129 @@ body{
     color:#d4af37;
 }
 
+.notifications-dropdown {
+    position: relative;
+}
+
+.notifications-trigger {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.notifications-trigger::after {
+    content: '▼';
+    font-size: 0.7rem;
+    transition: transform 0.3s;
+}
+
+.notifications-dropdown:hover .notifications-trigger::after {
+    transform: rotate(-180deg);
+}
+
+.notifications-dropdown:hover .notifications-menu {
+    display: block;
+    animation: slideDown 0.2s ease-out;
+}
+
+.notifications-menu:hover {
+    display: block;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.notifications-menu {
+    display: none;
+    position: absolute;
+    top: calc(100% + 10px);
+    right: 0;
+    background: white;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    min-width: 320px;
+    max-height: 400px;
+    overflow-y: auto;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    color: #1f2937;
+}
+
+.notifications-dropdown::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    right: 0;
+    width: 100%;
+    height: 10px;
+}
+
+.notifications-dropdown:hover::after {
+    display: block;
+}
+
+.notification-item {
+    padding: 14px 16px;
+    border-bottom: 1px solid #e5e7eb;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.notification-item:hover {
+    background: #f9fafb;
+}
+
+.notification-item:last-child {
+    border-bottom: none;
+}
+
+.notification-title {
+    font-weight: 600;
+    color: #0f2747;
+    margin-bottom: 6px;
+    font-size: 0.95rem;
+}
+
+.notification-text {
+    font-size: 0.85rem;
+    color: #6b7280;
+    line-height: 1.4;
+}
+
+.notification-empty {
+    padding: 20px 16px;
+    text-align: center;
+    color: #6b7280;
+    font-size: 0.9rem;
+}
+
+.notification-btn {
+    margin-top: 8px;
+    padding: 6px 12px;
+    background: #0f2747;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    font-family: inherit;
+    transition: background 0.2s;
+    width: 100%;
+}
+
+.notification-btn:hover {
+    background: #183b69;
+}
+
 .auth-buttons{
     display:flex;
 }
