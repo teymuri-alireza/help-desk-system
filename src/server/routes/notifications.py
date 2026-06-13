@@ -1,6 +1,7 @@
-from fastapi import APIRouter, Body, status, Request
+from fastapi import APIRouter, Body, status, Request, Path
+from fastapi.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
-from src.server.dependencies import get_static_path, get_helpdesk
+from src.server.dependencies import get_static_path, get_helpdesk, get_current_user
 
 TEMPLATES_DIR = get_static_path()[0]
 templates = Jinja2Templates(directory=TEMPLATES_DIR)
@@ -9,18 +10,26 @@ router = APIRouter(prefix="/notifications", tags=["notifications"])
 
 
 @router.get("")
-def list_unread_notifications():
+def list_unread_notifications(request: Request):
+    try:
+        user_username = get_current_user(request=request)
+    except:
+        return RedirectResponse(url="/auth", status_code=status.HTTP_303_SEE_OTHER)
     help_desk = get_helpdesk()
-    # FUTURE WORK: user_id should be fetched from session
-    notifications_list = help_desk.notification_api(action="list_unread", user_id=1)
+    found_user = help_desk.admin_api(action="find_user_by_username", username=user_username)
+    notifications_list = help_desk.notification_api(action="list_unread", user_id=found_user.id)
     return {"response": notifications_list}
 
 
 @router.get("/all")
 def list_all_notifications(request: Request):
+    try:
+        user_username = get_current_user(request=request)
+    except:
+        return RedirectResponse(url="/auth", status_code=status.HTTP_303_SEE_OTHER)
     help_desk = get_helpdesk()
-    # FUTURE WORK: user_id should be fetched from session
-    notifications_list = help_desk.notification_api(action="list_all", user_id=1)
+    found_user = help_desk.admin_api(action="find_user_by_username", username=user_username)
+    notifications_list = help_desk.notification_api(action="list_all", user_id=found_user.id)
     return templates.TemplateResponse(
         request=request,
         name="notifications.html",

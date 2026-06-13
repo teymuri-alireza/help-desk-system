@@ -21,7 +21,7 @@ class HelpDeskCore:
 
         self.storage = StorageEngine(self.session_factory)
 
-    def admin_api(self, action: str, user_id: int = None, user: User = None) -> list[User] | User | bool:
+    def admin_api(self, action: str, user_id: int = None, username: str = None, user: User = None) -> list[User] | User | bool:
         """
         Handle administrative operations on users.
 
@@ -38,6 +38,8 @@ class HelpDeskCore:
             return self.storage.list_users()
         elif action == "find_user":
             return self.storage.find_user(user_id)
+        elif action == "find_user_by_username":
+            return self.storage.find_user_by_username(username)
         elif action == "update_user":
             return self.storage.update_user(user)
 
