@@ -20,13 +20,42 @@ def authentication(request: Request):
             return RedirectResponse(url="/dashboard", status_code=status.HTTP_303_SEE_OTHER)
     except:
         error = temp_session.pop("error", None)
-        return templates.TemplateResponse(request=request, name="auth.html", context={"request": request, "error": error})
+        signup_error = temp_session.pop("signup_error", None)
+        return templates.TemplateResponse(
+            request=request, 
+            name="auth.html", 
+            context={"request": request, "signup_error": signup_error, "error": error})
 
 # API endpoints
 # Authentication
 @router.post("/signup")
-def sign_up():
-    return {"response": "Sign Up Page"}
+def sign_up(request: Request,
+    name: str = Form(...),
+    username: str = Form(...),
+    email: str = Form(...),
+    ):
+    helpdesk = get_helpdesk()
+    user_exist = helpdesk.authentication_api(action="login", username=username)
+    if user_exist:
+        temp_session["signup_error"] = "این نام کاربری قبلا استفاده شده است."
+        return RedirectResponse(url="/auth", status_code=status.HTTP_303_SEE_OTHER)
+
+    new_user = User(name=name, username=username, email=email, role=Role.STUDENT)
+    helpdesk.authentication_api(action="signup", user=new_user)
+
+    found_user = helpdesk.admin_api(action="find_user_by_username", username=username)
+    notification = Notification(receiver_id=found_user.id, title="کاربر جدید", text=f"خوش آمدید {found_user.name}")
+    helpdesk.notification_api(action="new", notification=notification)
+
+    token = create_access_token({"sub": username})
+    response = RedirectResponse(url="/dashboard", status_code=status.HTTP_303_SEE_OTHER)
+    response.set_cookie(
+        key="access_token",
+        value=token,
+        httponly=True,
+        samesite="lax"
+    )
+    return response
 
 @router.post("/login")
 def log_in(request: Request, username: str = Form(...)):
