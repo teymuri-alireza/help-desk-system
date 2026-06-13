@@ -28,7 +28,15 @@ def log_in(request: Request, username: str = Form(...)):
     helpdesk = get_helpdesk()
     user_exist = helpdesk.authentication_api(action="login", username=username)
     if user_exist:
-        return RedirectResponse(url="/dashboard", status_code=status.HTTP_303_SEE_OTHER)
+        token = create_access_token({"sub": username})
+        response = RedirectResponse(url="/dashboard", status_code=status.HTTP_303_SEE_OTHER)
+        response.set_cookie(
+            key="access_token",
+            value=token,
+            httponly=True,
+            samesite="lax"
+        )
+        return response
     else:
         global temp_session
         temp_session["error"] = "کاربر یافت نشد"
