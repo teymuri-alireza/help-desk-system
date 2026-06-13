@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Request, Form, status
 from fastapi.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
-from src.server.dependencies import get_static_path, get_helpdesk
+from src.server.dependencies import get_static_path, get_helpdesk, create_access_token, get_current_user
 
 TEMPLATES_DIR = get_static_path()[0]
 templates = Jinja2Templates(directory=TEMPLATES_DIR)
@@ -14,8 +14,13 @@ temp_session = {}
 # Serve the authentication page
 @router.get("")
 def authentication(request: Request):
-    error = temp_session.pop("error", None)
-    return templates.TemplateResponse(request=request, name="auth.html", context={"request": request, "error": error})
+    try:
+        logged_in_user = get_current_user(request=request)
+        if logged_in_user:
+            return RedirectResponse(url="/dashboard", status_code=status.HTTP_303_SEE_OTHER)
+    except:
+        error = temp_session.pop("error", None)
+        return templates.TemplateResponse(request=request, name="auth.html", context={"request": request, "error": error})
 
 # API endpoints
 # Authentication
