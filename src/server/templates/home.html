@@ -17,13 +17,17 @@
             <ul class="nav-links">
                 <li><a href="/">صفحه اصلی</a></li>
                 <li><a>درباره دانشگاه</a></li>
-                <li><a>دانشکده‌ها</a></li>
-                <li><a>اخبار</a></li>
-                <li><a>تماس با ما</a></li>
+                {% if user %}
+                    <li><a href="/dashboard">داشبورد</a></li>
+                {% endif %}
             </ul>
 
             <div class="auth-buttons">
-                <a href="/auth" class="btn register-btn">ورود و ثبت نام</a>
+            {% if user %}
+                <a href="/auth/logout" class="btn register-btn">خروج</a>
+            {% else %}
+                <a href="/auth" class="btn register-btn">ورود به سامانه</a>
+            {% endif %}
             </div>
         </nav>
     </header>
@@ -37,7 +41,7 @@
             </p>
 
             <div class="hero-actions">
-                <a class="btn primary-btn">شروع ثبت نام</a>
+                <a href="/auth" class="btn primary-btn">شروع ثبت نام</a>
                 <a class="btn secondary-btn">مشاهده رشته‌ها</a>
             </div>
         </div>

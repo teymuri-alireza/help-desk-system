@@ -53,6 +53,27 @@ body{
     color:#d4af37;
 }
 
+.auth-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.btn {
+    text-decoration: none;
+    padding: 10px 18px;
+    border-radius: 6px;
+    transition: 0.3s;
+    font-weight: 500;
+}
+.register-btn {
+    background: #d4af37;
+    color: #0f2747;
+}
+
+.register-btn:hover {
+    opacity: 0.9;
+}
+
 .notifications-dropdown {
     position: relative;
 }
@@ -174,30 +195,6 @@ body{
 
 .notification-btn:hover {
     background: #183b69;
-}
-
-.auth-buttons{
-    display:flex;
-}
-
-.btn{
-
-    padding:10px 18px;
-
-    border-radius:6px;
-
-    border:1px solid white;
-
-    text-decoration:none;
-
-    color:white;
-}
-
-.btn:hover{
-
-    background:white;
-
-    color:#0f2747;
 }
 
 /* PAGE */
