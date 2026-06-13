@@ -42,7 +42,7 @@
 
                 <form action="/auth/login" method="POST">
 
-                    <p style="justify-self: center;" class="warning-text">
+                    <p style="justify-self: center;" class="alert alert-warning">
                         به علت آزمایشی بودن این سامانه فرم ورود ساده سازی شده است.
                     </p>
 
@@ -51,7 +51,7 @@
                         <input type="text" id="login-email" name="username" required placeholder="نام کاربری یا ایمیل خود را وارد کنید">
 
                         {% if error %}
-                            <p style="justify-self: center;" class="warning-text">
+                            <p style="justify-self: center;" class="alert alert-danger">
                                 {{ error }}
                             </p>
                         {% endif %}
@@ -71,7 +71,7 @@
 
                 <form>
 
-                    <p style="justify-self: center;" class="warning-text">
+                    <p style="justify-self: center;" class="alert alert-warning">
                         به علت آزمایشی بودن این سامانه ایجاد حساب کاربری جدید
                         موقتا غیر فعال می‌باشد.
                     </p>
