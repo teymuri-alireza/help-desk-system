@@ -197,6 +197,20 @@ class StorageEngine:
             found_user = session.query(User).filter(User.id==user_id).one_or_none()
             return found_user
 
+    def find_user_by_username(self, username: str) -> User | None:
+        """
+        Find a user by username.
+
+        Args:
+            username: The user's username to search for.
+
+        Returns:
+            User|None: User object if found, None otherwise.
+        """
+        with self.session_factory() as session:
+            found_user = session.query(User).filter(User.username==username).one_or_none()
+            return found_user
+
     def update_user(self, user: User) -> bool:
         """
         Update an existing user in the database.
