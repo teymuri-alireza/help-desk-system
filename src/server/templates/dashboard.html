@@ -39,9 +39,15 @@
         </h1>
         <p>مدیریت درخواست‌ها، مشاهده پاسخ‌ها و اطلاعات کاربران</p>
     </section>
-
+    
     <!-- Ticket Form -->
     <section class="card">
+        
+        {% if flash_message %}
+            <div id="flash-alert" class="alert alert-success">
+                تیکت با موفقیت ثبت شد
+            </div>
+        {% endif %}
 
         <div class="section-header">
             <h2>ثبت تیکت جدید</h2>

@@ -318,6 +318,22 @@ body{
     background:#183b69;
 }
 
+.alert {
+    padding: 1rem 1.25rem;
+    margin: 1rem 0;
+    border-radius: 8px;
+    border: 1px solid transparent;
+    font-size: 0.95rem;
+    font-weight: 500;
+    transition: opacity 0.5s ease;
+}
+
+.alert-success {
+    background-color: #d1fae5;
+    border-color: #6ee7b7;
+    color: #065f46;
+}
+
 /* TICKETS */
 
 .ticket-item{
