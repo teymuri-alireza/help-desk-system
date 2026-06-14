@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>داشبورد کاربر | دانشگاه دانش و فناوری</title>
     <link rel="stylesheet" href="static/css/dashboard.css">
+    <link rel="stylesheet" href="static/css/tickets.css">
 </head>
 <body>
 
@@ -98,20 +99,21 @@
                     <div class="ticket-item">
                         <div class="ticket-meta">
                             <div class="ticket-info">
-                                <h3>{{ ticket.title }}</h3>
-                                <p class="ticket-id">شناسه تیکت: #{{ ticket.id }}</p>
+                                <p class="ticket-id">#{{ ticket.id }}</p>
+                                <h3>عنوان: {{ ticket.title }}</h3>
                             </div>
                             <span class="status {% if ticket.status == 'answered' %}answered{% else %}pending{% endif %}">
                                 {% if ticket.status == 'answered' %}پاسخ داده شده{% else %}در انتظار پاسخ{% endif %}
                             </span>
                         </div>
-                        <p class="ticket-description">{{ ticket.description }}</p>
-                        {% if ticket.reply %}
-                            <div class="ticket-reply">
-                                <p class="reply-label">پاسخ:</p>
-                                <p>{{ ticket.reply }}</p>
-                            </div>
+                        <p class="ticket-description">توضیات: {{ ticket.description }}</p>
+                        {% if ticket.responses %}
+                        <div class="ticket-reply">
+                            <p class="reply-label">💬 پاسخ:</p>
+                            <p>{{ ticket.responses }}</p>
+                        </div>
                         {% endif %}
+                        <small><p class="ticket-created">ثبت شده در: {{ ticket.created_at }}</p></small>
                     </div>
                 {% endfor %}
                 <div class="auth-buttons">
@@ -122,8 +124,6 @@
                     <p>هیچ تیکتی ثبت نشده است</p>
                 </div>
             {% endif %}
-
-
         </div>
 
     </section>

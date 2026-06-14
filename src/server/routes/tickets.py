@@ -29,6 +29,7 @@ def list_tickets(request: Request):
         context = {
             "request": request,
             "tickets_list": tickets_list,
+            "role": found_user.role.value,
         }
         response = templates.TemplateResponse(
             request=request,

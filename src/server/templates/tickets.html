@@ -66,6 +66,9 @@
                         </div>
                         {% endif %}
                         <small><p class="ticket-created">ثبت شده در: {{ ticket.created_at }}</p></small>
+                        {% if role != "Student" %}
+                            <small><p class="ticket-created">شناسه کاربر ایجاد کننده: {{ ticket.creator_id }}</p></small>
+                        {% endif %}
                     </div>
                 {% endfor %}
             {% else %}

@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>داشبورد | دانشگاه دانش و فناوری</title>
     <link rel="stylesheet" href="static/css/dashboard.css">
+    <link rel="stylesheet" href="static/css/tickets.css">
 </head>
 <body>
 
@@ -93,32 +94,38 @@
             </div>
         </div>
 
-        <div class="table-wrapper">
-            
-            <table>
-                <thead>
-                    <tr>
-                        <th>شناسه</th>
-                        <th>عنوان</th>
-                        <th>توضیحات</th>
-                        <th>نام کاربری سازنده</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for ticket in tickets_list %}
-                    <tr>
-                        <td>{{ ticket.id }}</td>
-                        <td>{{ ticket.title }}</td>
-                        <td>{{ ticket.description }}</td>
-                        <td>{{ ticket.creator.username }}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-
-            <div class="auth-buttons">
-                <a href="/tickets" class="btn submit-btn" style="text-align: center;">مشاهده همه تیکت‌ها</a>
-            </div>
+        <div class="tickets-container">
+            {% if tickets_list %}
+                {% for ticket in tickets_list %}
+                    <div class="ticket-item">
+                        <div class="ticket-meta">
+                            <div class="ticket-info">
+                                <p class="ticket-id">#{{ ticket.id }}</p>
+                                <h3>عنوان: {{ ticket.title }}</h3>
+                            </div>
+                            <span class="status {% if ticket.status == 'answered' %}answered{% else %}pending{% endif %}">
+                                {% if ticket.status == 'answered' %}پاسخ داده شده{% else %}در انتظار پاسخ{% endif %}
+                            </span>
+                        </div>
+                        <p class="ticket-description">توضیات: {{ ticket.description }}</p>
+                        {% if ticket.responses %}
+                        <div class="ticket-reply">
+                            <p class="reply-label">💬 پاسخ:</p>
+                            <p>{{ ticket.responses }}</p>
+                        </div>
+                        {% endif %}
+                        <small><p class="ticket-created">ثبت شده در: {{ ticket.created_at }}</p></small>
+                        <small><p class="ticket-created">شناسه کاربر ایجاد کننده: {{ ticket.creator_id }}</p></small>
+                    </div>
+                {% endfor %}
+                <div class="auth-buttons">
+                    <a href="/tickets" class="btn submit-btn" style="text-align: center;">مشاهده همه تیکت‌ها</a>
+                </div>
+            {% else %}
+                <div class="empty-state">
+                    <p>هیچ تیکتی ثبت نشده است</p>
+                </div>
+            {% endif %}
         </div>
 
     </section>
