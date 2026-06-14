@@ -13,6 +13,17 @@ class Role(Enum):
     IT_MANAGER = "IT Manager"
     SYSTEM_ADMIN = "System Admin"
 
+    @property
+    def fa(self):
+        return {
+            self.STUDENT: "دانشجو",
+            self.EMPLOYEE: "کارمند",
+            self.IT_EXPERT: "کارشناس فناوری اطلاعات",
+            self.HELP_DESK_MANAGER: "مدیر میز خدمت",
+            self.IT_MANAGER: "مدیر فناوری اطلاعات",
+            self.SYSTEM_ADMIN: "مدیر سیستم",
+        }[self]
+
 
 class UserStatus(Enum):
     ACTIVE = "Active"
@@ -26,6 +37,16 @@ class TicketStatus(Enum):
     WAITING_FOR_USER = "Waiting For User"
     RESOLVED = "Resolved"
     CLOSED = "Closed"
+
+    @property
+    def fa(self):
+        return {
+            self.NEW:"جدید",
+            self.IN_PROGRESS:"در حال بررسی",
+            self.WAITING_FOR_USER:"در انتظار پاسخ کاربر",
+            self.RESOLVED:"پاسخ داده شده",
+            self.CLOSED:"بسته شده",
+        }[self]
 
 
 class TicketPriority(Enum):

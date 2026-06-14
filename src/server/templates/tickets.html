@@ -54,8 +54,8 @@
                                 <p class="ticket-id">#{{ ticket.id }}</p>
                                 <h3>عنوان: {{ ticket.title }}</h3>
                             </div>
-                            <span class="status {% if ticket.status == 'answered' %}answered{% else %}pending{% endif %}">
-                                {% if ticket.status == 'answered' %}پاسخ داده شده{% else %}در انتظار پاسخ{% endif %}
+                            <span class="status">
+                                وضعیت: {{ ticket.status.fa }}
                             </span>
                         </div>
                         <p class="ticket-description">توضیات: {{ ticket.description }}</p>
