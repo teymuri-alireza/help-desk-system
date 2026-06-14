@@ -20,9 +20,14 @@ class StorageEngine:
 
     def insert_user(self, user: User) -> None:
         """
-        This functions is not complete yet.
+        Insert a new user into the database.
+
+        Args:
+            user: The User object to insert.
         """
-        pass
+        with self.session_factory() as session:
+            session.add(user)
+            session.commit()
 
     def validate_user(self, username) -> bool:
         """
