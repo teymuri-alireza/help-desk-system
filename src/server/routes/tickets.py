@@ -1,3 +1,4 @@
+import os
 from fastapi import APIRouter, Request, Form, status, UploadFile
 from fastapi.responses import RedirectResponse
 from src.server.dependencies import get_static_path, get_helpdesk
@@ -24,6 +25,7 @@ def new_ticket(
     description: str = Form(...),
     creator_id: int = Form(...),
     ):
+    os.makedirs(f"{STATIC_DIR}/upload/", exist_ok=True)
     helpdesk = get_helpdesk()
 
     ticket = Ticket(title=title, description=description, creator_id=creator_id)
