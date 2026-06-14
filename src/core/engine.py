@@ -65,7 +65,8 @@ class HelpDeskCore:
             action: str,
             ticket: Ticket = None,
             ticket_id: int = None,
-            user_id: int | None = None
+            user_id: int | None = None,
+            limit: int | None = None,
         ) -> list[Ticket] | Ticket | bool:
         """
         Handle ticket operations.
@@ -75,6 +76,7 @@ class HelpDeskCore:
             ticket (Ticket): Ticket object for new ticket creation.
             ticket_id (int): ID of the ticket for find or update operations.
             user_id (int | None): User ID to filter tickets for "list" action.
+            limit (int | None): The maximum number of tickets to retrieve.
 
         Returns:
             list[Ticket] | Ticket | bool: List of tickets for "list" action, single ticket for "find" action,
@@ -83,7 +85,7 @@ class HelpDeskCore:
         if action == "new":
             return self.storage.insert_ticket(ticket)
         elif action == "list":
-            return self.storage.list_tickets(user_id)
+            return self.storage.list_tickets(user_id, limit)
         elif action == "find":
             return self.storage.find_ticket(ticket_id)
         elif action == "update":

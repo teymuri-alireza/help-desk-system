@@ -45,23 +45,26 @@ class StorageEngine:
                 return True
             return False
 
-    def list_tickets(self, user_id: int |  None) -> list[Ticket]:
+    def list_tickets(self, user_id: int |  None, limit: int | None) -> list[Ticket]:
         """
         Retrieve all tickets.
 
         Args:
             user_id: The user ID to filter tickets by. If None, returns all tickets.
+            limit: The maximum number of tickets to retrieve.
 
         Returns:
             list[Ticket]: List of all Ticket objects.
         """
         with self.session_factory() as session:
             if user_id is None:
-                tickets = session.query(Ticket).options(joinedload(Ticket.creator)).all()
+                tickets = session.query(Ticket).options(joinedload(Ticket.creator), joinedload(Ticket.responses)).order_by(
+                    Ticket.id.desc()
+                ).limit(limit=limit).all()
             else:
-                tickets = session.query(Ticket).options(joinedload(Ticket.creator)).filter(
+                tickets = session.query(Ticket).options(joinedload(Ticket.creator), joinedload(Ticket.responses)).filter(
                     Ticket.creator_id==user_id
-                ).all()
+                ).order_by(Ticket.id.desc()).limit(limit=limit).all()
             return tickets
 
     def find_ticket(self, ticket_id: int) -> Ticket | None:
