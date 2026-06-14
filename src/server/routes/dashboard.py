@@ -2,6 +2,7 @@ from fastapi import APIRouter, Request, status, Response
 from fastapi.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
 from src.server.dependencies import get_static_path, get_helpdesk, get_current_user
+from src.database.tables import Role
 
 TEMPLATES_DIR = get_static_path()[0]
 templates = Jinja2Templates(directory=TEMPLATES_DIR)
@@ -21,20 +22,34 @@ def dashboard(request: Request, response: Response):
 
     if found_user is not None:
         flash_message = request.cookies.get("flash_message")
-        users_list = helpdesk.admin_api(action="list_users")
-        tickets_list = helpdesk.ticket_api(action="list")
-        response = templates.TemplateResponse(
-            request=request,
-            name="dashboard.html",
-            context={
+        if found_user.role == Role.STUDENT:
+            tickets_list = helpdesk.ticket_api(action="list", user_id=found_user.id)
+            context = {
+                    "request": request,
+                    "user_username": found_user.username, 
+                    "user_id": found_user.id,
+                    "tickets_list": tickets_list,
+                    "flash_message": flash_message
+                    }
+            html_file = "user_dashboard.html"
+        else:
+            tickets_list = helpdesk.ticket_api(action="list")
+            users_list = helpdesk.admin_api(action="list_users")
+            context = {
                 "request": request,
-                "users_list": users_list,
-                "tickets_list": tickets_list, 
                 "user_username": found_user.username, 
-                "user_id": found_user.id, 
+                "user_id": found_user.id,
+                "users_list": users_list,
+                "tickets_list": tickets_list,
                 "flash_message": flash_message
                 }
-            )
+            html_file = "admin_dashboard.html"
+ 
+        response = templates.TemplateResponse(
+            request=request,
+            name=html_file,
+            context=context
+        )
         response.delete_cookie("flash_message")
         return response
 

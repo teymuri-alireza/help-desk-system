@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>داشبورد کاربر | دانشگاه دانش و فناوری</title>
+    <link rel="stylesheet" href="static/css/dashboard.css">
+</head>
+<body>
+
+<header>
+    <nav class="navbar">
+        <div class="logo">
+            <h2>دانشگاه دانش و فناوری</h2>
+        </div>
+
+        <ul class="nav-links">
+            <li><a href="/">صفحه اصلی</a></li>
+            <li><a>تیکت‌ها</a></li>
+            <li class="notifications-dropdown">
+                <a href="/notifications/all" class="notifications-trigger">اعلان‌ها</a>
+                <div class="notifications-menu" id="notifications-menu"></div>
+            </li>
+        </ul>
+
+        <div class="auth-buttons">
+            <a href="/auth/logout" class="btn register-btn">خروج</a>
+        </div>
+    </nav>
+</header>
+
+<main class="dashboard">
+
+    <section class="page-title">
+        <h1>
+            پنل کاربری
+            -
+            کاربر {{ user_username }}
+        </h1>
+        <p>مدیریت درخواست‌ها و مشاهده پاسخ‌ها</p>
+    </section>
+
+    <!-- Ticket Form -->
+    <section class="card">
+        
+        {% if flash_message %}
+            <div id="flash-alert" class="alert alert-success">
+                تیکت با موفقیت ثبت شد
+            </div>
+        {% endif %}
+
+        <div class="section-header">
+            <h2>ثبت تیکت جدید</h2>
+        </div>
+
+        <form class="ticket-form" action="/tickets" method="POST" enctype="multipart/form-data">
+
+            <div class="form-group">
+                <label>عنوان تیکت</label>
+                <input type="text" name="title" required placeholder="عنوان درخواست">
+            </div>
+
+            <div class="form-group">
+                <label>توضیحات</label>
+                <textarea name="description" rows="6" required placeholder="جزئیات درخواست خود را وارد کنید"></textarea>
+            </div>
+
+            <div>
+                <input name="creator_id" value="{{ user_id }}" hidden>
+            </div>
+
+            <div class="form-group">
+                <label>آپلود فایل</label>
+                <input type="file" name="attachment">
+            </div>
+
+            <button class="submit-btn" type="submit">ثبت تیکت</button>
+
+        </form>
+
+    </section>
+
+    <!-- Tickets List -->
+    <section class="card">
+
+        <div class="section-header">
+            <h2>تیکت‌های من</h2>
+        </div>
+
+        <div class="tickets-container">
+            {% if tickets_list %}
+                {% for ticket in tickets_list %}
+                    <div class="ticket-item">
+                        <div class="ticket-meta">
+                            <div class="ticket-info">
+                                <h3>{{ ticket.title }}</h3>
+                                <p class="ticket-id">شناسه تیکت: #{{ ticket.id }}</p>
+                            </div>
+                            <span class="status {% if ticket.status == 'answered' %}answered{% else %}pending{% endif %}">
+                                {% if ticket.status == 'answered' %}پاسخ داده شده{% else %}در انتظار پاسخ{% endif %}
+                            </span>
+                        </div>
+                        <p class="ticket-description">{{ ticket.description }}</p>
+                        {% if ticket.reply %}
+                            <div class="ticket-reply">
+                                <p class="reply-label">پاسخ:</p>
+                                <p>{{ ticket.reply }}</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="empty-state">
+                    <p>هیچ تیکتی ثبت نشده است</p>
+                </div>
+            {% endif %}
+        </div>
+
+    </section>
+
+</main>
+
+<script src="static/js/dashboard.js"></script>
+
+</body>
+</html>
