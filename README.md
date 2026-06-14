@@ -4,6 +4,42 @@ A Help Desk system designed for managing Information Technology (IT) support req
 
 This project is developed as part of a Systems Analysis and Design course and covers the complete software development lifecycle, including business analysis, system modeling, database design, software architecture, and implementation.
 
+## How to Run
+
+### 1. Create a Python Virtual Environment
+
+#### Linux / macOS
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+```
+
+#### Windows (Command Prompt)
+```cmd
+python -m venv .venv
+.venv\Scripts\activate
+```
+
+#### Windows (PowerShell)
+```powershell
+python -m venv .venv
+.venv\Scripts\Activate.ps1
+```
+
+### 2. Install Dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+### 3. Start the Server
+
+```bash
+uvicorn src.server.app:app
+```
+
+The application will start using the `app` instance defined in `src/server/app.py`.
+
 ## Project Objectives
 
 - Centralized ticket registration and tracking
