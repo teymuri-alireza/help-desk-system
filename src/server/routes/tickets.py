@@ -53,6 +53,14 @@ def new_ticket(
     description: str = Form(...),
     creator_id: int = Form(...),
     ):
+    try:
+        user_username = get_current_user(request=request)
+    except:
+        return RedirectResponse(url="/auth", status_code=status.HTTP_303_SEE_OTHER)
+    found_user = helpdesk.admin_api(action="find_user_by_username", username=user_username)
+    if found_user is None:
+        return RedirectResponse(url="/auth", status_code=status.HTTP_303_SEE_OTHER)
+
     os.makedirs(f"{STATIC_DIR}/upload/", exist_ok=True)
     helpdesk = get_helpdesk()
 
