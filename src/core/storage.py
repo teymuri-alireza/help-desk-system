@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session, sessionmaker
-from src.database.tables import User, Ticket, Response, Notification
+from src.database.tables import User, Ticket, Response, Attachment, Notification
 from sqlalchemy.orm import joinedload
 class StorageEngine:
     """
@@ -128,6 +128,18 @@ class StorageEngine:
         with self.session_factory() as session:
             session.add(response)
             session.commit()
+
+    def insert_attachment(self, attachment: Attachment):
+        """
+        Insert a new attachment into the database.
+
+        Args:
+            attachment: The Attachment object to insert.
+        """
+        with self.session_factory() as session:
+            session.add(attachment)
+            session.commit()
+            session.refresh(attachment)
 
     def insert_notification(self, notification: Notification) -> None:
         """

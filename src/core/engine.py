@@ -1,5 +1,5 @@
 from src.database.engine import DatabaseEngine
-from src.database.tables import User, Ticket, Response, Notification
+from src.database.tables import User, Ticket, Response, Attachment, Notification
 from src.core.storage import StorageEngine
 
 
@@ -97,6 +97,15 @@ class HelpDeskCore:
             return self.storage.list_responses()
         elif action == "new":
             self.storage.insert_response(response)
+
+    def attachment_api(self, attachment: Attachment):
+        """
+        Handle attachment operations.
+
+        Args:
+            attachment (Attachment): Attachment object for new attachment creation.
+        """
+        self.storage.insert_attachment(attachment)
 
     def notification_api(
             self,
