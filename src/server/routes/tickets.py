@@ -24,6 +24,8 @@ def new_ticket(
     description: str = Form(...),
     creator_id: int = Form(...),
     ):
+    helpdesk = get_helpdesk()
+
     ticket = Ticket(title=title, description=description, creator_id=creator_id)
     if attachment.size != 0:
         upload = Attachment(
@@ -33,11 +35,11 @@ def new_ticket(
             creator_id=ticket.creator_id, 
             path=f"{STATIC_DIR}/upload"
             )
+        helpdesk.attachment_api(upload)
         content = attachment.file.read()
         with open(f"{upload.path}/{upload.file_name}", "wb") as file:
             file.write(content)
 
-    helpdesk = get_helpdesk()
     is_created = helpdesk.ticket_api(action="new", ticket=ticket)
     if is_created:
         notification = Notification(receiver_id=creator_id, title="تیکت جدید ثبت شد", text=f"عنوان تیکت: {title}")
