@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تمامی تیکت‌ها | دانشگاه دانش و فناوری</title>
+    <link rel="stylesheet" href="{{ url_for('static', path='css/tickets.css') }}">
+</head>
+<body>
+
+<header>
+    <nav class="navbar">
+        <div class="logo">
+            <h2>دانشگاه دانش و فناوری</h2>
+        </div>
+
+        <ul class="nav-links">
+            <li><a href="/">صفحه اصلی</a></li>
+            <li><a href="/dashboard">داشبورد</a></li>
+            <li class="notifications-dropdown">
+                <a href="/notifications/all" class="notifications-trigger">اعلان‌ها</a>
+                <div class="notifications-menu" id="notifications-menu"></div>
+            </li>
+        </ul>
+
+        <div class="auth-buttons">
+            <a href="/auth/logout" class="btn register-btn">خروج</a>
+        </div>
+    </nav>
+</header>
+
+<main class="dashboard">
+    <section class="page-title">
+        <h1>تمامی تیکت‌ها</h1>
+        <p>مشاهده و مدیریت تمامی درخواست‌های سامانه</p>
+    </section>
+
+    <section class="card">
+        <div class="section-header">
+            <h2>لیست تیکت‌ها</h2>
+        </div>
+
+        <div class="tickets-container">
+            {% if tickets_list %}
+                {% for ticket in tickets_list %}
+                    <div class="ticket-item">
+                        <div class="ticket-meta">
+                            <div class="ticket-info">
+                                <p class="ticket-id">#{{ ticket.id }}</p>
+                                <h3>عنوان: {{ ticket.title }}</h3>
+                            </div>
+                            <span class="status {% if ticket.status == 'answered' %}answered{% else %}pending{% endif %}">
+                                {% if ticket.status == 'answered' %}پاسخ داده شده{% else %}در انتظار پاسخ{% endif %}
+                            </span>
+                        </div>
+                        <p class="ticket-description">توضیات: {{ ticket.description }}</p>
+                        {% if ticket.responses %}
+                        <div class="ticket-reply">
+                            <p class="reply-label">💬 پاسخ:</p>
+                            <p>{{ ticket.responses }}</p>
+                        </div>
+                        {% endif %}
+                        <small><p class="ticket-created">ثبت شده در: {{ ticket.created_at }}</p></small>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="empty-state">
+                    <p>هیچ تیکتی ثبت نشده است</p>
+                </div>
+            {% endif %}
+        </div>
+    </section>
+</main>
+
+<script src="static/js/dashboard.js"></script>
+
+</body>
+</html>

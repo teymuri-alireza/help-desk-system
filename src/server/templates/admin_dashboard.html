@@ -16,7 +16,7 @@
 
         <ul class="nav-links">
             <li><a href="/">صفحه اصلی</a></li>
-            <li><a>تیکت‌ها</a></li>
+            <li><a href="/tickets">تیکت‌ها</a></li>
             <li class="notifications-dropdown">
                 <a href="/notifications/all" class="notifications-trigger">اعلان‌ها</a>
                 <div class="notifications-menu" id="notifications-menu"></div>
@@ -89,28 +89,31 @@
         </div>
 
         <div class="table-wrapper">
-
+            
             <table>
                 <thead>
-                <tr>
-                    <th>شناسه</th>
-                    <th>عنوان</th>
-                    <th>توضیحات</th>
-                    <th>نام کاربری سازنده</th>
-                </tr>
+                    <tr>
+                        <th>شناسه</th>
+                        <th>عنوان</th>
+                        <th>توضیحات</th>
+                        <th>نام کاربری سازنده</th>
+                    </tr>
                 </thead>
                 <tbody>
-                {% for ticket in tickets_list %}
+                    {% for ticket in tickets_list %}
                     <tr>
                         <td>{{ ticket.id }}</td>
                         <td>{{ ticket.title }}</td>
                         <td>{{ ticket.description }}</td>
                         <td>{{ ticket.creator.username }}</td>
                     </tr>
-                {% endfor %}
+                    {% endfor %}
                 </tbody>
             </table>
 
+            <div class="auth-buttons">
+                <a href="/tickets" class="btn submit-btn" style="text-align: center;">مشاهده همه تیکت‌ها</a>
+            </div>
         </div>
 
     </section>

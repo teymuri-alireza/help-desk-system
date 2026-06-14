@@ -1,17 +1,44 @@
 import os
 from fastapi import APIRouter, Request, Form, status, UploadFile
 from fastapi.responses import RedirectResponse
-from src.server.dependencies import get_static_path, get_helpdesk
-from src.database.tables import Ticket, Attachment, Notification
+from fastapi.templating import Jinja2Templates
+from src.server.dependencies import get_static_path, get_helpdesk, get_current_user
+from src.database.tables import Ticket, Attachment, Notification, Role
 
-STATIC_DIR = get_static_path()[1]
+TEMPLATES_DIR, STATIC_DIR = get_static_path()
+templates = Jinja2Templates(directory=TEMPLATES_DIR)
 
 router = APIRouter(prefix="/tickets", tags=["tickets"])
 
 
 @router.get("")
-def list_tickets():
-    return {"response": "List Tickets Page"}
+def list_tickets(request: Request):
+    try:
+        user_username = get_current_user(request=request)
+    except:
+        return RedirectResponse(url="/auth", status_code=status.HTTP_303_SEE_OTHER)
+    helpdesk = get_helpdesk()
+    found_user = helpdesk.admin_api(action="find_user_by_username", username=user_username)
+    if found_user is not None:
+        if found_user.role == Role.STUDENT:
+            tickets_list = helpdesk.ticket_api(action="list", user_id=found_user.id)
+        else:
+            # For admins
+            tickets_list = helpdesk.ticket_api(action="list")
+
+        context = {
+            "request": request,
+            "tickets_list": tickets_list,
+        }
+        response = templates.TemplateResponse(
+            request=request,
+            name="tickets.html",
+            context=context
+        )
+        return response
+
+    else:
+        return {"response": "not found"}
 
 @router.get("/{ticket_id}")
 def show_ticket():

@@ -16,7 +16,7 @@
 
         <ul class="nav-links">
             <li><a href="/">صفحه اصلی</a></li>
-            <li><a>تیکت‌ها</a></li>
+            <li><a href="/tickets">تیکت‌ها</a></li>
             <li class="notifications-dropdown">
                 <a href="/notifications/all" class="notifications-trigger">اعلان‌ها</a>
                 <div class="notifications-menu" id="notifications-menu"></div>
@@ -109,11 +109,16 @@
                         {% endif %}
                     </div>
                 {% endfor %}
+                <div class="auth-buttons">
+                    <a href="/tickets" class="btn submit-btn" style="text-align: center;">مشاهده همه تیکت‌ها</a>
+                </div>
             {% else %}
                 <div class="empty-state">
                     <p>هیچ تیکتی ثبت نشده است</p>
                 </div>
             {% endif %}
+
+
         </div>
 
     </section>
