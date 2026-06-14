@@ -18,7 +18,12 @@ def list_unread_notifications(request: Request):
     help_desk = get_helpdesk()
     found_user = help_desk.admin_api(action="find_user_by_username", username=user_username)
     notifications_list = help_desk.notification_api(action="list_unread", user_id=found_user.id)
-    return {"response": notifications_list}
+    
+    count_notifications = None
+    if notifications_list is not None:
+        count_notifications = len(notifications_list)
+
+    return {"response": notifications_list, "count_notifications": count_notifications}
 
 
 @router.get("/all")

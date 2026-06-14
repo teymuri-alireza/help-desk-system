@@ -1,5 +1,6 @@
 async function loadNotifications() {
   const notificationsMenu = document.getElementById('notifications-menu');
+  const notificationsTrigger = document.querySelector('.notifications-trigger');
 
   try {
     const response = await fetch('/notifications');
@@ -12,6 +13,10 @@ async function loadNotifications() {
     const notifications = Array.isArray(data.response)
       ? data.response
       : [];
+
+    // Update notification count badge
+    const countNotifications = data.count_notifications || 0;
+    updateNotificationBadge(notificationsTrigger, countNotifications);
 
     notificationsMenu.replaceChildren();
 
@@ -97,3 +102,20 @@ document.addEventListener("DOMContentLoaded", () => {
         }, 500);
     }, 3500);
 });
+
+// Helper function to update the badge
+function updateNotificationBadge(trigger, count) {
+  // Remove existing badge if present
+  const existingBadge = trigger.querySelector('.notification-badge');
+  if (existingBadge) {
+    existingBadge.remove();
+  }
+
+  // Add new badge if count > 0
+  if (count > 0) {
+    const badge = document.createElement('span');
+    badge.className = 'notification-badge';
+    badge.textContent = count;
+    trigger.appendChild(badge);
+  }
+}
