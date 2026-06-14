@@ -23,7 +23,7 @@ def dashboard(request: Request, response: Response):
     if found_user is not None:
         flash_message = request.cookies.get("flash_message")
         if found_user.role == Role.STUDENT:
-            tickets_list = helpdesk.ticket_api(action="list", user_id=found_user.id)
+            tickets_list = helpdesk.ticket_api(action="list", user_id=found_user.id, limit=10)
             context = {
                     "request": request,
                     "user_username": found_user.username, 
@@ -33,7 +33,7 @@ def dashboard(request: Request, response: Response):
                     }
             html_file = "user_dashboard.html"
         else:
-            tickets_list = helpdesk.ticket_api(action="list")
+            tickets_list = helpdesk.ticket_api(action="list", limit=10)
             users_list = helpdesk.admin_api(action="list_users")
             context = {
                 "request": request,
