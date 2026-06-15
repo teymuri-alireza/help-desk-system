@@ -26,12 +26,13 @@ class HelpDeskCore:
         Handle administrative operations on users.
 
         Args:
-            action (str): The admin action to perform (`list_users`, `find_user`, or `update_user`).
+            action (str): The admin action to perform (`list_users`, `find_user`, `find_user_by_username`, or `update_user`).
             user_id (int): User ID for find or update operations.
+            username (str): Username for find_user_by_username operations.
             user (User): User object for update operations.
 
         Returns:
-            list[User] | User | bool: List of users for "list_users" action, single user for "find_user" action,
+            list[User] | User | bool: List of users for "list_users" action, single user for "find_user" or "find_user_by_username" actions,
                 and boolean for "update_user" action, indicating if the operation was successful or not.
         """
         if action == "list_users":
@@ -53,7 +54,7 @@ class HelpDeskCore:
             username (str): Username for login validation.
 
         Returns:
-            bool: Boolean indicating if user validation is successful, False otherwise.
+            bool | None: Boolean indicating if user validation is successful for "login" action, None for "signup" action.
         """
         if action == "signup":
             self.storage.insert_user(user)
@@ -91,7 +92,7 @@ class HelpDeskCore:
         elif action == "update":
             return self.storage.update_ticket(ticket)
 
-    def response_api(self, action: str, response: Response) -> list[Response]:
+    def response_api(self, action: str, response: Response = None) -> list[Response] | None:
         """
         Handle response operations.
 
@@ -100,14 +101,14 @@ class HelpDeskCore:
             response (Response): Response object for new response creation.
 
         Returns:
-            list[Response]: List of responses for "list" action, None otherwise.
+            list[Response] | None: List of responses for "list" action, None for "new" action.
         """
         if action == "list":
             return self.storage.list_responses()
         elif action == "new":
             self.storage.insert_response(response)
 
-    def attachment_api(self, attachment: Attachment):
+    def attachment_api(self, attachment: Attachment) -> None:
         """
         Handle attachment operations.
 

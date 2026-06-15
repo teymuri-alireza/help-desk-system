@@ -1,6 +1,8 @@
 from sqlalchemy.orm import Session, sessionmaker
 from src.database.tables import User, Ticket, Response, Attachment, Notification
 from sqlalchemy.orm import joinedload
+
+
 class StorageEngine:
     """
     Database storage engine for managing database tables.
@@ -29,9 +31,9 @@ class StorageEngine:
             session.add(user)
             session.commit()
 
-    def validate_user(self, username) -> bool:
+    def validate_user(self, username: str) -> bool:
         """
-        Validate if a user exists in the databse by username.
+        Validate if a user exists in the database by username.
 
         Args:
             username: The username to search for.
@@ -45,7 +47,7 @@ class StorageEngine:
                 return True
             return False
 
-    def list_tickets(self, user_id: int |  None, limit: int | None) -> list[Ticket]:
+    def list_tickets(self, user_id: int | None, limit: int | None) -> list[Ticket]:
         """
         Retrieve all tickets.
 
@@ -143,7 +145,7 @@ class StorageEngine:
             session.add(response)
             session.commit()
 
-    def insert_attachment(self, attachment: Attachment):
+    def insert_attachment(self, attachment: Attachment) -> None:
         """
         Insert a new attachment into the database.
 
@@ -208,7 +210,7 @@ class StorageEngine:
         Retrieve all users.
 
         Returns:
-            List[User]: List of all User objects.
+            list[User]: List of all User objects.
         """
         with self.session_factory() as session:
             users_list = session.query(User).all()
