@@ -74,11 +74,11 @@ class User(Base):
     status: Mapped[str] = mapped_column(SQLEnum(UserStatus), default=UserStatus.ACTIVE, nullable=False, index=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=False), default=datetime.now, nullable=False)
 
-    created_tickets = relationship("Ticket", foreign_keys="Ticket.creator_id", back_populates="creator")
-    assigned_tickets = relationship("Ticket", foreign_keys="Ticket.assigned_to", back_populates="assignee")
-    responses = relationship("Response", back_populates="creator")
-    received_notifications = relationship("Notification", foreign_keys="Notification.receiver_id", back_populates="receiver")
-    created_notifications = relationship("Notification", foreign_keys="Notification.creator_id", back_populates="creator")
+    created_tickets = relationship("Ticket", foreign_keys="Ticket.creator_id", back_populates="creator", cascade="all, delete-orphan")
+    assigned_tickets = relationship("Ticket", foreign_keys="Ticket.assigned_to", back_populates="assignee", cascade="all, delete-orphan")
+    responses = relationship("Response", back_populates="creator", cascade="all, delete-orphan")
+    received_notifications = relationship("Notification", foreign_keys="Notification.receiver_id", back_populates="receiver", cascade="all, delete-orphan")
+    created_notifications = relationship("Notification", foreign_keys="Notification.creator_id", back_populates="creator", cascade="all, delete-orphan")
 
 
 class Ticket(Base):
