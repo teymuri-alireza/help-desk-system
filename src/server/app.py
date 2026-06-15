@@ -52,16 +52,14 @@ app.include_router(dashboard_router)
 app.include_router(users_router)
 app.include_router(notifications_router)
 
-@app.exception_handler(HTTPException)
+@app.exception_handler(403)
 def http_exception_handler(request: Request, exc: HTTPException):
-    if exc.status_code == 403:
-        return templates.TemplateResponse(
-            request=request,
-            name="403.html",
-            context={"request": request},
-            status_code=status.HTTP_403_FORBIDDEN
-        )
-    raise exc
+    return templates.TemplateResponse(
+        request=request,
+        name="403.html",
+        context={"request": request},
+        status_code=status.HTTP_403_FORBIDDEN
+    )
 
 @app.exception_handler(404)
 async def not_found_handler(request: Request, exc: HTTPException):
