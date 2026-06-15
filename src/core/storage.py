@@ -205,15 +205,20 @@ class StorageEngine:
 
             return fetched_notifications
 
-    def list_users(self) -> list[User]:
+    def list_users(self, limit: int | None = None) -> list[User]:
         """
         Retrieve all users.
+
+        Args:
+            limit: The maximum number of tickets to retrieve.
 
         Returns:
             list[User]: List of all User objects.
         """
         with self.session_factory() as session:
-            users_list = session.query(User).all()
+            users_list = session.query(User).order_by(
+                User.id.desc()
+            ).limit(limit=limit).all()
             return users_list
 
     def find_user(self, user_id: int) -> User | None:

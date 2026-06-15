@@ -21,7 +21,14 @@ class HelpDeskCore:
 
         self.storage = StorageEngine(self.session_factory)
 
-    def admin_api(self, action: str, user_id: int = None, username: str = None, user: User = None) -> list[User] | User | bool:
+    def admin_api(
+            self, 
+            action: str, 
+            user_id: int = None, 
+            username: str = None, 
+            user: User = None, 
+            limit: int | None = None
+        ) -> list[User] | User | bool:
         """
         Handle administrative operations on users.
 
@@ -30,13 +37,14 @@ class HelpDeskCore:
             user_id (int): User ID for find or update operations.
             username (str): Username for find_user_by_username operations.
             user (User): User object for update operations.
+            limit (int | None): The maximum number of users to retrieve.
 
         Returns:
             list[User] | User | bool: List of users for "list_users" action, single user for "find_user" or "find_user_by_username" actions,
                 and boolean for "update_user" action, indicating if the operation was successful or not.
         """
         if action == "list_users":
-            return self.storage.list_users()
+            return self.storage.list_users(limit=limit)
         elif action == "find_user":
             return self.storage.find_user(user_id)
         elif action == "find_user_by_username":
