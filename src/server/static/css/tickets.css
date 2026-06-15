@@ -329,6 +329,20 @@ body{
     background:#183b69;
 }
 
+.show-ticket {
+    text-align: center;
+    max-width: 50%;
+    margin: auto;
+}
+
+.line {
+    max-width: 75%;
+    margin: auto;
+    border: none;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #0f2747, transparent);
+}
+
 .alert {
     padding: 1rem 1.25rem;
     margin: 1rem 0;
