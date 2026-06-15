@@ -61,12 +61,12 @@
         </div>
     </section>
 
+    {% if user %}
     <section class="card">
         <div class="section-header">
             <h2>ویرایش اطلاعات کاربر</h2>
             <button class="toggle-form-btn submit-btn" id="toggleFormBtn" type="button">نمایش فرم</button>
         </div>
-        {% if user %}
         <form class="ticket-form" id="editForm" action="/users/{{ user.id }}" method="post" style="display: none; font-size: 1.5em;">
 
             <div class="form-group">
@@ -111,13 +111,8 @@
             <button class="submit-btn" type="submit">آپدیت کاربر</button>
 
         </form>
-        {% else %}
-        <div>
-            <p class="ticket-description">کاربر مورد نظر یافت نشد</p>
-        </div>
-        {% endif %}
-
     </section>
+    {% endif %}
 
 </main>
 
