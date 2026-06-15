@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, HTTPException, status
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
@@ -51,3 +51,14 @@ app.include_router(responses_router)
 app.include_router(dashboard_router)
 app.include_router(users_router)
 app.include_router(notifications_router)
+
+@app.exception_handler(HTTPException)
+def http_exception_handler(request: Request, exc: HTTPException):
+    if exc.status_code == 403:
+        return templates.TemplateResponse(
+            request=request,
+            name="403.html",
+            context={"request": request},
+            status_code=status.HTTP_403_FORBIDDEN
+        )
+    raise exc
