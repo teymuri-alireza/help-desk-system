@@ -249,7 +249,7 @@ class StorageEngine:
             found_user = session.query(User).filter(User.username==username).one_or_none()
             return found_user
 
-    def update_user(self, user: User) -> None:
+    def update_user(self, new_user: User, old_user_id: int) -> None:
         """
         Update an existing user in the database.
 
@@ -257,7 +257,12 @@ class StorageEngine:
             user: The user object with updated values.
         """
         with self.session_factory() as session:
-            found_user = session.query(User).filter(User.id==user.id).one_or_none()
+            found_user = session.query(User).filter(User.id==old_user_id).one_or_none()
             if found_user is not None:
-                session.merge(user)
+                found_user.name = new_user.name
+                found_user.email = new_user.email
+                found_user.username = new_user.username
+                found_user.role = new_user.role
+                found_user.status = new_user.status
                 session.commit()
+                session.refresh(found_user)
