@@ -1,5 +1,5 @@
 import os
-from fastapi import APIRouter, Request, Form, status, UploadFile, Path
+from fastapi import APIRouter, Request, Form, status, UploadFile, Path, HTTPException
 from fastapi.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
 from src.server.dependencies import get_static_path, get_helpdesk, get_current_user
@@ -50,13 +50,22 @@ def show_ticket(request: Request, ticket_id: int = Path(...)):
     helpdesk = get_helpdesk()
     found_user = helpdesk.admin_api(action="find_user_by_username", username=user_username)
     if found_user is not None:
-        found_ticket = helpdesk.ticket_api(action="find", ticket_id=ticket_id)
-        user_role = found_user.role
-        return templates.TemplateResponse(
-            request=request, 
-            name="show_ticket.html", 
-            context={"request": request, "ticket": found_ticket, "user_role": user_role}
-        )
+        try:
+            found_ticket = helpdesk.ticket_api(action="find", ticket_id=ticket_id)
+            # Check if user has access
+            if found_user.role == Role.STUDENT or found_user.role == Role.EMPLOYEE:
+                if found_ticket.creator_id != found_user.id:
+                    raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Access denied")
+            user_role = found_user.role
+            return templates.TemplateResponse(
+                request=request, 
+                name="show_ticket.html", 
+                context={"request": request, "ticket": found_ticket, "user_role": user_role}
+            )
+        except AttributeError as e:
+            if "has no attribute 'creator_id'" in str(e):
+                # found_ticket.creator_id doesn't exist, which means ticket is not found.
+                raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Not Found")
     else:
         return {"response": "not found"}
 
