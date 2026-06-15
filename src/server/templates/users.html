@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لیست کاربران | دانشگاه دانش و فناوری</title>
+    <link rel="stylesheet" href="{{ url_for('static', path='css/tickets.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', path='css/dashboard.css') }}">
+</head>
+<body>
+
+<header>
+    <nav class="navbar">
+        <div class="logo">
+            <h2>دانشگاه دانش و فناوری</h2>
+        </div>
+
+        <ul class="nav-links">
+            <li><a href="/">صفحه اصلی</a></li>
+            <li><a href="/tickets">تیکت‌ها</a></li>
+            <li class="notifications-dropdown">
+                <a href="/notifications/all" class="notifications-trigger">اعلان‌ها</a>
+                <div class="notifications-menu" id="notifications-menu"></div>
+            </li>
+        </ul>
+
+        <div class="auth-buttons">
+            <a href="/auth/logout" class="btn register-btn">خروج</a>
+        </div>
+    </nav>
+</header>
+
+<main class="dashboard">
+
+    <section class="page-title">
+        <h2>تمامی کاربران سامانه</h2>
+        <p>مشاهده و مدیریت تمامی کاربران سامانه</p>
+    </section>
+
+    <section class="card">
+
+        <div class="table-wrapper">
+
+            <table>
+                <thead>
+                    <tr>
+                        <th># id</th>
+                        <th>نام کاربری</th>
+                        <th>نام</th>
+                        <th>ایمیل</th>
+                        <th>نقش</th>
+                        <th>وضعیت حساب</th>
+                        <th>مدیریت کاربر</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for user in users_list %}
+                    <tr>
+                        <td>{{ user.id }}</td>
+                        <td>{{ user.username }}</td>
+                        <td>{{ user.name }}</td>
+                        <td>{{ user.email }}</td>
+                        <td>{{ user.role.fa }}</td>
+                        <td>{{ user.status.fa }}</td>
+                        <td>
+                            <div class="auth-buttons">
+                                <a href="/auth/logout" class="btn submit-btn show-ticket" style="max-width: 100%;">مدیریت کاربر</a>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+    </section>
+
+</main>
+
+<script src="{{ url_for('static', path='js/dashboard.js') }}"></script>
+
+</body>
+</html>
