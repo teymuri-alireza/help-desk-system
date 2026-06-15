@@ -34,7 +34,7 @@ def dashboard(request: Request, response: Response):
             html_file = "user_dashboard.html"
         else:
             tickets_list = helpdesk.ticket_api(action="list", limit=10)
-            users_list = helpdesk.admin_api(action="list_users")
+            users_list = helpdesk.admin_api(action="list_users", limit=10)
             context = {
                 "request": request,
                 "user_username": found_user.username, 
