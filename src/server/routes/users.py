@@ -92,3 +92,18 @@ def patch_user(
         return RedirectResponse(url=f"/users/{user_id}", status_code=status.HTTP_303_SEE_OTHER)
     else:
         return {"response": "You don't have access"}
+
+@router.delete("/{user_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_user(request: Request, user_id: int = Path(...)):
+    try:
+        user_username = get_current_user(request=request)
+    except:
+        return RedirectResponse(url="/auth", status_code=status.HTTP_303_SEE_OTHER)
+    helpdesk = get_helpdesk()
+    found_user = helpdesk.admin_api(action="find_user_by_username", username=user_username)
+    # Check if user is admin first
+    if found_user is not None and found_user.role == Role.SYSTEM_ADMIN:
+        helpdesk.admin_api(action="delete_user", user_id=user_id)
+        # return RedirectResponse(url="/users", status_code=status.HTTP_303_SEE_OTHER)
+    else:
+        return {"response": "You don't have access"}
