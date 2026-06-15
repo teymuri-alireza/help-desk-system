@@ -266,3 +266,16 @@ class StorageEngine:
                 found_user.status = new_user.status
                 session.commit()
                 session.refresh(found_user)
+
+    def delete_user(self, user_id: int) -> None:
+        """
+        Delete an existing user in the database.
+
+        Args:
+            user_id: The user_id to search for deleting.
+        """
+        with self.session_factory() as session:
+            user_to_delete = session.query(User).filter(User.id==user_id).one_or_none()
+            if user_to_delete is not None:
+                session.delete(user_to_delete)
+                session.commit()

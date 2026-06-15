@@ -33,7 +33,8 @@ class HelpDeskCore:
         Handle administrative operations on users.
 
         Args:
-            action (str): The admin action to perform (`list_users`, `find_user`, `find_user_by_username`, or `update_user`).
+            action (str): The admin action to perform (`list_users`, `find_user`, `find_user_by_username`, or `update_user`
+                `delete_user`).
             user_id (int): User ID for find or update operations.
             username (str): Username for find_user_by_username operations.
             user (User): User object for update operations.
@@ -51,6 +52,8 @@ class HelpDeskCore:
             return self.storage.find_user_by_username(username)
         elif action == "update_user":
             self.storage.update_user(new_user=user, old_user_id=user_id)
+        elif action == "delete_user":
+            self.storage.delete_user(user_id=user_id)
 
     def authentication_api(self, action: str, user: User = None, username: str = None) -> bool | None:
         """
