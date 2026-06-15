@@ -30,6 +30,14 @@ class UserStatus(Enum):
     INACTIVE = "Inactive"
     SUSPENDED = "Suspended"
 
+    @property
+    def fa(self):
+        return {
+            self.ACTIVE: "فعال",
+            self.INACTIVE: "غیر فعال",
+            self.SUSPENDED: "مسدود شده",
+        }[self]
+
 
 class TicketStatus(Enum):
     NEW = "New"
