@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>403 - دسترسی غیرمجاز</title>
+    <link rel="stylesheet" href="{{ url_for('static', path='css/403.css') }}">
+</head>
+<body>
+<div class="error-container">
+    <div class="error-code">403</div>
+    <h1>دسترسی غیرمجاز</h1>
+    <p>
+        شما مجوز لازم برای مشاهده این بخش از سامانه را ندارید.
+        در صورتی که تصور می‌کنید این مورد به اشتباه رخ داده است،
+        با مدیریت سامانه تماس بگیرید.
+    </p>
+    <div class="buttons">
+        <a href="/" class="btn secondary">صفحه اصلی</a>
+        <a href="/dashboard" class="btn primary">بازگشت به داشبورد</a>
+    </div>
+</div>
+</body>
+</html>

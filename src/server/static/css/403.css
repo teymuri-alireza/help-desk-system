@@ -1,0 +1,78 @@
+@import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Vazirmatn', sans-serif;
+    background: #f4f6f9;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 30px;
+}
+
+.error-container {
+    background: white;
+    max-width: 700px;
+    width: 100%;
+    text-align: center;
+    padding: 60px 40px;
+    border-radius: 20px;
+    box-shadow: 0 15px 40px rgba(0,0,0,.08);
+}
+
+.error-code {
+    font-size: 7rem;
+    font-weight: 700;
+    color: #0f2747;
+    margin-bottom: 20px;
+}
+
+h1 {
+    color: #1f2937;
+    margin-bottom: 20px;
+}
+
+p {
+    color: #6b7280;
+    line-height: 2;
+    margin-bottom: 35px;
+}
+
+.buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.btn {
+    text-decoration: none;
+    padding: 14px 24px;
+    border-radius: 8px;
+    transition: .3s;
+}
+
+.primary {
+    background: #0f2747;
+    color: white;
+}
+
+.primary:hover {
+    background: #183b69;
+}
+
+.secondary {
+    border: 1px solid #0f2747;
+    color: #0f2747;
+}
+
+.secondary:hover {
+    background: #0f2747;
+    color: white;
+}
