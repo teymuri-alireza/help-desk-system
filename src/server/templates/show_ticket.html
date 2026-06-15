@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نمایش تیکت | دانشگاه دانش و فناوری</title>
+    <link rel="stylesheet" href="{{ url_for('static', path='css/tickets.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', path='css/dashboard.css') }}">
+</head>
+<body>
+
+<header>
+    <nav class="navbar">
+        <div class="logo">
+            <h2>دانشگاه دانش و فناوری</h2>
+        </div>
+
+        <ul class="nav-links">
+            <li><a href="/">صفحه اصلی</a></li>
+            <li><a href="/tickets">تیکت‌ها</a></li>
+            <li><a href="/dashboard">داشبورد</a></li>
+            <li class="notifications-dropdown">
+                <a href="/notifications/all" class="notifications-trigger">اعلان‌ها</a>
+                <div class="notifications-menu" id="notifications-menu"></div>
+            </li>
+        </ul>
+
+        <div class="auth-buttons">
+            <a href="/auth/logout" class="btn register-btn">خروج</a>
+        </div>
+    </nav>
+</header>
+
+<main class="dashboard">
+
+    <section class="card">
+        <div class="section-header">
+            <h2>اطلاعات تیکت</h2>
+        </div>
+
+        <div class="tickets-container">
+            {% if ticket %}
+                <div class="ticket-item">
+                    <div class="ticket-meta">
+                        <div class="ticket-info">
+                            <p class="ticket-id">#{{ ticket.id }}</p>
+                            <h3>عنوان: {{ ticket.title }}</h3>
+                        </div>
+                        <span class="status">
+                            وضعیت: {{ ticket.status.fa }}
+                        </span>
+                    </div>
+                    <p class="ticket-description">توضیحات: {{ ticket.description }}</p>
+
+                    <div class="ticket-reply">
+                    {% if ticket.responses %}
+                        <p class="reply-label">💬 پاسخ:</p>
+                        {% for response in ticket.responses %}
+                            <p class="ticket-id">
+                                #{{ response.id }}
+                                <br>
+                                نویسنده: {{ response.creator.name }} - نقش: {{ user_role.fa }}
+                            </p>
+                            <p>{{ response.text }}</p>
+                            <hr class="line">
+                        {% endfor %}
+                    {% else %}
+                        <p>پاسخی ثبت نشده</p>
+                    {% endif %}
+                    </div>
+                    <br />
+                    <small><p class="ticket-created">ثبت شده در: {{ ticket.created_at }}</p></small>
+                    {% if user_role.value != "Student" %}
+                        <small><p class="ticket-created">شناسه کاربر ایجاد کننده: {{ ticket.creator_id }}</p></small>
+                    {% endif %}
+
+                    <form action="/tickets/{{ ticket.id }}/responses" method="post" class="ticket-form">
+
+                        <div class="form-group">
+                            <label for="response">متن پاسخ:</label>
+                            <textarea id="response" name="text" placeholder="متن پاسخ خود را وارد کنید..." required></textarea>
+                        </div>
+
+                        <input type="hidden" name="response_ticket_id" value="{{ ticket.id }}">
+
+                        <button type="submit" class="submit-btn">ارسال پاسخ</button>
+                    </form>
+
+                </div>
+            {% else %}
+                <div class="empty-state">
+                    <p>تیکت مورد نظر یافت نشد</p>
+                </div>
+            {% endif %}
+        </div>
+    </section>
+
+</main>
+
+<script src="{{ url_for('static', path='js/dashboard.js') }}"></script>
+
+</body>
+</html>
