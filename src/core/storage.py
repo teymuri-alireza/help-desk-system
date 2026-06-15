@@ -78,7 +78,10 @@ class StorageEngine:
             Ticket|None: Ticket object if found, otherwise None.
         """
         with self.session_factory() as session:
-            found_ticket = session.query(Ticket).filter(Ticket.id==ticket_id).one_or_none()
+            found_ticket = session.query(Ticket).options(
+                joinedload(Ticket.creator),
+                joinedload(Ticket.responses).joinedload(Response.creator)
+                ).filter(Ticket.id==ticket_id).one_or_none()
             return found_ticket
 
     def insert_ticket(self, ticket: Ticket) -> bool:
