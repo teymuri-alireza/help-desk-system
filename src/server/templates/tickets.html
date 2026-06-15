@@ -59,16 +59,13 @@
                             </span>
                         </div>
                         <p class="ticket-description">توضیات: {{ ticket.description }}</p>
-                        {% if ticket.responses %}
-                        <div class="ticket-reply">
-                            <p class="reply-label">💬 پاسخ:</p>
-                            <p>{{ ticket.responses }}</p>
-                        </div>
-                        {% endif %}
                         <small><p class="ticket-created">ثبت شده در: {{ ticket.created_at }}</p></small>
                         {% if role != "Student" %}
                             <small><p class="ticket-created">شناسه کاربر ایجاد کننده: {{ ticket.creator_id }}</p></small>
                         {% endif %}
+                        <div class="auth-buttons">
+                            <a href="/tickets/{{ ticket.id }}" class="btn submit-btn show-ticket">مشاهده جزییات تیکت</a>
+                        </div>
                     </div>
                 {% endfor %}
             {% else %}
