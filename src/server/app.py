@@ -1,5 +1,5 @@
 from fastapi import FastAPI, Request, HTTPException, status
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from fastapi_swagger import patch_fastapi
@@ -62,3 +62,12 @@ def http_exception_handler(request: Request, exc: HTTPException):
             status_code=status.HTTP_403_FORBIDDEN
         )
     raise exc
+
+@app.exception_handler(404)
+async def not_found_handler(request: Request, exc: HTTPException):
+    return templates.TemplateResponse(
+        request=request,
+        name="404.html",
+        context={"request": request},
+        status_code=status.HTTP_404_NOT_FOUND
+    )
