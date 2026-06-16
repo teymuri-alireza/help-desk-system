@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, HTTPException, status
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
@@ -51,3 +51,30 @@ app.include_router(responses_router)
 app.include_router(dashboard_router)
 app.include_router(users_router)
 app.include_router(notifications_router)
+
+@app.exception_handler(403)
+def http_exception_handler(request: Request, exc: HTTPException):
+    return templates.TemplateResponse(
+        request=request,
+        name="403.html",
+        context={"request": request},
+        status_code=status.HTTP_403_FORBIDDEN
+    )
+
+@app.exception_handler(404)
+async def not_found_handler(request: Request, exc: HTTPException):
+    return templates.TemplateResponse(
+        request=request,
+        name="404.html",
+        context={"request": request},
+        status_code=status.HTTP_404_NOT_FOUND
+    )
+
+@app.exception_handler(500)
+async def server_errors(request: Request, exc: HTTPException):
+    return templates.TemplateResponse(
+        request=request,
+        name="500.html",
+        context={"request": request},
+        status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
+    )

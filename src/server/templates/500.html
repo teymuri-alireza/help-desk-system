@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>500 - Internal server error</title>
+    <link rel="stylesheet" href="{{ url_for('static', path='css/403.css') }}">
+</head>
+<body>
+<div class="error-container">
+    <div class="error-code">500</div>
+    <h1>Internal server error</h1>
+    <p>
+        Internal server error. خطای غیر منتظره در سیستم رخ داده.
+        لاگ‌های سیستم را بررسی کرده یا با مدیریت سامانه تماس بگیرید.
+    </p>
+    <div class="buttons">
+        <a href="/" class="btn secondary">صفحه اصلی</a>
+        <a href="/dashboard" class="btn primary">بازگشت به داشبورد</a>
+    </div>
+</div>
+</body>
+</html>

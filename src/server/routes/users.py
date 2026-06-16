@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Request, status, Path, Form
+from fastapi import APIRouter, Request, status, Path, Form, HTTPException
 from fastapi.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
 from src.server.dependencies import get_helpdesk, get_current_user, get_static_path
@@ -31,7 +31,7 @@ def list_users(request: Request):
         )
         return response
     else:
-        return {"response": "not found"}
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Access denied")
 
 @router.get("/{user_id}")
 def show_user(request: Request, user_id: int = Path(...)):
@@ -63,7 +63,8 @@ def show_user(request: Request, user_id: int = Path(...)):
                 name="show_user.html",
             )
     else:
-        return {"response": "You don't have access"}
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Access denied")
+
 
 @router.post("")
 def new_user():
@@ -91,7 +92,7 @@ def patch_user(
         helpdesk.admin_api("update_user", user=user_to_update, user_id=user_id)
         return RedirectResponse(url=f"/users/{user_id}", status_code=status.HTTP_303_SEE_OTHER)
     else:
-        return {"response": "You don't have access"}
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Access denied")
 
 @router.delete("/{user_id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_user(request: Request, user_id: int = Path(...)):
@@ -106,4 +107,4 @@ def delete_user(request: Request, user_id: int = Path(...)):
         helpdesk.admin_api(action="delete_user", user_id=user_id)
         # return RedirectResponse(url="/users", status_code=status.HTTP_303_SEE_OTHER)
     else:
-        return {"response": "You don't have access"}
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Access denied")

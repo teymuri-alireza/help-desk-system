@@ -28,4 +28,5 @@ def new_response(
         helpdesk.response_api(action="new", response=response)
         return RedirectResponse(url=f"/tickets/{response_ticket_id}", status_code=status.HTTP_303_SEE_OTHER)
     else:
-        return {"response": "not found"}
+        # Error handler for when db is removed but session exists
+        return RedirectResponse(url="/auth/logout", status_code=status.HTTP_303_SEE_OTHER)
