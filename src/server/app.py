@@ -70,7 +70,7 @@ async def not_found_handler(request: Request, exc: HTTPException):
         status_code=status.HTTP_404_NOT_FOUND
     )
 
-@app.exception_handler(HTTPException)
+@app.exception_handler(500)
 async def server_errors(request: Request, exc: HTTPException):
     return templates.TemplateResponse(
         request=request,
