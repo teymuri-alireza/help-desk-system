@@ -39,7 +39,8 @@ def list_tickets(request: Request):
         return response
 
     else:
-        return {"response": "not found"}
+        # Error handler for when db is removed but session exists
+        return RedirectResponse(url="/auth/logout", status_code=status.HTTP_303_SEE_OTHER)
 
 @router.get("/{ticket_id}")
 def show_ticket(request: Request, ticket_id: int = Path(...)):
@@ -67,7 +68,8 @@ def show_ticket(request: Request, ticket_id: int = Path(...)):
                 # found_ticket.creator_id doesn't exist, which means ticket is not found.
                 raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Not Found")
     else:
-        return {"response": "not found"}
+        # Error handler for when db is removed but session exists
+        return RedirectResponse(url="/auth/logout", status_code=status.HTTP_303_SEE_OTHER)
 
 @router.post("")
 def new_ticket(
