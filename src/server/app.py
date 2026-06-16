@@ -69,3 +69,12 @@ async def not_found_handler(request: Request, exc: HTTPException):
         context={"request": request},
         status_code=status.HTTP_404_NOT_FOUND
     )
+
+@app.exception_handler(HTTPException)
+async def server_errors(request: Request, exc: HTTPException):
+    return templates.TemplateResponse(
+        request=request,
+        name="500.html",
+        context={"request": request},
+        status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
+    )
