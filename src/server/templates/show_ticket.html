@@ -46,7 +46,7 @@
                             <p class="ticket-id">#{{ ticket.id }}</p>
                             <h3>عنوان: {{ ticket.title }}</h3>
                         </div>
-                        <span class="status">
+                        <span class="status alert {% if ticket.status.name == 'NEW' %}alert-success{% elif ticket.status.name == 'IN_PROGRESS' or ticket.status.name == 'WAITING_FOR_USER' %}alert-warning{% elif ticket.status.name == 'RESOLVED' or ticket.status.name == 'CLOSED' %}alert-danger{% endif %}">
                             وضعیت: {{ ticket.status.fa }}
                         </span>
                         <span class="status alert {% if ticket.priority.name == 'NORMAL' %}alert-info{% elif ticket.priority.name == 'WARNING' %}alert-warning{% elif ticket.priority.name == 'CRITICAL' %}alert-danger{% endif %}">
