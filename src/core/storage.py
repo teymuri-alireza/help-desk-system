@@ -117,8 +117,6 @@ class StorageEngine:
             if old_ticket is not None:
                 session.merge(ticket)
                 session.commit()
-                return True
-            return False
 
     def list_responses(self, ticket_id: int) -> list[Response]:
         """

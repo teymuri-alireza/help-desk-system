@@ -92,7 +92,7 @@ class HelpDeskCore:
 
         Returns:
             list[Ticket] | Ticket | bool: List of tickets for "list" action, single ticket for "find" action,
-                and boolean for "new" and "update" actions, indicating it was successful or not.
+                and boolean for "new" action, indicating it was successful or not.
         """
         if action == "new":
             return self.storage.insert_ticket(ticket)
@@ -101,7 +101,7 @@ class HelpDeskCore:
         elif action == "find":
             return self.storage.find_ticket(ticket_id)
         elif action == "update":
-            return self.storage.update_ticket(ticket)
+            self.storage.update_ticket(ticket)
 
     def response_api(self, action: str, response: Response = None) -> list[Response] | None:
         """
