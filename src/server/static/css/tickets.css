@@ -283,6 +283,10 @@ body{
     padding: 0 8px;
 }
 
+tr.hidden {
+    display: none;
+}
+
 /* FORM */
 
 .form-group{

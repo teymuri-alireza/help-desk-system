@@ -40,7 +40,12 @@
     <section class="card">
 
         <div class="table-wrapper">
-
+            <h2>جستجو کاربران</h2>
+            <div class="search-bar-wrapper">
+                <input 
+                    type="text" id="user-search" class="search-bar" 
+                    placeholder="جستجو بر اساس شناسه، عنوان یا توضیحات...">
+            </div>
             <table>
                 <thead>
                     <tr>
@@ -53,15 +58,15 @@
                         <th>مدیریت کاربر</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody class="user-container">
                 {% for user in users_list %}
-                    <tr>
-                        <td>{{ user.id }}</td>
-                        <td>{{ user.username }}</td>
+                    <tr class="user-items">
+                        <td class="user-id">{{ user.id }}</td>
+                        <td class="user-username">{{ user.username }}</td>
                         <td>{{ user.name }}</td>
                         <td>{{ user.email }}</td>
-                        <td>{{ user.role.fa }}</td>
-                        <td>{{ user.status.fa }}</td>
+                        <td class="user-role">{{ user.role.fa }}</td>
+                        <td class="user-status">{{ user.status.fa }}</td>
                         <td>
                             <div class="auth-buttons">
                                 <a href="/users/{{ user.id }}" class="btn submit-btn show-ticket" style="max-width: 100%;">مدیریت کاربر</a>
@@ -72,6 +77,7 @@
                 </tbody>
             </table>
         </div>
+        <div class="search-empty-state"></div>
 
     </section>
 
@@ -79,6 +85,7 @@
 
 <script src="{{ url_for('static', path='js/dashboard.js') }}"></script>
 <script src="{{ url_for('static', path='js/notification.js') }}"></script>
+<script src="{{ url_for('static', path='js/user_search.js') }}"></script>
 
 </body>
 </html>
