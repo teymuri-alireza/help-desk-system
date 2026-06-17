@@ -3,7 +3,7 @@ from fastapi import APIRouter, Request, Form, status, UploadFile, Path, HTTPExce
 from fastapi.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
 from src.server.dependencies import get_static_path, get_helpdesk, get_current_user
-from src.database.tables import Ticket, Attachment, Notification, Role
+from src.database.tables import Ticket, Attachment, Notification, Role, TicketStatus, TicketPriority
 
 TEMPLATES_DIR, STATIC_DIR = get_static_path()
 templates = Jinja2Templates(directory=TEMPLATES_DIR)
@@ -61,7 +61,13 @@ def show_ticket(request: Request, ticket_id: int = Path(...)):
             return templates.TemplateResponse(
                 request=request, 
                 name="show_ticket.html", 
-                context={"request": request, "ticket": found_ticket, "user_role": user_role}
+                context={
+                    "request": request,
+                    "ticket": found_ticket,
+                    "user_role": user_role,
+                    "TicketStatus":TicketStatus,
+                    "TicketPriority":TicketPriority,
+                }
             )
         except AttributeError as e:
             if "has no attribute 'creator_id'" in str(e):
