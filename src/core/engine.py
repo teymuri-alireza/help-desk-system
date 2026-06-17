@@ -101,7 +101,7 @@ class HelpDeskCore:
         elif action == "find":
             return self.storage.find_ticket(ticket_id)
         elif action == "update":
-            self.storage.update_ticket(ticket)
+            self.storage.update_ticket(ticket=ticket, old_ticket_id=ticket_id)
 
     def response_api(self, action: str, response: Response = None) -> list[Response] | None:
         """

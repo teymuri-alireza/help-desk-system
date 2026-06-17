@@ -102,21 +102,24 @@ class StorageEngine:
             return True
         return False
 
-    def update_ticket(self, ticket: Ticket) -> bool:
+    def update_ticket(self, new_ticket: Ticket, old_ticket_id: int) -> bool:
         """
         Update an existing ticket in the database.
 
         Args:
-            ticket: The Ticket object with updated values.
-
-        Returns:
-            bool: True if ticket was updated, False if ticket not found.
+            new_ticket: The Ticket object with updated values.
+            old_ticket_id: The old Ticket ID to search for.
         """
         with self.session_factory() as session:
-            old_ticket = session.query(Ticket).filter(Ticket.id==ticket.id).one_or_none()
-            if old_ticket is not None:
-                session.merge(ticket)
+            found_ticket = session.query(Ticket).filter(Ticket.id==old_ticket_id).one_or_none()
+            if found_ticket is not None:
+                found_ticket.title = new_ticket.title
+                found_ticket.description = new_ticket.description
+                found_ticket.status = new_ticket.status
+                found_ticket.priority = new_ticket.priority
+                found_ticket.assigned_to = new_ticket.assigned_to
                 session.commit()
+                session.refresh(found_ticket)
 
     def list_responses(self, ticket_id: int) -> list[Response]:
         """
