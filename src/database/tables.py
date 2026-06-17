@@ -66,7 +66,7 @@ class TicketPriority(Enum):
     def fa(self):
         return {
             self.NORMAL:"عادی",
-            self.WARNING:"بحرانی",
+            self.WARNING:"هشدار",
             self.CRITICAL:"بحرانی",
         }[self]
 
