@@ -20,7 +20,7 @@ def list_tickets(request: Request):
     helpdesk = get_helpdesk()
     found_user = helpdesk.admin_api(action="find_user_by_username", username=user_username)
     if found_user is not None:
-        if found_user.role == Role.STUDENT:
+        if found_user.role == Role.STUDENT or found_user.role == Role.EMPLOYEE:
             tickets_list = helpdesk.ticket_api(action="list", user_id=found_user.id)
         else:
             # For admins

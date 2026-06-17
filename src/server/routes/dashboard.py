@@ -22,7 +22,7 @@ def dashboard(request: Request, response: Response):
 
     if found_user is not None:
         flash_message = request.cookies.get("flash_message")
-        if found_user.role == Role.STUDENT:
+        if found_user.role == Role.STUDENT or found_user.role == Role.EMPLOYEE:
             tickets_list = helpdesk.ticket_api(action="list", user_id=found_user.id, limit=10)
             context = {
                     "request": request,
