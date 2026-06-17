@@ -71,7 +71,9 @@
                     <br />
                     <small><p class="ticket-created">ثبت شده در: {{ ticket.created_at }}</p></small>
                     {% if user_role.value != "Student" %}
-                        <small><p class="ticket-created">شناسه کاربر ایجاد کننده: {{ ticket.creator_id }}</p></small>
+                        <small><p class="ticket-created">شناسه کاربر ایجاد کننده: 
+                                <a href="/users/{{ ticket.creator_id }}">{{ ticket.creator_id }}</a>
+                        </p></small>
                     {% endif %}
 
                     <form action="/tickets/{{ ticket.id }}/responses" method="post" class="ticket-form">
