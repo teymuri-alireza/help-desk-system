@@ -49,7 +49,7 @@
                         <span class="status">
                             وضعیت: {{ ticket.status.fa }}
                         </span>
-                        <span class="status">
+                        <span class="status alert {% if ticket.priority.name == 'NORMAL' %}alert-info{% elif ticket.priority.name == 'WARNING' %}alert-warning{% elif ticket.priority.name == 'CRITICAL' %}alert-danger{% endif %}">
                             اولویت: {{ ticket.priority.fa }}
                         </span>
                     </div>
