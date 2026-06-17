@@ -62,6 +62,14 @@ class TicketPriority(Enum):
     WARNING = "Warning"
     CRITICAL = "Critical"
 
+    @property
+    def fa(self):
+        return {
+            self.NORMAL:"عادی",
+            self.WARNING:"بحرانی",
+            self.CRITICAL:"بحرانی",
+        }[self]
+
 
 class User(Base):
     __tablename__ = "users"
