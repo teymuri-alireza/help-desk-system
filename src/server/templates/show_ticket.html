@@ -100,10 +100,105 @@
         </div>
     </section>
 
+    {% if ticket %}
+    <section class="card">
+        <div class="section-header">
+            <h2>ویرایش اطلاعات تیکت</h2>
+            <button class="toggle-form-btn submit-btn" id="toggleFormBtn" type="button">نمایش فرم</button>
+        </div>
+        <form class="ticket-form" id="editForm" action="/tickets/{{ ticket.id }}" method="post" style="display: none; font-size: 1.5em;">
+
+            <div class="form-group">
+                <label>عنوان</label>
+                <input type="text" name="title" value="{{ ticket.title }}" required placeholder="عنوان تیکت">
+            </div>
+
+            <div class="form-group">
+                <label>توضیحات</label>
+                <input type="text" name="description" value="{{ ticket.description }}" required placeholder="توضیحات تیکت">
+            </div>
+
+            <div class="form-group">
+                <label>وضعیت</label>
+                <select name="ticket_status" required>
+                    {% for status in TicketStatus %}
+                    <option value="{{ status.name }}"
+                            {% if ticket.status == status %}selected{% endif %}>
+                        {{ status.fa }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>اولویت</label>
+                <select name="priority" required>
+                    {% for priority in TicketPriority %}
+                    <option value="{{ priority.name }}"
+                            {% if ticket.priority == priority %}selected{% endif %}>
+                        {{ priority.fa }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>ID کارشناس بررسی کننده</label>
+                <input type="text" name="assigned_to" value="{{ ticket.assigned_to }}" required placeholder="ID کارشناس بررسی کننده">
+            </div>
+
+            <button class="submit-btn" type="submit">آپدیت کاربر</button>
+        </form>
+    </section>
+    {% endif %}
 </main>
 
 <script src="{{ url_for('static', path='js/dashboard.js') }}"></script>
 <script src="{{ url_for('static', path='js/notification.js') }}"></script>
+<script>
+    // Opening and closing form
+    const toggleBtn = document.getElementById('toggleFormBtn');
+    const editForm = document.getElementById('editForm');
+
+    toggleBtn.addEventListener('click', function() {
+        if (editForm.style.display === 'none') {
+            editForm.style.display = 'block';
+            toggleBtn.textContent = 'بستن فرم';
+        } else {
+            editForm.style.display = 'none';
+            toggleBtn.textContent = 'نمایش فرم';
+        }
+    });
+
+    //Sending PATCH request using JS
+    document.getElementById("editForm").addEventListener("submit", async function (e) {
+        e.preventDefault();
+
+    const form = e.target;
+    const formData = new FormData(form);
+
+    try {
+        const response = await fetch(form.action, {
+            method: "PATCH",
+            body: formData
+        });
+
+        if (response.redirected) {
+            window.location.href = response.url;
+            return;
+        }
+
+        if (response.ok) {
+            return
+        } else {
+            const error = await response.text();
+            alert("Error: " + error);
+        }
+    } catch (err) {
+        console.error(err);
+    }
+    });
+</script>
 
 </body>
 </html>

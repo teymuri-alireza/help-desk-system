@@ -127,5 +127,24 @@ def assign_ticket():
     return {"response": "Assign Ticket Page"}
 
 @router.patch("/{ticket_id}")
-def patch_ticket():
-    return {"response": "Patch Ticket Page"}
+def patch_ticket(        request: Request, 
+        ticket_id: int = Path(...),
+        title: str = Form(...),
+        description: str = Form(...),
+        ticket_status: str = Form(...),
+        priority: str = Form(...),
+        assigned_to: str = Form(...),
+    ):
+    try:
+        user_username = get_current_user(request=request)
+    except:
+        return RedirectResponse(url="/auth", status_code=status.HTTP_303_SEE_OTHER)
+    helpdesk = get_helpdesk()
+    found_user = helpdesk.admin_api(action="find_user_by_username", username=user_username)
+    # Check if user is admin first
+    if found_user is not None and found_user.role == Role.SYSTEM_ADMIN:
+        ticket_to_update = Ticket(title=title, description=description, status=ticket_status, priority=priority, assigned_to=assigned_to)
+        helpdesk.ticket_api("update", ticket=ticket_to_update, ticket_id=ticket_id)
+        return RedirectResponse(url=f"/tickets/{ticket_id}", status_code=status.HTTP_303_SEE_OTHER)
+    else:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Access denied")
