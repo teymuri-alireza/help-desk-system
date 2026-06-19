@@ -52,9 +52,10 @@
 
         <div class="section-header">
             <h2>ثبت تیکت جدید</h2>
+            <button class="toggle-form-btn submit-btn" id="toggleFormBtn" type="button">نمایش فرم</button>
         </div>
 
-        <form class="ticket-form" action="/tickets" method="POST" enctype="multipart/form-data">
+        <form id="newTicketForm" class="ticket-form" action="/tickets" method="POST" enctype="multipart/form-data" style="display: none;">
 
             <div class="form-group">
                 <label>عنوان تیکت</label>
@@ -172,6 +173,20 @@
 
 <script src="{{ url_for('static', path='js/dashboard.js') }}"></script>
 <script src="{{ url_for('static', path='js/notification.js') }}"></script>
+<script>
+    const toggleBtn = document.getElementById('toggleFormBtn');
+    const newTicketForm = document.getElementById('newTicketForm');
+
+    toggleBtn.addEventListener('click', function() {
+        if (newTicketForm.style.display === 'none') {
+            newTicketForm.style.display = 'block';
+            toggleBtn.textContent = 'بستن فرم';
+        } else {
+            newTicketForm.style.display = 'none';
+            toggleBtn.textContent = 'نمایش فرم';
+        }
+    });
+</script>
 
 </body>
 </html>
