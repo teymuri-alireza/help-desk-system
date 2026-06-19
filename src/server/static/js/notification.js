@@ -90,15 +90,15 @@ document
 loadNotifications();
 
 document.addEventListener("DOMContentLoaded", () => {
-    const alert = document.getElementById("flash-alert");
+    const ticketAlert = document.getElementById("ticket-flash-alert");
     const userAlert = document.getElementById("user-flash-alert");
 
-    if (alert) {
+    if (ticketAlert) {
         setTimeout(() => {
-            alert.style.opacity = "0";
+            ticketAlert.style.opacity = "0";
 
             setTimeout(() => {
-                alert.remove();
+                ticketAlert.remove();
             }, 500);
         }, 3500);
     }
