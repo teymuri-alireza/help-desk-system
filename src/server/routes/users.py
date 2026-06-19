@@ -17,9 +17,9 @@ def list_users(request: Request):
     except:
         return RedirectResponse(url="/auth", status_code=status.HTTP_303_SEE_OTHER)
     helpdesk = get_helpdesk()
-    found_user = helpdesk.admin_api(action="find_user_by_username", username=user_username)
+    found_user = helpdesk.admin_api.find_user_by_username(username=user_username)
     if found_user is not None and found_user.role == Role.SYSTEM_ADMIN:
-        users_list = helpdesk.admin_api(action="list_users")
+        users_list = helpdesk.admin_api.list_users()
         context = {
             "request": request,
             "users_list": users_list,
@@ -40,11 +40,11 @@ def show_user(request: Request, user_id: int = Path(...)):
     except:
         return RedirectResponse(url="/auth", status_code=status.HTTP_303_SEE_OTHER)
     helpdesk = get_helpdesk()
-    found_user = helpdesk.admin_api(action="find_user_by_username", username=user_username)
+    found_user = helpdesk.admin_api.find_user_by_username(username=user_username)
     # Check if user is admin first
     if found_user is not None:
         if found_user.role == Role.SYSTEM_ADMIN or found_user.id == user_id:
-            user_to_show = helpdesk.admin_api(action="find_user", user_id=user_id)
+            user_to_show = helpdesk.admin_api.find_user(user_id=user_id)
             if user_to_show is not None:
                 update_user_flash_message = request.cookies.get("update_user_flash_message")
                 context = {
@@ -86,13 +86,13 @@ def new_user(
     except:
         return RedirectResponse(url="/auth", status_code=status.HTTP_303_SEE_OTHER)
     helpdesk = get_helpdesk()
-    found_user = helpdesk.admin_api(action="find_user_by_username", username=user_username)
+    found_user = helpdesk.admin_api.find_user_by_username(username=user_username)
     # Check if user is admin first
     if found_user is not None and found_user.role == Role.SYSTEM_ADMIN:
         new_user = User(name=name, email=email, username=username, role=role)
-        helpdesk.admin_api(action="new_user", user=new_user)
+        helpdesk.admin_api.new_user(user=new_user)
 
-        found_user = helpdesk.admin_api(action="find_user_by_username", username=username)
+        found_user = helpdesk.admin_api.find_user_by_username(username=username)
         notification = Notification(receiver_id=found_user.id, title="کاربر جدید", text=f"خوش آمدید {found_user.name}")
         helpdesk.notification_api(action="new", notification=notification)
 
@@ -118,11 +118,11 @@ def patch_user(
     except:
         return RedirectResponse(url="/auth", status_code=status.HTTP_303_SEE_OTHER)
     helpdesk = get_helpdesk()
-    found_user = helpdesk.admin_api(action="find_user_by_username", username=user_username)
+    found_user = helpdesk.admin_api.find_user_by_username(username=user_username)
     # Check if user is admin first
     if found_user is not None and found_user.role == Role.SYSTEM_ADMIN:
         user_to_update = User(name=name, email=email, username=username, role=role, status=user_status)
-        helpdesk.admin_api("update_user", user=user_to_update, user_id=user_id)
+        helpdesk.admin_api.update_user(new_user=user_to_update, old_user_id=user_id)
 
         redirect = RedirectResponse(url=f"/users/{user_id}", status_code=status.HTTP_303_SEE_OTHER)
         redirect.set_cookie(key="update_user_flash_message", value="successful")
@@ -137,10 +137,10 @@ def delete_user(request: Request, user_id: int = Path(...)):
     except:
         return RedirectResponse(url="/auth", status_code=status.HTTP_303_SEE_OTHER)
     helpdesk = get_helpdesk()
-    found_user = helpdesk.admin_api(action="find_user_by_username", username=user_username)
+    found_user = helpdesk.admin_api.find_user_by_username(username=user_username)
     # Check if user is admin first
     if found_user is not None and found_user.role == Role.SYSTEM_ADMIN:
-        helpdesk.admin_api(action="delete_user", user_id=user_id)
+        helpdesk.admin_api.delete_user(user_id=user_id)
         return RedirectResponse(url="/users", status_code=status.HTTP_303_SEE_OTHER)
     else:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Access denied")

@@ -44,7 +44,7 @@ def sign_up(request: Request,
     new_user = User(name=name, username=username, email=email, role=Role.STUDENT)
     helpdesk.authentication_api(action="signup", user=new_user)
 
-    found_user = helpdesk.admin_api(action="find_user_by_username", username=username)
+    found_user = helpdesk.admin_api.find_user_by_username(username=username)
     notification = Notification(receiver_id=found_user.id, title="کاربر جدید", text=f"خوش آمدید {found_user.name}")
     helpdesk.notification_api(action="new", notification=notification)
 

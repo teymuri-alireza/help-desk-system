@@ -18,7 +18,7 @@ def list_tickets(request: Request):
     except:
         return RedirectResponse(url="/auth", status_code=status.HTTP_303_SEE_OTHER)
     helpdesk = get_helpdesk()
-    found_user = helpdesk.admin_api(action="find_user_by_username", username=user_username)
+    found_user = helpdesk.admin_api.find_user_by_username(username=user_username)
     if found_user is not None:
         if found_user.role == Role.STUDENT or found_user.role == Role.EMPLOYEE:
             tickets_list = helpdesk.ticket_api(action="list", user_id=found_user.id)
@@ -50,7 +50,7 @@ def show_ticket(request: Request, ticket_id: int = Path(...)):
     except:
         return RedirectResponse(url="/auth", status_code=status.HTTP_303_SEE_OTHER)
     helpdesk = get_helpdesk()
-    found_user = helpdesk.admin_api(action="find_user_by_username", username=user_username)
+    found_user = helpdesk.admin_api.find_user_by_username(username=user_username)
     if found_user is not None:
         try:
             found_ticket = helpdesk.ticket_api(action="find", ticket_id=ticket_id)
@@ -59,7 +59,7 @@ def show_ticket(request: Request, ticket_id: int = Path(...)):
                 if found_ticket.creator_id != found_user.id:
                     raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Access denied")
             user_role = found_user.role.value
-            it_experts = helpdesk.admin_api(action="list_it_experts")
+            it_experts = helpdesk.admin_api.list_it_experts()
             return templates.TemplateResponse(
                 request=request, 
                 name="show_ticket.html", 
@@ -94,7 +94,7 @@ def new_ticket(
     except:
         return RedirectResponse(url="/auth", status_code=status.HTTP_303_SEE_OTHER)
     helpdesk = get_helpdesk()
-    found_user = helpdesk.admin_api(action="find_user_by_username", username=user_username)
+    found_user = helpdesk.admin_api.find_user_by_username(username=user_username)
     if found_user is None:
         return RedirectResponse(url="/auth", status_code=status.HTTP_303_SEE_OTHER)
 
@@ -144,7 +144,7 @@ def patch_ticket(        request: Request,
     except:
         return RedirectResponse(url="/auth", status_code=status.HTTP_303_SEE_OTHER)
     helpdesk = get_helpdesk()
-    found_user = helpdesk.admin_api(action="find_user_by_username", username=user_username)
+    found_user = helpdesk.admin_api.find_user_by_username(username=user_username)
     # Check if user is admin first
     if found_user is not None and found_user.role == Role.SYSTEM_ADMIN:
         ticket_to_update = Ticket(title=title, description=description, status=ticket_status, priority=priority, assigned_to=assigned_to)
