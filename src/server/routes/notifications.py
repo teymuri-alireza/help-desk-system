@@ -39,7 +39,12 @@ def list_all_notifications(request: Request):
         request=request,
         name="notifications.html",
         status_code=status.HTTP_200_OK, 
-        context={"request": request, "notifications_list": notifications_list}
+        context={
+            "request": request,
+            "notifications_list": notifications_list,
+            "user_id": found_user.id,
+            "role": found_user.role.value,
+        }
     )
 
 

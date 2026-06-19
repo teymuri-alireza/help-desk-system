@@ -17,8 +17,11 @@
 
         <ul class="nav-links">
             <li><a href="/">صفحه اصلی</a></li>
-            <li><a href="/tickets">تیکت‌ها</a></li>
             <li><a href="/dashboard">داشبورد</a></li>
+            <li><a href="/tickets">تیکت‌ها</a></li>
+            {% if user_role.value != "Student" and user_role.value != "Employee" %}
+                <li><a href="/users">کاربران سامانه</a></li>
+            {% endif %}
             <li class="notifications-dropdown">
                 <a href="/notifications/all" class="notifications-trigger">اعلان‌ها</a>
                 <div class="notifications-menu" id="notifications-menu"></div>

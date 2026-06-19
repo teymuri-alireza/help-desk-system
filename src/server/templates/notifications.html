@@ -20,8 +20,12 @@
         <ul class="nav-links">
             <li><a href="/">صفحه اصلی</a></li>
             <li><a href="/dashboard">داشبورد</a></li>
+            <li><a href="/tickets">تیکت‌ها</a></li>
+            <li><a href="/users/{{ user_id }}">پروفایل کاربر</a></li>
+            {% if role != "Student" and role != "Employee" %}
+            <li><a href="/users">کاربران سامانه</a></li>
+            {% endif %}
         </ul>
-
         <div class="auth-buttons">
             <a href="/auth/logout" class="btn register-btn">خروج</a>
         </div>

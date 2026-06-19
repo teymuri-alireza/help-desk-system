@@ -29,6 +29,7 @@ def list_tickets(request: Request):
         context = {
             "request": request,
             "tickets_list": tickets_list,
+            "user_id": found_user.id,
             "role": found_user.role.value,
         }
         response = templates.TemplateResponse(
@@ -64,6 +65,7 @@ def show_ticket(request: Request, ticket_id: int = Path(...)):
                 context={
                     "request": request,
                     "ticket": found_ticket,
+                    "user_id": found_user.id,
                     "user_role": user_role,
                     "TicketStatus":TicketStatus,
                     "TicketPriority":TicketPriority,

@@ -16,9 +16,14 @@
 
             <ul class="nav-links">
                 <li><a href="/">صفحه اصلی</a></li>
-                <li><a>درباره دانشگاه</a></li>
                 {% if user %}
                     <li><a href="/dashboard">داشبورد</a></li>
+                    <li><a href="/tickets">تیکت‌ها</a></li>
+                    <li><a href="/users/{{ user.id }}">پروفایل کاربر</a></li>
+                    {% if user.role.value != "Student" and user.role.value != "Employee" %}
+                        <li><a href="/tickets">کاربران سامانه</a></li>
+                    {% endif %}
+                    <li><a href="/notifications/all">اعلان‌ها</a></li>
                 {% endif %}
             </ul>
 
