@@ -207,7 +207,7 @@ class StorageEngine:
 
             return fetched_notifications
 
-    def list_users(self, limit: int | None = None) -> list[User]:
+    def list_users(self, limit: int | None = None, role: str | None = None) -> list[User]:
         """
         Retrieve all users.
 
@@ -218,9 +218,14 @@ class StorageEngine:
             list[User]: List of all User objects.
         """
         with self.session_factory() as session:
-            users_list = session.query(User).order_by(
-                User.id.desc()
-            ).limit(limit=limit).all()
+            if role is not None:
+                users_list = session.query(User).order_by(
+                    User.id.desc()
+                ).limit(limit=limit).filter(User.role==role).all()
+            else:
+                users_list = session.query(User).order_by(
+                    User.id.desc()
+                ).limit(limit=limit).all()
             return users_list
 
     def find_user(self, user_id: int) -> User | None:
