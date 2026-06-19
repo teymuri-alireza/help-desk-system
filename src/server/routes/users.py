@@ -2,7 +2,7 @@ from fastapi import APIRouter, Request, status, Path, Form, HTTPException
 from fastapi.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
 from src.server.dependencies import get_helpdesk, get_current_user, get_static_path
-from src.database.tables import Role, User, UserStatus
+from src.database.tables import Role, User, UserStatus, Notification
 
 TEMPLATES_DIR, STATIC_DIR = get_static_path()
 templates = Jinja2Templates(directory=TEMPLATES_DIR)
@@ -67,8 +67,34 @@ def show_user(request: Request, user_id: int = Path(...)):
 
 
 @router.post("")
-def new_user():
-    return {"response": "New User Page"}
+def new_user(
+        request: Request,
+        name: str = Form(...),
+        username: str = Form(...),
+        email: str = Form(...),
+        role: str = Form(...)
+    ):
+    try:
+        user_username = get_current_user(request=request)
+    except:
+        return RedirectResponse(url="/auth", status_code=status.HTTP_303_SEE_OTHER)
+    helpdesk = get_helpdesk()
+    found_user = helpdesk.admin_api(action="find_user_by_username", username=user_username)
+    # Check if user is admin first
+    if found_user is not None and found_user.role == Role.SYSTEM_ADMIN:
+        new_user = User(name=name, email=email, username=username, role=role)
+        helpdesk.admin_api(action="new_user", user=new_user)
+
+        found_user = helpdesk.admin_api(action="find_user_by_username", username=username)
+        notification = Notification(receiver_id=found_user.id, title="کاربر جدید", text=f"خوش آمدید {found_user.name}")
+        helpdesk.notification_api(action="new", notification=notification)
+
+        redirect = RedirectResponse(url="/dashboard", status_code=status.HTTP_303_SEE_OTHER)
+        redirect.set_cookie(key="new_user_flash_message", value="successful")
+        return redirect
+    else:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Access denied")
+
 
 @router.patch("/{user_id}")
 def patch_user(

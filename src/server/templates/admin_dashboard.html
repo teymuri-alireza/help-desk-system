@@ -82,6 +82,42 @@
 
     </section>
 
+    <!-- User Form -->
+    <section class="card">
+
+        <div class="section-header">
+            <h2>ثبت کاربر جدید</h2>
+            <button class="toggle-form-btn submit-btn" id="toggleUserFormBtn" type="button">نمایش فرم</button>
+        </div>
+
+        <form id="newUserForm" class="ticket-form" action="/users" method="POST" enctype="multipart/form-data" style="display: none;">
+            <div class="form-group">
+                <label>نام و نام خانوادگی</label>
+                <input type="text" name="name" required placeholder="نام و نام خانوادگی">
+            </div>
+            <div class="form-group">
+                <label>نام کاربری (دانشجویی/کارمندی)</label>
+                <input type="text" name="username" required placeholder="نام کاربری">
+            </div>
+            <div class="form-group">
+                <label>ایمیل</label>
+                <input type="email" name="email" required placeholder="ایمیل">
+            </div>
+            <div class="form-group">
+                <label>نقش کاربر</label>
+                <select name="role" required>
+                    {% for role in Role %}
+                    <option value="{{ role.name }}">
+                        {{ role.fa }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <button class="submit-btn" type="submit">ثبت کاربر</button>
+        </form>
+
+    </section>
 
     <!-- Tickets List -->
     <section class="card">
@@ -184,6 +220,19 @@
         } else {
             newTicketForm.style.display = 'none';
             toggleBtn.textContent = 'نمایش فرم';
+        }
+    });
+
+    const toggleUserFormBtn = document.getElementById('toggleUserFormBtn');
+    const newUserForm = document.getElementById('newUserForm');
+
+    toggleUserFormBtn.addEventListener('click', function() {
+        if (newUserForm.style.display === 'none') {
+            newUserForm.style.display = 'block';
+            toggleUserFormBtn.textContent = 'بستن فرم';
+        } else {
+            newUserForm.style.display = 'none';
+            toggleUserFormBtn.textContent = 'نمایش فرم';
         }
     });
 </script>
