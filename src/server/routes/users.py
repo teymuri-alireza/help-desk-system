@@ -43,32 +43,35 @@ def show_user(request: Request, user_id: int = Path(...)):
     helpdesk = get_helpdesk()
     found_user = helpdesk.admin_api(action="find_user_by_username", username=user_username)
     # Check if user is admin first
-    if found_user is not None and found_user.role == Role.SYSTEM_ADMIN:
-        user_to_show = helpdesk.admin_api(action="find_user", user_id=user_id)
-        if user_to_show is not None:
-            update_user_flash_message = request.cookies.get("update_user_flash_message")
-            context = {
-                "request": request,
-                "user": user_to_show,
-                "Role": Role,
-                "user_role": found_user.role,
-                "UserStatus": UserStatus,
-                "update_user_flash_message": update_user_flash_message,
-            }
-            response = templates.TemplateResponse(
-                request=request,
-                name="show_user.html",
-                context=context
-            )
-            response.delete_cookie("update_user_flash_message")
-            return response
+    if found_user is not None:
+        if found_user.role == Role.SYSTEM_ADMIN or found_user.id == user_id:
+            user_to_show = helpdesk.admin_api(action="find_user", user_id=user_id)
+            if user_to_show is not None:
+                update_user_flash_message = request.cookies.get("update_user_flash_message")
+                context = {
+                    "request": request,
+                    "user": user_to_show,
+                    "Role": Role,
+                    "user_role": found_user.role,
+                    "UserStatus": UserStatus,
+                    "update_user_flash_message": update_user_flash_message,
+                }
+                response = templates.TemplateResponse(
+                    request=request,
+                    name="show_user.html",
+                    context=context
+                )
+                response.delete_cookie("update_user_flash_message")
+                return response
+            else:
+                return templates.TemplateResponse(
+                    request=request,
+                    name="show_user.html",
+                )
         else:
-            return templates.TemplateResponse(
-                request=request,
-                name="show_user.html",
-            )
+            raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Access denied")
     else:
-        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Access denied")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Not found")
 
 
 @router.post("")
