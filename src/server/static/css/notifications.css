@@ -185,6 +185,13 @@ body{
     line-height:1.9;
 }
 
+.notification-btn-status {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+}
+
 .notification-status{
 
     display:inline-block;

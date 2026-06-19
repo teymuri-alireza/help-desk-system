@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>اعلان‌ها | دانشگاه دانش و فناوری</title>
+    <link rel="stylesheet" href="{{ url_for('static', path='css/dashboard.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', path='css/tickets.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', path='css/notifications.css') }}">
 </head>
 <body>
@@ -37,7 +39,7 @@
         </p>
     </section>
 
-    <section class="notifications-list">
+    <section class="notifications-list" id="notifications-list">
         {% for notification in notifications_list %}
             <article class="notification-card {% if not notification.is_read %}unread{% endif %}">
                 <div class="notification-top">
@@ -47,19 +49,56 @@
                 </div>
                 <h3>{{ notification.title }}</h3>
                 <p>{{ notification.text }}</p>
-
+                <div class="notification-btn-status">
                     {% if notification.is_read %}
-                        <div class="notification-status read">
-                            خوانده شده
-                        </div>
+                    <div class="notification-status read">
+                        خوانده شده
+                    </div>
                     {% else %}
-                        <div class="notification-status unread">
-                            خوانده‌نشده
-                        </div>
+                    <div class="notification-status unread">
+                        خوانده‌نشده
+                    </div>
                     {% endif %}
+
+                    {% if not notification.is_read %}
+                    <button class="notification-btn" data-id="{{ notification.id }}" class="btn submit-btn show-ticket" style="max-width: 20%;">مشاهده شد</button>
+                    {% endif %}
+                </div>
             </article>
         {% endfor %}
     </section>
 </main>
 </body>
+<script>
+    document.getElementById("notifications-list")
+        .addEventListener("click", async (e) => {
+            const btn = e.target.closest('.notification-btn');
+            if (!btn) return;
+
+            btn.disabled = true;
+
+            try {
+            const response = await fetch('/notifications', {
+                method: 'PATCH',
+                headers: {
+                'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                notification_id: btn.dataset.id,
+                is_read: true
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}`);
+            }
+
+            location.reload();
+
+            } catch (error) {
+            console.error('Failed to update notification:', error);
+            btn.disabled = false;
+            }
+        });
+</script>
 </html>
