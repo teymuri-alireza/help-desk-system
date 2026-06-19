@@ -451,6 +451,13 @@ body{
     border-radius:8px;
 }
 
+.set-items-space-between {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+}
+
 /* USERS */
 
 .table-wrapper{

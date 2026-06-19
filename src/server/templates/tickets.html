@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>تمامی تیکت‌ها | دانشگاه دانش و فناوری</title>
+    <link rel="stylesheet" href="{{ url_for('static', path='css/dashboard.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', path='css/tickets.css') }}">
 </head>
 <body>
@@ -54,17 +55,19 @@
                                 <p class="ticket-id">#{{ ticket.id }}</p>
                                 <h3>عنوان: {{ ticket.title }}</h3>
                             </div>
-                            <span class="status">
+                            <span class="status alert {% if ticket.status.name == 'NEW' %}alert-success{% elif ticket.status.name == 'IN_PROGRESS' or ticket.status.name == 'WAITING_FOR_USER' %}alert-warning{% elif ticket.status.name == 'RESOLVED' or ticket.status.name == 'CLOSED' %}alert-danger{% endif %}">
                                 وضعیت: {{ ticket.status.fa }}
                             </span>
                         </div>
                         <p class="ticket-description">توضیحات: {{ ticket.description }}</p>
-                        <small><p class="ticket-created">ثبت شده در: {{ ticket.created_at }}</p></small>
-                        {% if role != "Student" and role != "Employee" %}
-                            <small><p class="ticket-created">شناسه کاربر ایجاد کننده: 
-                                <a href="/users/{{ ticket.creator_id }}">{{ ticket.creator_id }}</a>
-                            </p></small>
-                        {% endif %}
+                        <div class="set-items-space-between">
+                            <p class="ticket-created">ثبت شده در: {{ ticket.created_at }}</p>
+                            {% if role != "Student" and role != "Employee" %}
+                                <p class="ticket-created">شناسه کاربر ایجاد کننده: 
+                                    <a href="/users/{{ ticket.creator_id }}">{{ ticket.creator_id }}</a>
+                                </p>
+                            {% endif %}
+                        </div>
                         <div class="auth-buttons">
                             <a href="/tickets/{{ ticket.id }}" class="btn submit-btn show-ticket">مشاهده جزییات تیکت</a>
                         </div>
