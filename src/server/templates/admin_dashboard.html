@@ -85,6 +85,12 @@
     <!-- User Form -->
     <section class="card">
 
+        {% if new_user_flash_message %}
+            <div id="user-flash-alert" class="alert alert-success">
+                کاربر با موفقیت ثبت شد
+            </div>
+        {% endif %}
+
         <div class="section-header">
             <h2>ثبت کاربر جدید</h2>
             <button class="toggle-form-btn submit-btn" id="toggleUserFormBtn" type="button">نمایش فرم</button>

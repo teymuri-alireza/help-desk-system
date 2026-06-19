@@ -91,14 +91,25 @@ loadNotifications();
 
 document.addEventListener("DOMContentLoaded", () => {
     const alert = document.getElementById("flash-alert");
+    const userAlert = document.getElementById("user-flash-alert");
 
-    if (!alert) return;
-
-    setTimeout(() => {
-        alert.style.opacity = "0";
-
+    if (alert) {
         setTimeout(() => {
-            alert.remove();
-        }, 500);
-    }, 3500);
+            alert.style.opacity = "0";
+
+            setTimeout(() => {
+                alert.remove();
+            }, 500);
+        }, 3500);
+    }
+
+    if (userAlert) {
+        setTimeout(() => {
+            userAlert.style.opacity = "0";
+
+            setTimeout(() => {
+                userAlert.remove();
+            }, 500);
+        }, 3500);
+    }
 });
