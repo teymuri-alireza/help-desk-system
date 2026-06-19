@@ -20,7 +20,7 @@
             <li><a href="/dashboard">داشبورد</a></li>
             <li><a href="/tickets">تیکت‌ها</a></li>
             <li><a href="/users/{{ user_id }}">پروفایل کاربر</a></li>
-            {% if user_role.value != "Student" and user_role.value != "Employee" %}
+            {% if user_role != "Student" and user_role != "Employee" %}
                 <li><a href="/users">کاربران سامانه</a></li>
             {% endif %}
             <li class="notifications-dropdown">
@@ -77,7 +77,7 @@
                     </div>
                     <br />
                     <small><p class="ticket-created">ثبت شده در: {{ ticket.created_at }}</p></small>
-                    {% if user_role.value != "Student" and user_role.value != "Employee" %}
+                    {% if user_role != "Student" and user_role != "Employee" %}
                         <small><p class="ticket-created">شناسه کاربر ایجاد کننده: 
                                 <a href="/users/{{ ticket.creator_id }}">{{ ticket.creator_id }}</a>
                         </p></small>

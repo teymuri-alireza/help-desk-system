@@ -51,7 +51,7 @@ def show_user(request: Request, user_id: int = Path(...)):
                     "request": request,
                     "user": user_to_show,
                     "Role": Role,
-                    "user_role": found_user.role,
+                    "user_role": found_user.role.value,
                     "UserStatus": UserStatus,
                     "update_user_flash_message": update_user_flash_message,
                 }

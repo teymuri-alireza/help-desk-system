@@ -58,7 +58,7 @@ def show_ticket(request: Request, ticket_id: int = Path(...)):
             if found_user.role == Role.STUDENT or found_user.role == Role.EMPLOYEE:
                 if found_ticket.creator_id != found_user.id:
                     raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Access denied")
-            user_role = found_user.role
+            user_role = found_user.role.value
             return templates.TemplateResponse(
                 request=request, 
                 name="show_ticket.html", 
