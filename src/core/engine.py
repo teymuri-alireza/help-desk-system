@@ -1,6 +1,7 @@
 from src.database.engine import DatabaseEngine
-from src.database.tables import User, Ticket, Response, Attachment, Notification, Role
+from src.database.tables import User, Ticket, Response, Attachment, Notification
 from src.core.storage import StorageEngine
+from src.core.services.admin_service import AdminService
 
 
 class HelpDeskCore:
@@ -21,44 +22,7 @@ class HelpDeskCore:
 
         self.storage = StorageEngine(self.session_factory)
 
-    def admin_api(
-            self, 
-            action: str, 
-            user_id: int = None, 
-            username: str = None, 
-            user: User = None, 
-            limit: int | None = None
-        ) -> list[User] | User | bool:
-        """
-        Handle administrative operations on users.
-
-        Args:
-            action (str): The admin action to perform (`new_user`, `list_users`, `list_it_experts`, `find_user`,
-                `find_user_by_username`, `update_user` or `delete_user`).
-            user_id (int): User ID for find or update operations.
-            username (str): Username for find_user_by_username operations.
-            user (User): User object for update operations.
-            limit (int | None): The maximum number of users to retrieve.
-
-        Returns:
-            list[User] | User | bool: List of users for "list_users" and "list_it_experts" action, single user
-                for "find_user" or "find_user_by_username" actions, and boolean for "update_user" action,
-                indicating if the operation was successful or not.
-        """
-        if action == "new_user":
-            self.storage.insert_user(user=user)
-        elif action == "list_users":
-            return self.storage.list_users(limit=limit)
-        elif action == "list_it_experts":
-            return self.storage.list_users(role=Role.IT_EXPERT)
-        elif action == "find_user":
-            return self.storage.find_user(user_id)
-        elif action == "find_user_by_username":
-            return self.storage.find_user_by_username(username)
-        elif action == "update_user":
-            self.storage.update_user(new_user=user, old_user_id=user_id)
-        elif action == "delete_user":
-            self.storage.delete_user(user_id=user_id)
+        self.admin_api = AdminService(storage=self.storage)
 
     def authentication_api(self, action: str, user: User = None, username: str = None) -> bool | None:
         """
