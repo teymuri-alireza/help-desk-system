@@ -59,6 +59,7 @@ def show_ticket(request: Request, ticket_id: int = Path(...)):
                 if found_ticket.creator_id != found_user.id:
                     raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Access denied")
             user_role = found_user.role.value
+            it_experts = helpdesk.admin_api(action="list_it_experts")
             return templates.TemplateResponse(
                 request=request, 
                 name="show_ticket.html", 
@@ -69,6 +70,7 @@ def show_ticket(request: Request, ticket_id: int = Path(...)):
                     "user_role": user_role,
                     "TicketStatus":TicketStatus,
                     "TicketPriority":TicketPriority,
+                    "it_experts": it_experts,
                 }
             )
         except AttributeError as e:

@@ -148,8 +148,15 @@
             </div>
 
             <div class="form-group">
-                <label>ID کارشناس بررسی کننده</label>
-                <input type="text" name="assigned_to" value="{{ ticket.assigned_to }}" required placeholder="ID کارشناس بررسی کننده">
+                <label>کارشناس بررسی کننده</label>
+                <select name="assigned_to" required>
+                    {% for it_expert in it_experts %}
+                    <option value="{{ it_expert.id }}"
+                        {% if ticket.assigned_to == it_expert.id %}selected{% endif %}>
+                        {{ it_expert.name }}
+                    </option>
+                    {% endfor %}
+                </select>
             </div>
 
             <button class="submit-btn" type="submit">آپدیت کاربر</button>
