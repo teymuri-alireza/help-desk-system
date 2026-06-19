@@ -203,7 +203,7 @@
             });
 
             if (response.ok) {
-                location.reload(); // or remove the row from the DOM
+                window.location.href = response.url;
             } else {
                 alert("Failed to delete user.");
             }

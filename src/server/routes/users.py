@@ -137,6 +137,6 @@ def delete_user(request: Request, user_id: int = Path(...)):
     # Check if user is admin first
     if found_user is not None and found_user.role == Role.SYSTEM_ADMIN:
         helpdesk.admin_api(action="delete_user", user_id=user_id)
-        # return RedirectResponse(url="/users", status_code=status.HTTP_303_SEE_OTHER)
+        return RedirectResponse(url="/users", status_code=status.HTTP_303_SEE_OTHER)
     else:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Access denied")
