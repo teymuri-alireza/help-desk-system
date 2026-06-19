@@ -116,7 +116,7 @@ def new_ticket(
         helpdesk.notification_api(action="new", notification=notification)
 
         redirect = RedirectResponse(url="/dashboard", status_code=status.HTTP_303_SEE_OTHER)
-        redirect.set_cookie(key="flash_message", value="successful")
+        redirect.set_cookie(key="new_ticket_flash_message", value="successful")
         return redirect
     else:
         # Placeholder for error, this functionality will be implemented later

@@ -21,7 +21,8 @@ def dashboard(request: Request, response: Response):
     found_user = helpdesk.admin_api(action="find_user_by_username", username=user_username)
 
     if found_user is not None:
-        flash_message = request.cookies.get("flash_message")
+        new_ticket_flash_message = request.cookies.get("new_ticket_flash_message")
+        new_user_flash_message = request.cookies.get("new_user_flash_message")
         if found_user.role == Role.STUDENT or found_user.role == Role.EMPLOYEE:
             tickets_list = helpdesk.ticket_api(action="list", user_id=found_user.id, limit=10)
             context = {
@@ -29,7 +30,7 @@ def dashboard(request: Request, response: Response):
                     "user_username": found_user.username, 
                     "user_id": found_user.id,
                     "tickets_list": tickets_list,
-                    "flash_message": flash_message
+                    "new_ticket_flash_message": new_ticket_flash_message,
                     }
             html_file = "user_dashboard.html"
         else:
@@ -41,7 +42,9 @@ def dashboard(request: Request, response: Response):
                 "user_id": found_user.id,
                 "users_list": users_list,
                 "tickets_list": tickets_list,
-                "flash_message": flash_message
+                "new_ticket_flash_message": new_ticket_flash_message,
+                "new_user_flash_message": new_user_flash_message,
+                "Role": Role,
                 }
             html_file = "admin_dashboard.html"
  
@@ -50,7 +53,8 @@ def dashboard(request: Request, response: Response):
             name=html_file,
             context=context
         )
-        response.delete_cookie("flash_message")
+        response.delete_cookie("new_ticket_flash_message")
+        response.delete_cookie("new_user_flash_message")
         return response
 
     else:

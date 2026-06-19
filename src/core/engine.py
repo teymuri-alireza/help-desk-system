@@ -33,7 +33,7 @@ class HelpDeskCore:
         Handle administrative operations on users.
 
         Args:
-            action (str): The admin action to perform (`list_users`, `find_user`, `find_user_by_username`, or `update_user`
+            action (str): The admin action to perform (`new_user`, `list_users`, `find_user`, `find_user_by_username`, or `update_user`
                 `delete_user`).
             user_id (int): User ID for find or update operations.
             username (str): Username for find_user_by_username operations.
@@ -44,7 +44,9 @@ class HelpDeskCore:
             list[User] | User | bool: List of users for "list_users" action, single user for "find_user" or "find_user_by_username" actions,
                 and boolean for "update_user" action, indicating if the operation was successful or not.
         """
-        if action == "list_users":
+        if action == "new_user":
+            self.storage.insert_user(user=user)
+        elif action == "list_users":
             return self.storage.list_users(limit=limit)
         elif action == "find_user":
             return self.storage.find_user(user_id)
