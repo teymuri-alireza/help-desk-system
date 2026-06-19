@@ -45,17 +45,20 @@ def show_user(request: Request, user_id: int = Path(...)):
     if found_user is not None and found_user.role == Role.SYSTEM_ADMIN:
         user_to_show = helpdesk.admin_api(action="find_user", user_id=user_id)
         if user_to_show is not None:
+            update_user_flash_message = request.cookies.get("update_user_flash_message")
             context = {
                 "request": request,
                 "user": user_to_show,
                 "Role": Role,
                 "UserStatus": UserStatus,
+                "update_user_flash_message": update_user_flash_message,
             }
             response = templates.TemplateResponse(
                 request=request,
                 name="show_user.html",
                 context=context
             )
+            response.delete_cookie("update_user_flash_message")
             return response
         else:
             return templates.TemplateResponse(
@@ -116,7 +119,10 @@ def patch_user(
     if found_user is not None and found_user.role == Role.SYSTEM_ADMIN:
         user_to_update = User(name=name, email=email, username=username, role=role, status=user_status)
         helpdesk.admin_api("update_user", user=user_to_update, user_id=user_id)
-        return RedirectResponse(url=f"/users/{user_id}", status_code=status.HTTP_303_SEE_OTHER)
+
+        redirect = RedirectResponse(url=f"/users/{user_id}", status_code=status.HTTP_303_SEE_OTHER)
+        redirect.set_cookie(key="update_user_flash_message", value="successful")
+        return redirect
     else:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Access denied")
 

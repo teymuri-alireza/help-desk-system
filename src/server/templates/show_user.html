@@ -31,9 +31,31 @@
     </nav>
 </header>
 
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        // Check localStorage for flash message
+        if (localStorage.getItem('update_user_flash_message')) {
+            const flashDiv = document.getElementById('user-flash-alert');
+            if (flashDiv) {
+                flashDiv.style.display = 'block';
+                setTimeout(() => {
+                    flashDiv.style.opacity = "0";
+                    setTimeout(() => {
+                        flashDiv.remove();
+                    }, 500);
+                }, 3500);
+            }
+            localStorage.removeItem('update_user_flash_message');
+        }
+    });
+</script>
+
 <main class="dashboard">
 
     <section class="card">
+        <div id="user-flash-alert" class="alert alert-success" style="display: none;">
+            کاربر با موفقیت آپدیت شد
+        </div>
         <div class="section-header">
             <h2>پروفایل کاربر</h2>
         </div>
@@ -149,16 +171,14 @@
     try {
         const response = await fetch(form.action, {
             method: "PATCH",
-            body: formData
+            body: formData,
+            credentials: 'include'
         });
 
-        if (response.redirected) {
-            window.location.href = response.url;
-            return;
-        }
-
         if (response.ok) {
-            return
+            // Store flash message in localStorage instead of cookie
+            localStorage.setItem('update_user_flash_message', 'successful');
+            window.location.href = response.url;
         } else {
             const error = await response.text();
             alert("Error: " + error);
