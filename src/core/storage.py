@@ -82,7 +82,8 @@ class StorageEngine:
         with self.session_factory() as session:
             found_ticket = session.query(Ticket).options(
                 joinedload(Ticket.creator),
-                joinedload(Ticket.responses).joinedload(Response.creator)
+                joinedload(Ticket.responses).joinedload(Response.creator),
+                joinedload(Ticket.assignee)
                 ).filter(Ticket.id==ticket_id).one_or_none()
             return found_ticket
 
