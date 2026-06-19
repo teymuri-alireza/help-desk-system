@@ -23,7 +23,6 @@ def list_users(request: Request):
         context = {
             "request": request,
             "users_list": users_list,
-            "user_role": found_user.role,
         }
         response = templates.TemplateResponse(
             request=request,
