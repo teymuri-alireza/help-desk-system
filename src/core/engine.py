@@ -2,6 +2,7 @@ from src.database.engine import DatabaseEngine
 from src.database.tables import User, Ticket, Response, Attachment, Notification
 from src.core.storage import StorageEngine
 from src.core.services.admin_service import AdminService
+from src.core.services.authentication_service import AuthenticationService
 
 
 class HelpDeskCore:
@@ -23,23 +24,7 @@ class HelpDeskCore:
         self.storage = StorageEngine(self.session_factory)
 
         self.admin_api = AdminService(storage=self.storage)
-
-    def authentication_api(self, action: str, user: User = None, username: str = None) -> bool | None:
-        """
-        Handle authentication operations.
-
-        Args:
-            action (str): The authentication action to perform (`signup` or `login`).
-            user (User): User object for signup operations.
-            username (str): Username for login validation.
-
-        Returns:
-            bool | None: Boolean indicating if user validation is successful for "login" action, None for "signup" action.
-        """
-        if action == "signup":
-            self.storage.insert_user(user)
-        elif action == "login":
-            return self.storage.validate_user(username)
+        self.authentication_api = AuthenticationService(storage=self.storage)
 
     def ticket_api(
             self,
