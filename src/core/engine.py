@@ -1,5 +1,4 @@
 from src.database.engine import DatabaseEngine
-from src.database.tables import User, Ticket, Response, Attachment, Notification
 from src.core.storage import StorageEngine
 from src.core.services.admin_service import AdminService
 from src.core.services.authentication_service import AuthenticationService

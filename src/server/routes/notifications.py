@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Body, status, Request, Path
+from fastapi import APIRouter, Body, status, Request
 from fastapi.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
 from src.server.dependencies import get_static_path, get_helpdesk, get_current_user
