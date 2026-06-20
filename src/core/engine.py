@@ -4,6 +4,7 @@ from src.core.storage import StorageEngine
 from src.core.services.admin_service import AdminService
 from src.core.services.authentication_service import AuthenticationService
 from src.core.services.ticket_service import TicketService
+from src.core.services.response_sesrvice import ResponseService
 
 
 class HelpDeskCore:
@@ -27,22 +28,7 @@ class HelpDeskCore:
         self.admin_api = AdminService(storage=self.storage)
         self.authentication_api = AuthenticationService(storage=self.storage)
         self.ticket_api = TicketService(storage=self.storage)
-
-    def response_api(self, action: str, response: Response = None) -> list[Response] | None:
-        """
-        Handle response operations.
-
-        Args:
-            action (str): The response action to perform (`list` or `new`).
-            response (Response): Response object for new response creation.
-
-        Returns:
-            list[Response] | None: List of responses for "list" action, None for "new" action.
-        """
-        if action == "list":
-            return self.storage.list_responses()
-        elif action == "new":
-            self.storage.insert_response(response)
+        self.response_api = ResponseService(storage=self.storage)
 
     def attachment_api(self, attachment: Attachment) -> None:
         """
