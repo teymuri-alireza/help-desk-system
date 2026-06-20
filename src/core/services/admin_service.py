@@ -25,7 +25,7 @@ class AdminService:
         """
         self.storage.insert_user(user=user)
 
-    def list_users(self, limit: int) -> list[User]:
+    def list_users(self, limit: int = None) -> list[User]:
         """
         List users with a specified limit.
 
