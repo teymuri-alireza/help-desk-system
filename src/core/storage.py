@@ -184,12 +184,12 @@ class StorageEngine:
                 old_notification.is_read = is_read
                 session.commit()
 
-    def list_notifications(self, user_id: int, unread: bool = True) -> list[Notification]:
+    def list_notifications(self, receiver_id: int, unread: bool = True) -> list[Notification]:
         """
         Retrieve notifications for a user.
 
         Args:
-            user_id: The user ID to retrieve notifications for.
+            receiver_id: The receiver ID to retrieve notifications for.
             unread: If True, retrieve only unread notifications; if False,
                 retrieve all notifications.
 
@@ -199,11 +199,11 @@ class StorageEngine:
         with self.session_factory() as session:
             if unread:
                 fetched_notifications = session.query(Notification).filter(
-                    Notification.receiver_id==user_id, Notification.is_read==False
+                    Notification.receiver_id==receiver_id, Notification.is_read==False
                     ).all()
             else:
                 fetched_notifications = session.query(Notification).filter(
-                    Notification.receiver_id==user_id).order_by(Notification.id.desc()).all()
+                    Notification.receiver_id==receiver_id).order_by(Notification.id.desc()).all()
 
             return fetched_notifications
 
