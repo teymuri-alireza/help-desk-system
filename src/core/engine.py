@@ -3,6 +3,7 @@ from src.database.tables import User, Ticket, Response, Attachment, Notification
 from src.core.storage import StorageEngine
 from src.core.services.admin_service import AdminService
 from src.core.services.authentication_service import AuthenticationService
+from src.core.services.ticket_service import TicketService
 
 
 class HelpDeskCore:
@@ -25,37 +26,7 @@ class HelpDeskCore:
 
         self.admin_api = AdminService(storage=self.storage)
         self.authentication_api = AuthenticationService(storage=self.storage)
-
-    def ticket_api(
-            self,
-            action: str,
-            ticket: Ticket = None,
-            ticket_id: int = None,
-            user_id: int | None = None,
-            limit: int | None = None,
-        ) -> list[Ticket] | Ticket | bool:
-        """
-        Handle ticket operations.
-
-        Args:
-            action (str): The ticket action to perform (`new`, `list`, `find`, or `update`).
-            ticket (Ticket): Ticket object for new ticket creation.
-            ticket_id (int): ID of the ticket for find or update operations.
-            user_id (int | None): User ID to filter tickets for "list" action.
-            limit (int | None): The maximum number of tickets to retrieve.
-
-        Returns:
-            list[Ticket] | Ticket | bool: List of tickets for "list" action, single ticket for "find" action,
-                and boolean for "new" action, indicating it was successful or not.
-        """
-        if action == "new":
-            return self.storage.insert_ticket(ticket)
-        elif action == "list":
-            return self.storage.list_tickets(user_id, limit)
-        elif action == "find":
-            return self.storage.find_ticket(ticket_id)
-        elif action == "update":
-            self.storage.update_ticket(new_ticket=ticket, old_ticket_id=ticket_id)
+        self.ticket_api = TicketService(storage=self.storage)
 
     def response_api(self, action: str, response: Response = None) -> list[Response] | None:
         """
