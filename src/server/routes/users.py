@@ -94,7 +94,7 @@ def new_user(
 
         found_user = helpdesk.admin_api.find_user_by_username(username=username)
         notification = Notification(receiver_id=found_user.id, title="کاربر جدید", text=f"خوش آمدید {found_user.name}")
-        helpdesk.notification_api(action="new", notification=notification)
+        helpdesk.notification_api.new_notification(notification=notification)
 
         redirect = RedirectResponse(url="/dashboard", status_code=status.HTTP_303_SEE_OTHER)
         redirect.set_cookie(key="new_user_flash_message", value="successful")
