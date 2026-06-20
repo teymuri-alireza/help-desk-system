@@ -9,8 +9,6 @@ templates = Jinja2Templates(directory=TEMPLATES_DIR)
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
-# Create temporary session to manage errors
-temp_session = {}
 
 # Serve the authentication page
 @router.get("")
@@ -20,12 +18,14 @@ def authentication(request: Request):
         if logged_in_user:
             return RedirectResponse(url="/dashboard", status_code=status.HTTP_303_SEE_OTHER)
     except:
-        login_error = temp_session.pop("login_error", None)
-        signup_error = temp_session.pop("signup_error", None)
-        return templates.TemplateResponse(
+        login_error = request.session.pop("login_error", None)
+        signup_error = request.session.pop("signup_error", None)
+        response = templates.TemplateResponse(
             request=request, 
             name="auth.html", 
             context={"request": request, "signup_error": signup_error, "login_error": login_error})
+        response.delete_cookie(key="signup_error")
+        return response
 
 # API endpoints
 # Authentication
@@ -38,8 +38,9 @@ def sign_up(request: Request,
     helpdesk = get_helpdesk()
     user_exist = helpdesk.admin_api.find_user_by_username(username=username)
     if user_exist:
-        temp_session["signup_error"] = "این نام کاربری قبلا استفاده شده است."
-        return RedirectResponse(url="/auth", status_code=status.HTTP_303_SEE_OTHER)
+        redirect = RedirectResponse(url="/auth", status_code=status.HTTP_303_SEE_OTHER)
+        request.session["signup_error"] = "این نام کاربری قبلا استفاده شده است."
+        return redirect
 
     new_user = User(name=name, username=username, email=email, role=Role.STUDENT)
     helpdesk.authentication_api.signup(user=new_user)
@@ -74,8 +75,9 @@ def log_in(request: Request, username: str = Form(...)):
         return response
     else:
         global temp_session
-        temp_session["login_error"] = "کاربر یافت نشد"
-        return RedirectResponse(url="/auth", status_code=status.HTTP_303_SEE_OTHER)
+        response = RedirectResponse(url="/auth", status_code=status.HTTP_303_SEE_OTHER)
+        request.session["login_error"] = "کاربر یافت نشد."
+        return response
 
 @router.get("/logout")
 def log_out(response: Response):
