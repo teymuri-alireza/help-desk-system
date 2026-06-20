@@ -24,7 +24,7 @@ def dashboard(request: Request, response: Response):
         new_ticket_flash_message = request.cookies.get("new_ticket_flash_message")
         new_user_flash_message = request.cookies.get("new_user_flash_message")
         if found_user.role == Role.STUDENT or found_user.role == Role.EMPLOYEE:
-            tickets_list = helpdesk.ticket_api(action="list", user_id=found_user.id, limit=10)
+            tickets_list = helpdesk.ticket_api.list_tickets(creator_id=found_user.id, limit=10)
             context = {
                     "request": request,
                     "user_username": found_user.username, 
@@ -34,7 +34,7 @@ def dashboard(request: Request, response: Response):
                     }
             html_file = "user_dashboard.html"
         else:
-            tickets_list = helpdesk.ticket_api(action="list", limit=10)
+            tickets_list = helpdesk.ticket_api.list_tickets(limit=10)
             users_list = helpdesk.admin_api.list_users(limit=10)
             context = {
                 "request": request,

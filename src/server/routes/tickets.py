@@ -21,10 +21,10 @@ def list_tickets(request: Request):
     found_user = helpdesk.admin_api.find_user_by_username(username=user_username)
     if found_user is not None:
         if found_user.role == Role.STUDENT or found_user.role == Role.EMPLOYEE:
-            tickets_list = helpdesk.ticket_api(action="list", user_id=found_user.id)
+            tickets_list = helpdesk.ticket_api.list_tickets(creator_id=found_user.id)
         else:
             # For admins
-            tickets_list = helpdesk.ticket_api(action="list")
+            tickets_list = helpdesk.ticket_api.list_tickets()
 
         context = {
             "request": request,
@@ -53,7 +53,7 @@ def show_ticket(request: Request, ticket_id: int = Path(...)):
     found_user = helpdesk.admin_api.find_user_by_username(username=user_username)
     if found_user is not None:
         try:
-            found_ticket = helpdesk.ticket_api(action="find", ticket_id=ticket_id)
+            found_ticket = helpdesk.ticket_api.find_ticket(ticket_id=ticket_id)
             # Check if user has access
             if found_user.role == Role.STUDENT or found_user.role == Role.EMPLOYEE:
                 if found_ticket.creator_id != found_user.id:
@@ -114,7 +114,7 @@ def new_ticket(
         with open(f"{upload.path}/{upload.file_name}", "wb") as file:
             file.write(content)
 
-    is_created = helpdesk.ticket_api(action="new", ticket=ticket)
+    is_created = helpdesk.ticket_api.new_ticket(ticket=ticket)
     if is_created:
         notification = Notification(receiver_id=creator_id, title="تیکت جدید ثبت شد", text=f"عنوان تیکت: {title}")
         helpdesk.notification_api(action="new", notification=notification)
@@ -148,7 +148,7 @@ def patch_ticket(        request: Request,
     # Check if user is admin first
     if found_user is not None and found_user.role == Role.SYSTEM_ADMIN:
         ticket_to_update = Ticket(title=title, description=description, status=ticket_status, priority=priority, assigned_to=assigned_to)
-        helpdesk.ticket_api("update", ticket=ticket_to_update, ticket_id=ticket_id)
+        helpdesk.ticket_api.update_ticket(new_ticket=ticket_to_update, old_ticket_id=ticket_id)
         return RedirectResponse(url=f"/tickets/{ticket_id}", status_code=status.HTTP_303_SEE_OTHER)
     else:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Access denied")
