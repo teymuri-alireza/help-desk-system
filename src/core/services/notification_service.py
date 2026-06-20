@@ -35,7 +35,7 @@ class NotificationService:
         """
         self.storage.update_notification(notification_id=notification_id, is_read=is_read)
 
-    def list_unread(self, receiver_id):
+    def list_unread(self, receiver_id: int) -> list[Notification]:
         """
         List all unread notifications for a receiver.
 
@@ -47,7 +47,7 @@ class NotificationService:
         """
         return self.storage.list_notifications(receiver_id=receiver_id)
 
-    def list_all(self, receiver_id: int, unread: bool = False):
+    def list_all(self, receiver_id: int, unread: bool = False) -> list[Notification]:
         """
         List all notifications for a receiver.
 

@@ -16,7 +16,7 @@ class AttachmentService:
         """
         self.storage = storage
 
-    def new_attachment(self, attachment: Attachment):
+    def new_attachment(self, attachment: Attachment) -> None:
         """
         Create a new attachment.
 
