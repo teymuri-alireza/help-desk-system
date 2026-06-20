@@ -109,7 +109,7 @@ def new_ticket(
             creator_id=ticket.creator_id, 
             path=f"{STATIC_DIR}/upload"
             )
-        helpdesk.attachment_api(upload)
+        helpdesk.attachment_api.new_attachment(attachment=upload)
         content = attachment.file.read()
         with open(f"{upload.path}/{upload.file_name}", "wb") as file:
             file.write(content)
