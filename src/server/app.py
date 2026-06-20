@@ -3,6 +3,7 @@ from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from fastapi_swagger import patch_fastapi
+from starlette.middleware.sessions import SessionMiddleware
 from contextlib import asynccontextmanager
 from src.server.routes.auth import router as auth_router
 from src.server.routes.tickets import router as tickets_router
@@ -26,6 +27,10 @@ async def lifespan(app: FastAPI):
 # Patch FastAPI to serve Swagger UI locally
 app = FastAPI(docs_url=None, swagger_ui_oauth2_redirect_url=None, lifespan=lifespan)
 patch_fastapi(app=app, redirect_from_root_to_docs=False)
+app.add_middleware(
+    SessionMiddleware,
+    secret_key="placeholder_for_secret_key"
+)
 
 templates = Jinja2Templates(directory=TEMPLATES_DIR)
 app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
