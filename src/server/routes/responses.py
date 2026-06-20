@@ -21,11 +21,11 @@ def new_response(
     except:
         return RedirectResponse(url="/auth", status_code=status.HTTP_303_SEE_OTHER)
     helpdesk = get_helpdesk()
-    found_user = helpdesk.admin_api(action="find_user_by_username", username=user_username)
+    found_user = helpdesk.admin_api.find_user_by_username(username=user_username)
     if found_user is not None:
         creator_id = found_user.id
         response = Response(text=text, ticket_id=response_ticket_id, creator_id=creator_id)
-        helpdesk.response_api(action="new", response=response)
+        helpdesk.response_api.new_response(response=response)
         return RedirectResponse(url=f"/tickets/{response_ticket_id}", status_code=status.HTTP_303_SEE_OTHER)
     else:
         # Error handler for when db is removed but session exists

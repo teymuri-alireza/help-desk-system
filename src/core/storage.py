@@ -47,25 +47,25 @@ class StorageEngine:
                 return True
             return False
 
-    def list_tickets(self, user_id: int | None, limit: int | None) -> list[Ticket]:
+    def list_tickets(self, creator_id: int | None, limit: int | None) -> list[Ticket]:
         """
         Retrieve all tickets.
 
         Args:
-            user_id: The user ID to filter tickets by. If None, returns all tickets.
+            creator_id: The creator ID to filter tickets by. If None, returns all tickets.
             limit: The maximum number of tickets to retrieve.
 
         Returns:
             list[Ticket]: List of all Ticket objects.
         """
         with self.session_factory() as session:
-            if user_id is None:
+            if creator_id is None:
                 tickets = session.query(Ticket).options(joinedload(Ticket.creator), joinedload(Ticket.responses)).order_by(
                     Ticket.id.desc()
                 ).limit(limit=limit).all()
             else:
                 tickets = session.query(Ticket).options(joinedload(Ticket.creator), joinedload(Ticket.responses)).filter(
-                    Ticket.creator_id==user_id
+                    Ticket.creator_id==creator_id
                 ).order_by(Ticket.id.desc()).limit(limit=limit).all()
             return tickets
 
@@ -103,7 +103,7 @@ class StorageEngine:
             return True
         return False
 
-    def update_ticket(self, new_ticket: Ticket, old_ticket_id: int) -> bool:
+    def update_ticket(self, new_ticket: Ticket, old_ticket_id: int) -> None:
         """
         Update an existing ticket in the database.
 
@@ -184,12 +184,12 @@ class StorageEngine:
                 old_notification.is_read = is_read
                 session.commit()
 
-    def list_notifications(self, user_id: int, unread: bool = True) -> list[Notification]:
+    def list_notifications(self, receiver_id: int, unread: bool = True) -> list[Notification]:
         """
         Retrieve notifications for a user.
 
         Args:
-            user_id: The user ID to retrieve notifications for.
+            receiver_id: The receiver ID to retrieve notifications for.
             unread: If True, retrieve only unread notifications; if False,
                 retrieve all notifications.
 
@@ -199,11 +199,11 @@ class StorageEngine:
         with self.session_factory() as session:
             if unread:
                 fetched_notifications = session.query(Notification).filter(
-                    Notification.receiver_id==user_id, Notification.is_read==False
+                    Notification.receiver_id==receiver_id, Notification.is_read==False
                     ).all()
             else:
                 fetched_notifications = session.query(Notification).filter(
-                    Notification.receiver_id==user_id).order_by(Notification.id.desc()).all()
+                    Notification.receiver_id==receiver_id).order_by(Notification.id.desc()).all()
 
             return fetched_notifications
 

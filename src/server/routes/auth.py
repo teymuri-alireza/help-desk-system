@@ -36,17 +36,17 @@ def sign_up(request: Request,
     email: str = Form(...),
     ):
     helpdesk = get_helpdesk()
-    user_exist = helpdesk.authentication_api(action="login", username=username)
+    user_exist = helpdesk.authentication_api.login(username=username)
     if user_exist:
         temp_session["signup_error"] = "این نام کاربری قبلا استفاده شده است."
         return RedirectResponse(url="/auth", status_code=status.HTTP_303_SEE_OTHER)
 
     new_user = User(name=name, username=username, email=email, role=Role.STUDENT)
-    helpdesk.authentication_api(action="signup", user=new_user)
+    helpdesk.authentication_api.signup(user=new_user)
 
-    found_user = helpdesk.admin_api(action="find_user_by_username", username=username)
+    found_user = helpdesk.admin_api.find_user_by_username(username=username)
     notification = Notification(receiver_id=found_user.id, title="کاربر جدید", text=f"خوش آمدید {found_user.name}")
-    helpdesk.notification_api(action="new", notification=notification)
+    helpdesk.notification_api.new_notification(notification=notification)
 
     token = create_access_token({"sub": username})
     response = RedirectResponse(url="/dashboard", status_code=status.HTTP_303_SEE_OTHER)
@@ -61,7 +61,7 @@ def sign_up(request: Request,
 @router.post("/login")
 def log_in(request: Request, username: str = Form(...)):
     helpdesk = get_helpdesk()
-    user_exist = helpdesk.authentication_api(action="login", username=username)
+    user_exist = helpdesk.authentication_api.login(username=username)
     if user_exist:
         token = create_access_token({"sub": username})
         response = RedirectResponse(url="/dashboard", status_code=status.HTTP_303_SEE_OTHER)
