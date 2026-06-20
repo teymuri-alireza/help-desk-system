@@ -103,7 +103,7 @@ class StorageEngine:
             return True
         return False
 
-    def update_ticket(self, new_ticket: Ticket, old_ticket_id: int) -> bool:
+    def update_ticket(self, new_ticket: Ticket, old_ticket_id: int) -> None:
         """
         Update an existing ticket in the database.
 
