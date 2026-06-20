@@ -46,7 +46,7 @@
     <section class="notifications-list" id="notifications-list">
         {% for notification in notifications_list %}
             <article class="notification-card {% if not notification.is_read %}unread{% endif %}">
-                <div class="notification-top">
+                <div id="{{ notification.id }}" class="notification-top">
                     <span class="notification-date">
                         ایجاد شده در {{ notification.created_at }}
                     </span>

@@ -35,6 +35,11 @@ async function loadNotifications() {
         const title = document.createElement('div');
         title.className = 'notification-title';
         title.textContent = notification.title ?? '';
+        title.style.cursor = 'pointer';
+        title.style.textDecoration = 'underline';
+        title.onclick = () => {
+            window.open(`/notifications/all/#${notification.id}`, '_blank');
+        };
 
         const text = document.createElement('div');
         text.className = 'notification-text';
