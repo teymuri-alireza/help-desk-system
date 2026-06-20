@@ -78,11 +78,13 @@
                         </div>
                     </div>
                 </div>
+                {% if user_role == "System Admin" %}
                 <div class="auth-buttons">
                     <button class="btn submit-btn show-ticket delete-user-btn" style="background-color: tomato;" data-user-id="{{ user.id }}">
                         Delete
                     </button>
                 </div>
+                {% endif %}
             {% else %}
                 <div>
                     <p class="ticket-description">کاربر مورد نظر یافت نشد</p>
