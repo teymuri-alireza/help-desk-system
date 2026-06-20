@@ -114,17 +114,13 @@ def new_ticket(
         with open(f"{upload.path}/{upload.file_name}", "wb") as file:
             file.write(content)
 
-    is_created = helpdesk.ticket_api.new_ticket(ticket=ticket)
-    if is_created:
-        notification = Notification(receiver_id=creator_id, title="تیکت جدید ثبت شد", text=f"عنوان تیکت: {title}")
-        helpdesk.notification_api.new_notification(notification=notification)
+    helpdesk.ticket_api.new_ticket(ticket=ticket)
+    notification = Notification(receiver_id=creator_id, title="تیکت جدید ثبت شد", text=f"عنوان تیکت: {title}")
+    helpdesk.notification_api.new_notification(notification=notification)
 
-        redirect = RedirectResponse(url="/dashboard", status_code=status.HTTP_303_SEE_OTHER)
-        redirect.set_cookie(key="new_ticket_flash_message", value="successful")
-        return redirect
-    else:
-        # Placeholder for error, this functionality will be implemented later
-        return {"response": "error occured in new_ticket route"}
+    redirect = RedirectResponse(url="/dashboard", status_code=status.HTTP_303_SEE_OTHER)
+    redirect.set_cookie(key="new_ticket_flash_message", value="successful")
+    return redirect
 
 @router.post("/{ticket_id}/assign")
 def assign_ticket():
