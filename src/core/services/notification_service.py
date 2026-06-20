@@ -47,7 +47,7 @@ class NotificationService:
         """
         return self.storage.list_notifications(receiver_id=receiver_id)
 
-    def list_all(self, receiver_id: int, unread: bool):
+    def list_all(self, receiver_id: int, unread: bool = False):
         """
         List all notifications for a receiver.
 
@@ -58,4 +58,4 @@ class NotificationService:
         Returns:
             List of notifications.
         """
-        return self.storage.list_notifications(receiver_id=receiver_id, unread=False)
+        return self.storage.list_notifications(receiver_id=receiver_id, unread=unread)
