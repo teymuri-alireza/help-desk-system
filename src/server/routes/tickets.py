@@ -113,6 +113,8 @@ def new_ticket(
         os.makedirs(f"{STATIC_DIR}/upload/", exist_ok=True)
 
         ticket = Ticket(title=title, description=description, creator_id=creator_id)
+        helpdesk.ticket_api.new_ticket(ticket=ticket)
+
         if attachment.size != 0:
             upload = Attachment(
                 file_name=attachment.filename, 
@@ -126,7 +128,6 @@ def new_ticket(
             with open(f"{upload.path}/{upload.file_name}", "wb") as file:
                 file.write(content)
 
-        helpdesk.ticket_api.new_ticket(ticket=ticket)
         notification = Notification(receiver_id=creator_id, title="تیکت جدید ثبت شد", text=f"عنوان تیکت: {title}")
         helpdesk.notification_api.new_notification(notification=notification)
 
