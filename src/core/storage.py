@@ -117,6 +117,7 @@ class StorageEngine:
             with self.session_factory() as session:
                 session.add(ticket)
                 session.commit()
+                session.refresh(ticket)
         except Exception as e:
             core_logger.error(f"Insert ticket failed - {e}")
             raise
