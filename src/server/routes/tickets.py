@@ -129,11 +129,11 @@ def assign_ticket():
 @router.patch("/{ticket_id}")
 def patch_ticket(        request: Request, 
         ticket_id: int = Path(...),
-        title: str = Form(...),
-        description: str = Form(...),
-        ticket_status: str = Form(...),
-        priority: str = Form(...),
-        assigned_to: str = Form(...),
+        title: str | None = Form(None),
+        description: str | None = Form(None),
+        ticket_status: str | None = Form(None),
+        priority: str | None = Form(None),
+        assigned_to: str | None = Form(None),
     ):
     try:
         user_username = get_current_user(request=request)

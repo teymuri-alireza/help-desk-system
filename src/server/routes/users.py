@@ -107,11 +107,11 @@ def new_user(
 def patch_user(
         request: Request, 
         user_id: int = Path(...), 
-        name: str = Form(...), 
-        email: str = Form(...), 
-        username: str = Form(...), 
-        role: str = Form(...), 
-        user_status: str = Form(...)
+        name: str | None = Form(None), 
+        email: str | None = Form(None), 
+        username: str | None = Form(None), 
+        role: str | None = Form(None), 
+        user_status: str | None = Form(None)
     ):
     try:
         user_username = get_current_user(request=request)
