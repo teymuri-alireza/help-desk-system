@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Request, Response, Form, status
+from fastapi import APIRouter, Request, Response, Form, status, HTTPException
 from fastapi.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
 from src.server.dependencies import get_static_path, get_helpdesk, create_access_token, get_current_user
@@ -35,35 +35,21 @@ def sign_up(request: Request,
     username: str = Form(...),
     email: str = Form(...),
     ):
-    helpdesk = get_helpdesk()
-    user_exist = helpdesk.admin_api.find_user_by_username(username=username)
-    if user_exist:
-        redirect = RedirectResponse(url="/auth", status_code=status.HTTP_303_SEE_OTHER)
-        request.session["signup_error"] = "این نام کاربری قبلا استفاده شده است."
-        return redirect
+    try:
+        helpdesk = get_helpdesk()
+        user_exist = helpdesk.admin_api.find_user_by_username(username=username)
+        if user_exist:
+            redirect = RedirectResponse(url="/auth", status_code=status.HTTP_303_SEE_OTHER)
+            request.session["signup_error"] = "این نام کاربری قبلا استفاده شده است."
+            return redirect
 
-    new_user = User(name=name, username=username, email=email, role=Role.STUDENT)
-    helpdesk.authentication_api.signup(user=new_user)
+        new_user = User(name=name, username=username, email=email, role=Role.STUDENT)
+        helpdesk.authentication_api.signup(user=new_user)
 
-    found_user = helpdesk.admin_api.find_user_by_username(username=username)
-    notification = Notification(receiver_id=found_user.id, title="کاربر جدید", text=f"خوش آمدید {found_user.name}")
-    helpdesk.notification_api.new_notification(notification=notification)
+        found_user = helpdesk.admin_api.find_user_by_username(username=username)
+        notification = Notification(receiver_id=found_user.id, title="کاربر جدید", text=f"خوش آمدید {found_user.name}")
+        helpdesk.notification_api.new_notification(notification=notification)
 
-    token = create_access_token({"sub": username})
-    response = RedirectResponse(url="/dashboard", status_code=status.HTTP_303_SEE_OTHER)
-    response.set_cookie(
-        key="access_token",
-        value=token,
-        httponly=True,
-        samesite="lax"
-    )
-    return response
-
-@router.post("/login")
-def log_in(request: Request, username: str = Form(...)):
-    helpdesk = get_helpdesk()
-    user_exist = helpdesk.authentication_api.login(username=username)
-    if user_exist:
         token = create_access_token({"sub": username})
         response = RedirectResponse(url="/dashboard", status_code=status.HTTP_303_SEE_OTHER)
         response.set_cookie(
@@ -73,11 +59,31 @@ def log_in(request: Request, username: str = Form(...)):
             samesite="lax"
         )
         return response
-    else:
-        global temp_session
-        response = RedirectResponse(url="/auth", status_code=status.HTTP_303_SEE_OTHER)
-        request.session["login_error"] = "کاربر یافت نشد."
-        return response
+    except:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Internal server error")
+
+@router.post("/login")
+def log_in(request: Request, username: str = Form(...)):
+    try:
+        helpdesk = get_helpdesk()
+        user_exist = helpdesk.authentication_api.login(username=username)
+        if user_exist:
+            token = create_access_token({"sub": username})
+            response = RedirectResponse(url="/dashboard", status_code=status.HTTP_303_SEE_OTHER)
+            response.set_cookie(
+                key="access_token",
+                value=token,
+                httponly=True,
+                samesite="lax"
+            )
+            return response
+        else:
+            global temp_session
+            response = RedirectResponse(url="/auth", status_code=status.HTTP_303_SEE_OTHER)
+            request.session["login_error"] = "کاربر یافت نشد."
+            return response
+    except:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Internal server error")
 
 @router.get("/logout")
 def log_out(response: Response):
