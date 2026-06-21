@@ -1,9 +1,11 @@
+import logging
 from fastapi import APIRouter, Request, status, Path, Form, HTTPException
 from fastapi.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
 from src.server.dependencies import get_helpdesk, get_current_user, get_static_path
 from src.database.tables import Role, User, UserStatus, Notification
 
+core_logger = logging.getLogger("core")
 TEMPLATES_DIR, STATIC_DIR = get_static_path()
 templates = Jinja2Templates(directory=TEMPLATES_DIR)
 
@@ -14,7 +16,8 @@ router = APIRouter(prefix="/users", tags=["users"])
 def list_users(request: Request):
     try:
         user_username = get_current_user(request=request)
-    except:
+    except HTTPException as e:
+        core_logger.error(f"{e} - The access token is missing.")
         return RedirectResponse(url="/auth", status_code=status.HTTP_303_SEE_OTHER)
     helpdesk = get_helpdesk()
     found_user = helpdesk.admin_api.find_user_by_username(username=user_username)
@@ -37,7 +40,8 @@ def list_users(request: Request):
 def show_user(request: Request, user_id: int = Path(...)):
     try:
         user_username = get_current_user(request=request)
-    except:
+    except HTTPException as e:
+        core_logger.error(f"{e} - The access token is missing.")
         return RedirectResponse(url="/auth", status_code=status.HTTP_303_SEE_OTHER)
     helpdesk = get_helpdesk()
     found_user = helpdesk.admin_api.find_user_by_username(username=user_username)
@@ -83,7 +87,8 @@ def new_user(
     ):
     try:
         user_username = get_current_user(request=request)
-    except:
+    except HTTPException as e:
+        core_logger.error(f"{e} - The access token is missing.")
         return RedirectResponse(url="/auth", status_code=status.HTTP_303_SEE_OTHER)
     helpdesk = get_helpdesk()
     found_user = helpdesk.admin_api.find_user_by_username(username=user_username)
@@ -115,7 +120,8 @@ def patch_user(
     ):
     try:
         user_username = get_current_user(request=request)
-    except:
+    except HTTPException as e:
+        core_logger.error(f"{e} - The access token is missing.")
         return RedirectResponse(url="/auth", status_code=status.HTTP_303_SEE_OTHER)
     helpdesk = get_helpdesk()
     found_user = helpdesk.admin_api.find_user_by_username(username=user_username)
@@ -135,7 +141,8 @@ def patch_user(
 def delete_user(request: Request, user_id: int = Path(...)):
     try:
         user_username = get_current_user(request=request)
-    except:
+    except HTTPException as e:
+        core_logger.error(f"{e} - The access token is missing.")
         return RedirectResponse(url="/auth", status_code=status.HTTP_303_SEE_OTHER)
     helpdesk = get_helpdesk()
     found_user = helpdesk.admin_api.find_user_by_username(username=user_username)

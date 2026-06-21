@@ -1,9 +1,11 @@
-from fastapi import APIRouter, Request, status, Response
+import logging
+from fastapi import APIRouter, Request, status, Response, HTTPException
 from fastapi.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
 from src.server.dependencies import get_static_path, get_helpdesk, get_current_user
 from src.database.tables import Role
 
+core_logger = logging.getLogger("core")
 TEMPLATES_DIR = get_static_path()[0]
 templates = Jinja2Templates(directory=TEMPLATES_DIR)
 
@@ -14,7 +16,8 @@ router = APIRouter(prefix="/dashboard", tags=["dashboard"])
 def dashboard(request: Request, response: Response):
     try:
         user_username = get_current_user(request=request)
-    except:
+    except HTTPException as e:
+        core_logger.error(f"{e} - The access token is missing.")
         return RedirectResponse(url="/auth", status_code=status.HTTP_303_SEE_OTHER)
 
     helpdesk = get_helpdesk()

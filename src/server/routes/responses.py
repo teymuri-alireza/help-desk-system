@@ -1,7 +1,10 @@
-from fastapi import APIRouter, Request, status, Form
+import logging
+from fastapi import APIRouter, Request, status, Form, HTTPException
 from fastapi.responses import RedirectResponse
 from src.server.dependencies import get_helpdesk, get_current_user
 from src.database.tables import Response
+
+core_logger = logging.getLogger("core")
 
 router = APIRouter(prefix="/tickets/{ticket_id}/responses", tags=["responses"])
 
@@ -18,7 +21,8 @@ def new_response(
     ):
     try:
         user_username = get_current_user(request=request)
-    except:
+    except HTTPException as e:
+        core_logger.error(f"{e} - The access token is missing.")
         return RedirectResponse(url="/auth", status_code=status.HTTP_303_SEE_OTHER)
     helpdesk = get_helpdesk()
     found_user = helpdesk.admin_api.find_user_by_username(username=user_username)
