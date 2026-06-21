@@ -106,21 +106,17 @@ class StorageEngine:
             core_logger.error(f"Find ticket failed - {e}")
             raise
 
-    def insert_ticket(self, ticket: Ticket) -> bool:
+    def insert_ticket(self, ticket: Ticket) -> None:
         """
         Insert a new ticket into the database.
 
         Args:
             ticket: The Ticket object to insert.
-
-        Returns:
-            bool: True if ticket was inserted, False if error occured.
         """
         try:
             with self.session_factory() as session:
                 session.add(ticket)
                 session.commit()
-                return True
         except Exception as e:
             core_logger.error(f"Insert ticket failed - {e}")
             raise
