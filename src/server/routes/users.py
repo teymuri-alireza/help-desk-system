@@ -120,15 +120,16 @@ def patch_user(
     helpdesk = get_helpdesk()
     found_user = helpdesk.admin_api.find_user_by_username(username=user_username)
     # Check if user is admin first
-    if found_user is not None and found_user.role == Role.SYSTEM_ADMIN:
-        user_to_update = User(name=name, email=email, username=username, role=role, status=user_status)
-        helpdesk.admin_api.update_user(new_user=user_to_update, old_user_id=user_id)
+    if found_user is not None:
+        if found_user.role == Role.SYSTEM_ADMIN or found_user.id == user_id:
+            user_to_update = User(name=name, email=email, username=username, role=role, status=user_status)
+            helpdesk.admin_api.update_user(new_user=user_to_update, old_user_id=user_id)
 
-        redirect = RedirectResponse(url=f"/users/{user_id}", status_code=status.HTTP_303_SEE_OTHER)
-        redirect.set_cookie(key="update_user_flash_message", value="successful")
-        return redirect
-    else:
-        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Access denied")
+            redirect = RedirectResponse(url=f"/users/{user_id}", status_code=status.HTTP_303_SEE_OTHER)
+            redirect.set_cookie(key="update_user_flash_message", value="successful")
+            return redirect
+
+    raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Access denied")
 
 @router.delete("/{user_id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_user(request: Request, user_id: int = Path(...)):
