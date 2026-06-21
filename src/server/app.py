@@ -13,6 +13,7 @@ from src.server.routes.users import router as users_router
 from src.server.routes.notifications import router as notifications_router
 from src.server.dependencies import get_static_path, set_helpdesk, get_helpdesk, get_current_user
 from src.core.engine import HelpDeskCore
+from src.utilities.logger import get_logger
 
 TEMPLATES_DIR, STATIC_DIR = get_static_path()
 
@@ -21,6 +22,9 @@ async def lifespan(app: FastAPI):
 
     core = HelpDeskCore()
     set_helpdesk(core)
+
+    # Initialize the core logger
+    core_logger = get_logger()
 
     yield
 
