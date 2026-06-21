@@ -78,7 +78,6 @@ def log_in(request: Request, username: str = Form(...)):
             )
             return response
         else:
-            global temp_session
             response = RedirectResponse(url="/auth", status_code=status.HTTP_303_SEE_OTHER)
             request.session["login_error"] = "کاربر یافت نشد."
             return response
