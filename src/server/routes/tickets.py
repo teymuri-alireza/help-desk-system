@@ -46,7 +46,7 @@ def list_tickets(request: Request):
         else:
             # Error handler for when db is removed but session exists
             return RedirectResponse(url="/auth/logout", status_code=status.HTTP_303_SEE_OTHER)
-    except:
+    except HTTPException:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Internal server error")
 
 @router.get("/{ticket_id}")
@@ -88,7 +88,9 @@ def show_ticket(request: Request, ticket_id: int = Path(...)):
         else:
             # Error handler for when db is removed but session exists
             return RedirectResponse(url="/auth/logout", status_code=status.HTTP_303_SEE_OTHER)
-    except:
+    except HTTPException:
+        raise
+    except Exception:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Internal server error")
 
 @router.post("")
@@ -165,5 +167,7 @@ def patch_ticket(        request: Request,
             return RedirectResponse(url=f"/tickets/{ticket_id}", status_code=status.HTTP_303_SEE_OTHER)
         else:
             raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Access denied")
-    except:
+    except HTTPException:
+        raise
+    except Exception:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Internal server error")

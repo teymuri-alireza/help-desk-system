@@ -79,7 +79,9 @@ def show_user(request: Request, user_id: int = Path(...)):
                 raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Access denied")
         else:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Not found")
-    except:
+    except HTTPException:
+        raise
+    except Exception:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Internal server error")
 
 
@@ -113,7 +115,9 @@ def new_user(
             return redirect
         else:
             raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Access denied")
-    except:
+    except HTTPException:
+        raise
+    except Exception:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Internal server error")
 
 
@@ -146,7 +150,9 @@ def patch_user(
                 return redirect
 
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Access denied")
-    except:
+    except HTTPException:
+        raise
+    except Exception:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Internal server error")
 
 @router.delete("/{user_id}", status_code=status.HTTP_204_NO_CONTENT)
@@ -165,5 +171,7 @@ def delete_user(request: Request, user_id: int = Path(...)):
             return RedirectResponse(url="/users", status_code=status.HTTP_303_SEE_OTHER)
         else:
             raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Access denied")
-    except:
+    except HTTPException:
+        raise
+    except Exception:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Internal server error")
