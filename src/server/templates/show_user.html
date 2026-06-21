@@ -105,7 +105,7 @@
                 <label>نام و نام خوانوادگی کاربر</label>
                 <input type="text" name="name" value="{{ user.name }}" required placeholder="نام و نام خوانوادگی">
             </div>
-
+            {% if user_role == "System Admin" %}
             <div class="form-group">
                 <label>نام کاربری</label>
                 <input type="text" name="username" value="{{ user.username }}" required placeholder="نام کاربری">
@@ -139,6 +139,7 @@
                     {% endfor %}
                 </select>
             </div>
+            {% endif %}
 
             <button class="submit-btn" type="submit">آپدیت کاربر</button>
 
