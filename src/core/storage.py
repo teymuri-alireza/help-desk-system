@@ -114,11 +114,10 @@ class StorageEngine:
         with self.session_factory() as session:
             found_ticket = session.query(Ticket).filter(Ticket.id==old_ticket_id).one_or_none()
             if found_ticket is not None:
-                found_ticket.title = new_ticket.title
-                found_ticket.description = new_ticket.description
-                found_ticket.status = new_ticket.status
-                found_ticket.priority = new_ticket.priority
-                found_ticket.assigned_to = new_ticket.assigned_to
+                for field in ["title", "description", "status", "priority", "assigned_to"]:
+                    value = getattr(new_ticket, field)
+                    if value is not None:
+                        setattr(found_ticket, field, value)
                 session.commit()
                 session.refresh(found_ticket)
 
@@ -266,11 +265,10 @@ class StorageEngine:
         with self.session_factory() as session:
             found_user = session.query(User).filter(User.id==old_user_id).one_or_none()
             if found_user is not None:
-                found_user.name = new_user.name
-                found_user.email = new_user.email
-                found_user.username = new_user.username
-                found_user.role = new_user.role
-                found_user.status = new_user.status
+                for field in ["name", "username", "email", "role", "status"]:
+                    value = getattr(new_user, field)
+                    if value is not None:
+                        setattr(found_user, field, value)
                 session.commit()
                 session.refresh(found_user)
 
