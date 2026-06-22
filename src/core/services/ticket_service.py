@@ -25,18 +25,19 @@ class TicketService:
         """
         self.storage.insert_ticket(ticket)
 
-    def list_tickets(self, creator_id: int | None = None, limit: int | None= None) -> list[Ticket]:
+    def list_tickets(self, creator_id: int | None = None, assigned_to: int | None = None, limit: int | None= None) -> list[Ticket]:
         """
-        List tickets filtered by creator ID, and with a specified limit.
+        List tickets filtered by creator ID, assignee ID, and with a specified limit.
 
         Args:
             creator_id: The creator ID to filter tickets by. If None, returns all tickets
+            assigned_to: The assignee ID to filter tickets by. If None, returns all tickets
             limit: The maximum number of tickets to retrieve.
 
         Returns:
             list[Ticket]: A list of Ticket objects up to the specified limit.
         """
-        return self.storage.list_tickets(creator_id=creator_id, limit=limit)
+        return self.storage.list_tickets(creator_id=creator_id, assigned_to=assigned_to, limit=limit)
 
     def find_ticket(self, ticket_id: int) -> Ticket | None:
         """

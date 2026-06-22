@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تمامی تیکت‌ها | دانشگاه دانش و فناوری</title>
+    <title>داشبورد | دانشگاه دانش و فناوری</title>
     <link rel="stylesheet" href="{{ url_for('static', path='css/dashboard.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', path='css/tickets.css') }}">
 </head>
@@ -17,11 +17,8 @@
 
         <ul class="nav-links">
             <li><a href="/">صفحه اصلی</a></li>
-            <li><a href="/dashboard">داشبورد</a></li>
+            <li><a href="/tickets">تیکت‌ها</a></li>
             <li><a href="/users/{{ user_id }}">پروفایل کاربر</a></li>
-            {% if role == "Syetem Admin" %}
-                <li><a href="/users">کاربران سامانه</a></li>
-            {% endif %}
             <li class="notifications-dropdown">
                 <a href="/notifications/all" class="notifications-trigger">اعلان‌ها</a>
                 <div class="notifications-menu" id="notifications-menu"></div>
@@ -35,14 +32,62 @@
 </header>
 
 <main class="dashboard">
+
     <section class="page-title">
-        <h1>تمامی تیکت‌ها</h1>
-        <p>مشاهده و مدیریت تمامی درخواست‌های سامانه</p>
+        <h1>
+            پنل کاربری
+            -
+            کاربر {{ user_username }}
+        </h1>
+        <p>مدیریت درخواست‌ها و مشاهده پاسخ‌ها</p>
+    </section>
+    
+    <!-- Ticket Form -->
+    <section class="card">
+        
+        {% if new_ticket_flash_message %}
+            <div id="ticket-flash-alert" class="alert alert-success">
+                تیکت با موفقیت ثبت شد
+            </div>
+        {% endif %}
+
+        <div class="section-header">
+            <h2>ثبت تیکت جدید</h2>
+            <button class="toggle-form-btn submit-btn" id="toggleFormBtn" type="button">نمایش فرم</button>
+        </div>
+
+        <form id="newTicketForm" class="ticket-form" action="/tickets" method="POST" enctype="multipart/form-data" style="display: none;">
+
+            <div class="form-group">
+                <label>عنوان تیکت</label>
+                <input type="text" name="title" required placeholder="عنوان درخواست">
+            </div>
+
+            <div class="form-group">
+                <label>توضیحات</label>
+                <textarea name="description" rows="6" required placeholder="جزئیات درخواست خود را وارد کنید"></textarea>
+            </div>
+
+            <div>
+                <input name="creator_id" value="{{ user_id }}" hidden>
+            </div>
+
+            <div class="form-group">
+                <label>آپلود فایل</label>
+                <input type="file" name="attachment">
+            </div>
+
+            <button class="submit-btn" type="submit">ثبت تیکت</button>
+
+        </form>
+
     </section>
 
+    <!-- Tickets List -->
     <section class="card">
+
         <div class="section-header">
-            <h2>لیست تیکت‌ها</h2>
+            <h2>ده تیکت اخیر:</h2>
             <div class="search-bar-wrapper">
                 <input 
                     type="text" id="ticket-search" class="search-bar" 
@@ -63,31 +108,35 @@
                                 وضعیت: {{ ticket.status.fa }}
                             </span>
                         </div>
-                        <p class="ticket-description">توضیحات: {{ ticket.description }}</p>
                         <div class="set-items-space-between">
                             <p class="ticket-created">ثبت شده در: {{ ticket.created_at }}</p>
-                            {% if role != "Student" and role != "Employee" %}
-                                <p class="ticket-created">شناسه کاربر ایجاد کننده: 
+                            <p class="ticket-created">شناسه کاربر ایجاد کننده: 
                                     <a href="/users/{{ ticket.creator_id }}">{{ ticket.creator_id }}</a>
-                                </p>
-                            {% endif %}
+                            </p>
                         </div>
                         <div class="auth-buttons">
                             <a href="/tickets/{{ ticket.id }}" class="btn submit-btn show-ticket">مشاهده جزییات تیکت</a>
                         </div>
                     </div>
                 {% endfor %}
+                <div class="auth-buttons">
+                    <a href="/tickets" class="btn submit-btn" style="text-align: center;">مشاهده همه تیکت‌ها</a>
+                </div>
             {% else %}
                 <div class="empty-state">
                     <p>هیچ تیکتی ثبت نشده است</p>
                 </div>
             {% endif %}
         </div>
+
     </section>
+
 </main>
 
 <script src="{{ url_for('static', path='js/dashboard.js') }}"></script>
 <script src="{{ url_for('static', path='js/notification.js') }}"></script>
+<script src="{{ url_for('static', path='js/alerts.js') }}"></script>
+<script src="{{ url_for('static', path='js/toggle_btn.js') }}"></script>
 
 </body>
 </html>

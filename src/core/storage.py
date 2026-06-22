@@ -59,12 +59,13 @@ class StorageEngine:
             core_logger.error(f"Validate user failed - {e}")
             raise
 
-    def list_tickets(self, creator_id: int | None, limit: int | None) -> list[Ticket]:
+    def list_tickets(self, creator_id: int | None, assigned_to: int | None, limit: int | None) -> list[Ticket]:
         """
         Retrieve all tickets.
 
         Args:
             creator_id: The creator ID to filter tickets by. If None, returns all tickets.
+            assigned_to: The assignee ID to filter tickets by. If None, returns all tickets.
             limit: The maximum number of tickets to retrieve.
 
         Returns:
@@ -72,14 +73,21 @@ class StorageEngine:
         """
         try:
             with self.session_factory() as session:
-                if creator_id is None:
-                    tickets = session.query(Ticket).options(joinedload(Ticket.creator), joinedload(Ticket.responses)).order_by(
-                        Ticket.id.desc()
-                    ).limit(limit=limit).all()
-                else:
-                    tickets = session.query(Ticket).options(joinedload(Ticket.creator), joinedload(Ticket.responses)).filter(
+                if creator_id is not None:
+                    tickets = session.query(Ticket).options(
+                        joinedload(Ticket.creator), joinedload(Ticket.responses), joinedload(Ticket.assignee)).filter(
                         Ticket.creator_id==creator_id
                     ).order_by(Ticket.id.desc()).limit(limit=limit).all()
+                elif assigned_to is not None:
+                    tickets = session.query(Ticket).options(
+                        joinedload(Ticket.creator), joinedload(Ticket.responses), joinedload(Ticket.assignee)).filter(
+                        Ticket.assigned_to==assigned_to
+                    ).order_by(Ticket.id.desc()).limit(limit=limit).all()
+                else:
+                    tickets = session.query(Ticket).options(
+                        joinedload(Ticket.creator), joinedload(Ticket.responses), joinedload(Ticket.assignee)).order_by(
+                        Ticket.id.desc()
+                    ).limit(limit=limit).all()
                 return tickets
         except Exception as e:
             core_logger.error(f"List tickets failed - {e}")
