@@ -103,16 +103,17 @@ def new_user(
         found_user = helpdesk.admin_api.find_user_by_username(username=user_username)
         # Check if user is admin first
         if found_user is not None and found_user.role == Role.SYSTEM_ADMIN:
-            new_user = User(name=name, email=email, username=username, role=role)
-            helpdesk.admin_api.new_user(user=new_user)
-
-            found_user = helpdesk.admin_api.find_user_by_username(username=username)
-            notification = Notification(receiver_id=found_user.id, title="کاربر جدید", text=f"خوش آمدید {found_user.name}")
-            helpdesk.notification_api.new_notification(notification=notification)
-            if found_user is not None:
+            new_user_exist = helpdesk.admin_api.find_user_by_username(username=username)
+            if new_user_exist is not None:
                 redirect = RedirectResponse(url="/dashboard", status_code=status.HTTP_303_SEE_OTHER)
                 redirect.set_cookie(key="user_exists_flash_message", value="successful")
                 return redirect
+
+            new_user = User(name=name, email=email, username=username, role=role)
+            helpdesk.admin_api.new_user(user=new_user)
+
+            notification = Notification(receiver_id=new_user.id, title="کاربر جدید", text=f"خوش آمدید {new_user.name}")
+            helpdesk.notification_api.new_notification(notification=notification)
 
             redirect = RedirectResponse(url="/dashboard", status_code=status.HTTP_303_SEE_OTHER)
             redirect.set_cookie(key="new_user_flash_message", value="successful")
