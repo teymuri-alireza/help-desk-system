@@ -167,21 +167,8 @@
 
 <script src="{{ url_for('static', path='js/dashboard.js') }}"></script>
 <script src="{{ url_for('static', path='js/notification.js') }}"></script>
+<script src="{{ url_for('static', path='js/toggle_btn.js') }}"></script>
 <script>
-    // Opening and closing form
-    const toggleBtn = document.getElementById('toggleFormBtn');
-    const editForm = document.getElementById('editForm');
-
-    toggleBtn.addEventListener('click', function() {
-        if (editForm.style.display === 'none') {
-            editForm.style.display = 'block';
-            toggleBtn.textContent = 'بستن فرم';
-        } else {
-            editForm.style.display = 'none';
-            toggleBtn.textContent = 'نمایش فرم';
-        }
-    });
-
     //Sending PATCH request using JS
     document.getElementById("editForm").addEventListener("submit", async function (e) {
         e.preventDefault();
