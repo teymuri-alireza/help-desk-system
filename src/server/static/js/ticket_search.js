@@ -10,11 +10,13 @@ function filterTickets(searchTerm) {
         const ticketId = ticket.querySelector('.ticket-id')?.textContent.toLowerCase() || '';
         const ticketTitle = ticket.querySelector('h3')?.textContent.toLowerCase() || '';
         const ticketDescription = ticket.querySelector('.ticket-description')?.textContent.toLowerCase() || '';
+        const ticketStatus = ticket.querySelector('.status')?.textContent.toLowerCase() || '';
         
         // Check if search term matches any of the fields
         const isMatch = ticketId.includes(term) || 
                        ticketTitle.includes(term) || 
-                       ticketDescription.includes(term);
+                       ticketDescription.includes(term) ||
+                       ticketStatus.includes(term);
         
         if (isMatch) {
             ticket.classList.remove('hidden');
