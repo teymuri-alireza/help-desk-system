@@ -34,6 +34,7 @@ class StorageEngine:
             with self.session_factory() as session:
                 session.add(user)
                 session.commit()
+                session.refresh(user)
         except Exception as e:
             core_logger.error(f"Insert user failed - {e}")
             raise
