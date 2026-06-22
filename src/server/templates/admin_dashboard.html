@@ -225,33 +225,7 @@
 <script src="{{ url_for('static', path='js/dashboard.js') }}"></script>
 <script src="{{ url_for('static', path='js/notification.js') }}"></script>
 <script src="{{ url_for('static', path='js/alerts.js') }}"></script>
-<script>
-    const toggleBtn = document.getElementById('toggleFormBtn');
-    const newTicketForm = document.getElementById('newTicketForm');
-
-    toggleBtn.addEventListener('click', function() {
-        if (newTicketForm.style.display === 'none') {
-            newTicketForm.style.display = 'block';
-            toggleBtn.textContent = 'بستن فرم';
-        } else {
-            newTicketForm.style.display = 'none';
-            toggleBtn.textContent = 'نمایش فرم';
-        }
-    });
-
-    const toggleUserFormBtn = document.getElementById('toggleUserFormBtn');
-    const newUserForm = document.getElementById('newUserForm');
-
-    toggleUserFormBtn.addEventListener('click', function() {
-        if (newUserForm.style.display === 'none') {
-            newUserForm.style.display = 'block';
-            toggleUserFormBtn.textContent = 'بستن فرم';
-        } else {
-            newUserForm.style.display = 'none';
-            toggleUserFormBtn.textContent = 'نمایش فرم';
-        }
-    });
-</script>
+<script src="{{ url_for('static', path='js/toggle_btn.js') }}"></script>
 
 </body>
 </html>
