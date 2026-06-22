@@ -70,7 +70,7 @@
                 <div class="ticket-item">
                     <div class="ticket-meta">
                         <div class="ticket-info">
-                            <p class="ticket-id">#{{ ticket.id }}</p>
+                            <p class="ticket-id" id="ticket-id" data-ticket_id="{{ ticket.id }}">#{{ ticket.id }}</p>
                             <h3>عنوان: {{ ticket.title }}</h3>
                         </div>
                         <span class="status alert {% if ticket.status.name == 'NEW' %}alert-success{% elif ticket.status.name == 'IN_PROGRESS' or ticket.status.name == 'WAITING_FOR_USER' %}alert-warning{% elif ticket.status.name == 'RESOLVED' or ticket.status.name == 'CLOSED' %}alert-danger{% endif %}">
@@ -82,22 +82,7 @@
                     </div>
                     <p class="ticket-description">توضیحات: {{ ticket.description }}</p>
 
-                    <div class="ticket-reply">
-                    {% if ticket.responses %}
-                        <p class="reply-label">💬 پاسخ:</p>
-                        {% for response in ticket.responses %}
-                            <p class="ticket-id">
-                                #{{ response.id }}
-                                <br>
-                                نویسنده: {{ response.creator.name }} - نقش: {{ response.creator.role.fa }}
-                            </p>
-                            <p>{{ response.text }}</p>
-                            <hr class="line">
-                        {% endfor %}
-                    {% else %}
-                        <p>پاسخی ثبت نشده</p>
-                    {% endif %}
-                    </div>
+                    <div class="ticket-reply" id="ticket-reply"></div>
                     <br />
                     <p>کارشناس بررسی کننده: {{ ticket.assignee.username }}</p>
                     <small><p class="ticket-created">ثبت شده در: {{ ticket.created_at }}</p></small>
@@ -190,6 +175,7 @@
 
 <script src="{{ url_for('static', path='js/notification.js') }}"></script>
 <script src="{{ url_for('static', path='js/toggle_btn.js') }}"></script>
+<script src="{{ url_for('static', path='js/responses.js') }}"></script>
 <script>
     //Sending PATCH request using JS
     document.getElementById("editForm").addEventListener("submit", async function (e) {
