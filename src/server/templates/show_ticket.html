@@ -35,9 +35,32 @@
     </nav>
 </header>
 
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        // Check localStorage for flash message
+        if (localStorage.getItem('ticket_update_flash_message')) {
+            const flashDiv = document.getElementById('ticket-flash-alert');
+            if (flashDiv) {
+                flashDiv.style.display = 'block';
+                setTimeout(() => {
+                    flashDiv.style.opacity = "0";
+                    setTimeout(() => {
+                        flashDiv.remove();
+                    }, 500);
+                }, 3500);
+            }
+            localStorage.removeItem('ticket_update_flash_message');
+        }
+    });
+</script>
+
 <main class="dashboard">
 
     <section class="card">
+        <div id="ticket-flash-alert" class="alert alert-success" style="display: none;">
+            تیکت با موفقیت آپدیت شد.
+        </div>
+
         <div class="section-header">
             <h2>اطلاعات تیکت</h2>
         </div>
@@ -179,16 +202,14 @@
     try {
         const response = await fetch(form.action, {
             method: "PATCH",
-            body: formData
+            body: formData,
+            credentials: 'include'
         });
 
-        if (response.redirected) {
-            window.location.href = response.url;
-            return;
-        }
-
         if (response.ok) {
-            return
+            // Store flash message in localStorage instead of cookie
+            localStorage.setItem('ticket_update_flash_message', 'successful');
+            window.location.href = response.url;
         } else {
             const error = await response.text();
             alert("Error: " + error);

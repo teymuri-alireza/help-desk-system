@@ -66,9 +66,10 @@ def show_ticket(request: Request, ticket_id: int = Path(...)):
                 if found_user.role == Role.STUDENT or found_user.role == Role.EMPLOYEE:
                     if found_ticket.creator_id != found_user.id:
                         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Access denied")
+                ticket_update_flash_message = request.cookies.get("ticket_update_flash_message")
                 user_role = found_user.role.value
                 it_experts = helpdesk.admin_api.list_it_experts()
-                return templates.TemplateResponse(
+                response = templates.TemplateResponse(
                     request=request, 
                     name="show_ticket.html", 
                     context={
@@ -79,8 +80,11 @@ def show_ticket(request: Request, ticket_id: int = Path(...)):
                         "TicketStatus":TicketStatus,
                         "TicketPriority":TicketPriority,
                         "it_experts": it_experts,
+                        "ticket_update_flash_message": ticket_update_flash_message,
                     }
                 )
+                response.delete_cookie("ticket_update_flash_message")
+                return response
             except AttributeError as e:
                 if "has no attribute 'creator_id'" in str(e):
                     # found_ticket.creator_id doesn't exist, which means ticket is not found.
@@ -164,7 +168,9 @@ def patch_ticket(        request: Request,
         if found_user is not None and found_user.role == Role.SYSTEM_ADMIN:
             ticket_to_update = Ticket(title=title, description=description, status=ticket_status, priority=priority, assigned_to=assigned_to)
             helpdesk.ticket_api.update_ticket(new_ticket=ticket_to_update, old_ticket_id=ticket_id)
-            return RedirectResponse(url=f"/tickets/{ticket_id}", status_code=status.HTTP_303_SEE_OTHER)
+            redirect = RedirectResponse(url=f"/tickets/{ticket_id}", status_code=status.HTTP_303_SEE_OTHER)
+            redirect.set_cookie(key="ticket_update_flash_message", value="successful")
+            return redirect
         else:
             raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Access denied")
     except HTTPException:
