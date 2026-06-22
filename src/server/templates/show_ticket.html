@@ -20,7 +20,7 @@
             <li><a href="/dashboard">داشبورد</a></li>
             <li><a href="/tickets">تیکت‌ها</a></li>
             <li><a href="/users/{{ user_id }}">پروفایل کاربر</a></li>
-            {% if user_role != "Student" and user_role != "Employee" %}
+            {% if user_role == "System Admin" %}
                 <li><a href="/users">کاربران سامانه</a></li>
             {% endif %}
             <li class="notifications-dropdown">
