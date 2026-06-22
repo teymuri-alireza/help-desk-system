@@ -68,6 +68,10 @@ def show_ticket(request: Request, ticket_id: int = Path(...)):
                 if found_user.role == Role.STUDENT or found_user.role == Role.EMPLOYEE:
                     if found_ticket.creator_id != found_user.id:
                         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Access denied")
+                # Raise 403 error for IT Expert without access
+                if found_user.role == Role.IT_EXPERT and found_ticket.assigned_to != found_user.id:
+                        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Access denied")
+
                 ticket_update_flash_message = request.cookies.get("ticket_update_flash_message")
                 user_role = found_user.role.value
                 it_experts = helpdesk.admin_api.list_it_experts()
