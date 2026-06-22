@@ -165,8 +165,9 @@ class StorageEngine:
         """
         try:
             with self.session_factory() as session:
-                found_ticket = session.query(Ticket).filter(Ticket.id==ticket_id).one_or_none()
-                return found_ticket.responses
+                found_responses = session.query(Response).options(joinedload(Response.creator)).filter(
+                    Response.ticket_id==ticket_id).all()
+                return found_responses
         except Exception as e:
             core_logger.error(f"List responses failed - {e}")
             raise
