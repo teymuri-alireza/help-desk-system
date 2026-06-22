@@ -16,14 +16,17 @@ class ResponseService:
         """
         self.storage = storage
 
-    def list_responses(self) -> list[Response]:
+    def list_responses(self, ticket_id: int) -> list[Response]:
         """
         List response objects.
+
+        Args:
+            ticket_id: The ticket ID to filter responses by.
 
         Returns:
             list[Response]: A list of Response objects.
         """
-        return self.storage.list_responses()
+        return self.storage.list_responses(ticket_id=ticket_id)
     
     def new_response(self, response: Response) -> None:
         """
