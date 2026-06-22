@@ -210,6 +210,8 @@
             // Store flash message in localStorage instead of cookie
             localStorage.setItem('ticket_update_flash_message', 'successful');
             window.location.href = response.url;
+        } else if (response.status === 403) {
+            window.location.href = '/forbidden';
         } else {
             const error = await response.text();
             alert("Error: " + error);

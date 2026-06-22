@@ -54,6 +54,11 @@ def root(request: Request):
         pass
     return templates.TemplateResponse(request=request, name="home.html", context=context)
 
+# Forbidden page
+@app.get("/forbidden")
+def forbidden(request: Request):
+    raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Access denied")
+
 app.include_router(auth_router)
 app.include_router(tickets_router)
 app.include_router(responses_router)
