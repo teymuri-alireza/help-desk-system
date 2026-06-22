@@ -128,14 +128,14 @@
         </div>
     </section>
 
-    {% if ticket %}
+    {% if ticket and user_role != "Student" and user_role != "Employee" %}
     <section class="card">
         <div class="section-header">
             <h2>ویرایش اطلاعات تیکت</h2>
             <button class="toggle-form-btn submit-btn" id="toggleFormBtn" type="button">نمایش فرم</button>
         </div>
         <form class="ticket-form" id="editForm" action="/tickets/{{ ticket.id }}" method="post" style="display: none; font-size: 1.5em;">
-
+            {% if user_role != "IT Expert" %}
             <div class="form-group">
                 <label>عنوان</label>
                 <input type="text" name="title" value="{{ ticket.title }}" required placeholder="عنوان تیکت">
@@ -145,7 +145,7 @@
                 <label>توضیحات</label>
                 <input type="text" name="description" value="{{ ticket.description }}" required placeholder="توضیحات تیکت">
             </div>
-
+            {% endif %}
             <div class="form-group">
                 <label>وضعیت</label>
                 <select name="ticket_status" required>
@@ -157,7 +157,7 @@
                     {% endfor %}
                 </select>
             </div>
-
+            {% if user_role != "IT Expert" %}
             <div class="form-group">
                 <label>اولویت</label>
                 <select name="priority" required>
@@ -181,7 +181,7 @@
                     {% endfor %}
                 </select>
             </div>
-
+            {% endif %}
             <button class="submit-btn" type="submit">آپدیت تیکت</button>
         </form>
     </section>
