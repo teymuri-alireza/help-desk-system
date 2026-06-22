@@ -26,6 +26,8 @@ def list_tickets(request: Request):
         if found_user is not None:
             if found_user.role == Role.STUDENT or found_user.role == Role.EMPLOYEE:
                 tickets_list = helpdesk.ticket_api.list_tickets(creator_id=found_user.id)
+            elif found_user.role == Role.IT_EXPERT:
+                tickets_list = helpdesk.ticket_api.list_tickets(assigned_to=found_user.id)
             else:
                 # For admins
                 tickets_list = helpdesk.ticket_api.list_tickets()
