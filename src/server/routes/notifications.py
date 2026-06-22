@@ -28,7 +28,7 @@ def list_unread_notifications(request: Request):
             count_notifications = len(notifications_list)
 
         return {"response": notifications_list, "count_notifications": count_notifications}
-    except:
+    except HTTPException:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Internal server error")
 
 @router.get("/all")
@@ -53,7 +53,7 @@ def list_all_notifications(request: Request):
                 "role": found_user.role.value,
             }
         )
-    except:
+    except HTTPException:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Internal server error")
 
 
@@ -63,5 +63,5 @@ def update_notification(notification_id: int = Body(...), is_read: bool = Body(.
         helpdesk = get_helpdesk()
         helpdesk.notification_api.update_notification(notification_id=notification_id, is_read=is_read)
         return {"response": "ok"}
-    except:
+    except HTTPException:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Internal server error")

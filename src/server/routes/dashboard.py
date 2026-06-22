@@ -77,5 +77,5 @@ def dashboard(request: Request, response: Response):
         else:
             # Error handler for when db is removed but session exists
             return RedirectResponse(url="/auth/logout", status_code=status.HTTP_303_SEE_OTHER)
-    except:
+    except HTTPException:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Internal server error")

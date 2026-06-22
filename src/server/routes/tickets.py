@@ -146,7 +146,7 @@ def new_ticket(
         redirect = RedirectResponse(url="/dashboard", status_code=status.HTTP_303_SEE_OTHER)
         redirect.set_cookie(key="new_ticket_flash_message", value="successful")
         return redirect
-    except:
+    except HTTPException:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Internal server error")
 
 @router.post("/{ticket_id}/assign")
