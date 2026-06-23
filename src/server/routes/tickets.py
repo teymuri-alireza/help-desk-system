@@ -1,5 +1,7 @@
 import os
+import uuid
 import logging
+from pathlib import Path as FilePath
 from fastapi import APIRouter, Request, Form, status, UploadFile, Path, HTTPException
 from fastapi.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
@@ -130,8 +132,11 @@ def new_ticket(
         helpdesk.ticket_api.new_ticket(ticket=ticket)
 
         if attachment.size != 0:
+            ext = FilePath(attachment.filename).suffix.lower()
+            file_name = f"{uuid.uuid4()}{ext}"
+
             upload = Attachment(
-                file_name=attachment.filename, 
+                file_name=file_name, 
                 file_type=attachment.content_type, 
                 ticket_id=ticket.id, 
                 creator_id=ticket.creator_id, 
