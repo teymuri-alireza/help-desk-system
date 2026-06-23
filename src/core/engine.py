@@ -6,6 +6,7 @@ from src.core.services.ticket_service import TicketService
 from src.core.services.response_sesrvice import ResponseService
 from src.core.services.attachment_service import AttachmentService
 from src.core.services.notification_service import NotificationService
+from src.core.services.stats_service import StatsService
 
 
 class HelpDeskCore:
@@ -32,3 +33,5 @@ class HelpDeskCore:
         self.response_api = ResponseService(storage=self.storage)
         self.attachment_api = AttachmentService(storage=self.storage)
         self.notification_api = NotificationService(storage=self.storage)
+
+        self.statistics_api = StatsService(session_factory=self.session_factory)
