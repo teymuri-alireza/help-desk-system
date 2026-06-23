@@ -1,40 +1,21 @@
-<!DOCTYPE html>
-<html lang="fa" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تمامی تیکت‌ها | دانشگاه دانش و فناوری</title>
+{% extends 'base.html' %}
+
+{% block title %}لیست تیکت‌ها{% endblock %}
+{% block css %}
     <link rel="stylesheet" href="{{ url_for('static', path='css/dashboard.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', path='css/tickets.css') }}">
-</head>
-<body>
+{% endblock %}
 
-<header>
-    <nav class="navbar">
-        <div class="logo">
-            <h2>دانشگاه دانش و فناوری</h2>
-        </div>
-
-        <ul class="nav-links">
-            <li><a href="/">صفحه اصلی</a></li>
-            <li><a href="/dashboard">داشبورد</a></li>
-            <li><a href="/users/{{ user_id }}">پروفایل کاربر</a></li>
-            {% if role == "Syetem Admin" %}
-                <li><a href="/users">کاربران سامانه</a></li>
-            {% endif %}
-            <li class="notifications-dropdown">
-                <a href="/notifications/all" class="notifications-trigger">اعلان‌ها</a>
-                <div class="notifications-menu" id="notifications-menu"></div>
-            </li>
-        </ul>
-
-        <div class="auth-buttons">
-            <a href="/auth/logout" class="btn register-btn">خروج</a>
-        </div>
+{% block aside %}
+    <nav class="sidebar-nav">
+        <a class="nav-tab" style="text-decoration: none;" href="/dashboard" data-tab="overview">داشبورد</a>
+        <a class="nav-tab" style="text-decoration: none;" href="/users" data-tab="users">تمامی کاربران</a>
+        <a class="nav-tab active" style="text-decoration: none;" data-tab="tickets">تمامی تیکت‌ها</a>
+        <a class="nav-tab" style="text-decoration: none;" href="/notifications/all" data-tab="tickets">تمامی اعلان‌ها</a>
     </nav>
-</header>
+{% endblock %}
 
-<main class="dashboard">
+{% block content %}
     <section class="page-title">
         <h1>تمامی تیکت‌ها</h1>
         <p>مشاهده و مدیریت تمامی درخواست‌های سامانه</p>
@@ -84,10 +65,9 @@
             {% endif %}
         </div>
     </section>
-</main>
+{% endblock %}
 
-<script src="{{ url_for('static', path='js/notification.js') }}"></script>
-<script src="{{ url_for('static', path='js/ticket_search.js') }}"></script>
-
-</body>
-</html>
+{% block js %}
+    <script src="{{ url_for('static', path='js/notification.js') }}"></script>
+    <script src="{{ url_for('static', path='js/ticket_search.js') }}"></script>
+{% endblock%}

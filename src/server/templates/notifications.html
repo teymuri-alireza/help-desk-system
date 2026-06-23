@@ -1,42 +1,24 @@
-<!DOCTYPE html>
-<html lang="fa" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>اعلان‌ها | دانشگاه دانش و فناوری</title>
+{% extends 'base.html' %}
+
+{% block title %}لیست اعلان‌ها{% endblock %}
+{% block css %}
     <link rel="stylesheet" href="{{ url_for('static', path='css/dashboard.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', path='css/tickets.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', path='css/notifications.css') }}">
-</head>
-<body>
+{% endblock %}
 
-<header>
-    <nav class="navbar">
-
-        <div class="logo">
-            <h2>دانشگاه دانش و فناوری</h2>
-        </div>
-
-        <ul class="nav-links">
-            <li><a href="/">صفحه اصلی</a></li>
-            <li><a href="/dashboard">داشبورد</a></li>
-            <li><a href="/tickets">تیکت‌ها</a></li>
-            <li><a href="/users/{{ user_id }}">پروفایل کاربر</a></li>
-            {% if role == "System Admin" %}
-                <li><a href="/users">کاربران سامانه</a></li>
-            {% endif %}
-        </ul>
-        <div class="auth-buttons">
-            <a href="/auth/logout" class="btn register-btn">خروج</a>
-        </div>
-
+{% block aside %}
+    <nav class="sidebar-nav">
+        <a class="nav-tab" style="text-decoration: none;" href="/dashboard" data-tab="overview">داشبورد</a>
+        <a class="nav-tab" style="text-decoration: none;" href="/users" data-tab="users">تمامی کاربران</a>
+        <a class="nav-tab" style="text-decoration: none;" href="/tickets" data-tab="tickets">تمامی تیکت‌ها</a>
+        <a class="nav-tab active" style="text-decoration: none;" data-tab="tickets">تمامی اعلان‌ها</a>
     </nav>
-</header>
+{% endblock %}
 
-<main class="notifications-page">
+{% block content %}
     <section class="page-header">
         <h1>تمامی اعلان‌ها</h1>
-
         <p>
             در این بخش تمامی اعلان‌های سامانه اعم از خوانده‌شده و
             خوانده‌نشده قابل مشاهده هستند.
@@ -71,8 +53,9 @@
             </article>
         {% endfor %}
     </section>
-</main>
-</body>
+{% endblock %}
+
+{% block js %}
 <script>
     document.getElementById("notifications-list")
         .addEventListener("click", async (e) => {
@@ -105,4 +88,4 @@
             }
         });
 </script>
-</html>
+{% endblock%}

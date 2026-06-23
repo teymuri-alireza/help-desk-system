@@ -1,11 +1,101 @@
-<!DOCTYPE html>
+{% extends 'base.html' %}
+
+{% block title %}داشبورد{% endblock %}
+{% block css %}
+    <link rel="stylesheet" href="{{ url_for('static', path='css/dashboard.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', path='css/tickets.css') }}">
+{% endblock %}
+
+{% block aside %}
+    <nav class="sidebar-nav">
+        <a class="nav-tab active" style="text-decoration: none;" data-tab="overview">داشبورد</a>
+        <a class="nav-tab" style="text-decoration: none;" href="/tickets" data-tab="tickets">تمامی تیکت‌ها</a>
+        <a class="nav-tab" style="text-decoration: none;" href="/notifications/all" data-tab="tickets">تمامی اعلان‌ها</a>
+    </nav>
+{% endblock %}
+
+{% block content %}
+    <!-- Ticket Form -->
+    <section class="card">
+        {% if new_ticket_flash_message %}
+            <div id="ticket-flash-alert" class="alert alert-success">
+                تیکت با موفقیت ثبت شد
+            </div>
+        {% endif %}
+        <div class="section-header">
+            <h2>ثبت تیکت جدید</h2>
+            <button class="toggle-form-btn submit-btn" id="toggleFormBtn" type="button">نمایش فرم</button>
+        </div>
+        <form id="newTicketForm" class="ticket-form" action="/tickets" method="POST" enctype="multipart/form-data" style="display: none;">
+            <div class="form-group">
+                <label>عنوان تیکت</label>
+                <input type="text" name="title" required placeholder="عنوان درخواست">
+            </div>
+            <div class="form-group">
+                <label>توضیحات</label>
+                <textarea name="description" rows="6" required placeholder="جزئیات درخواست خود را وارد کنید"></textarea>
+            </div>
+            <div class="form-group">
+                <label>آپلود فایل</label>
+                <input type="file" name="attachment">
+            </div>
+            <button class="submit-btn" type="submit">ثبت تیکت</button>
+        </form>
+    </section>
+
+    <!-- Tickets TAB -->
+    <section class="card">
+        <div class="section-header">
+            <h2>تیکت‌های اخیر</h2>
+        </div>
+        <div class="table-wrapper">
+            <table class="tickets-table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>عنوان</th>
+                        <th>وضعیت</th>
+                        <th>تاریخ ثبت</th>
+                        <th>عملیات</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for ticket in tickets_list %}
+                    <tr>
+                        <td>#{{ ticket.id }}</td>
+                        <td>
+                            <strong>{{ ticket.title }}</strong>
+                        </td>
+                        <td>
+                            <span class="status-badge status-{{ ticket.status.name }}">{{ ticket.status.fa }}</span>
+                        </td>
+                        <td>{{ ticket.created_at }}</td>
+                        <td>
+                            <a href="/tickets/{{ ticket.id }}" class="btn-small btn submit-btn">مشاهده</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+{% endblock %}
+
+{% block js %}
+    <script src="{{ url_for('static', path='js/notification.js') }}"></script>
+    <script src="{{ url_for('static', path='js/alerts.js') }}"></script>
+    <script src="{{ url_for('static', path='js/ticket_search.js') }}"></script>
+{% endblock%}
+
+
+<!-- <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>داشبورد کاربر | دانشگاه دانش و فناوری</title>
-    <link rel="stylesheet" href="{{ url_for('static', path='css/dashboard.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', path='css/tickets.css') }}">
+    
 </head>
 <body>
 
@@ -42,7 +132,6 @@
         <p>مدیریت درخواست‌ها و مشاهده پاسخ‌ها</p>
     </section>
 
-    <!-- Ticket Form -->
     <section class="card">
         
         {% if new_ticket_flash_message %}
@@ -82,7 +171,6 @@
 
     </section>
 
-    <!-- Tickets List -->
     <section class="card">
 
         <div class="section-header">
@@ -127,9 +215,7 @@
 
 </main>
 
-<script src="{{ url_for('static', path='js/notification.js') }}"></script>
-<script src="{{ url_for('static', path='js/alerts.js') }}"></script>
-<script src="{{ url_for('static', path='js/ticket_search.js') }}"></script>
+
 
 </body>
-</html>
+</html> -->

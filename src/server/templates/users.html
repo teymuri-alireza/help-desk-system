@@ -1,46 +1,27 @@
-<!DOCTYPE html>
-<html lang="fa" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لیست کاربران | دانشگاه دانش و فناوری</title>
-    <link rel="stylesheet" href="{{ url_for('static', path='css/tickets.css') }}">
+{% extends 'base.html' %}
+
+{% block title %}لیست کاربران{% endblock %}
+{% block css %}
     <link rel="stylesheet" href="{{ url_for('static', path='css/dashboard.css') }}">
-</head>
-<body>
+    <link rel="stylesheet" href="{{ url_for('static', path='css/tickets.css') }}">
+{% endblock %}
 
-<header>
-    <nav class="navbar">
-        <div class="logo">
-            <h2>دانشگاه دانش و فناوری</h2>
-        </div>
-
-        <ul class="nav-links">
-            <li><a href="/">صفحه اصلی</a></li>
-            <li><a href="/dashboard">داشبورد</a></li>
-            <li><a href="/tickets">تیکت‌ها</a></li>
-            <li><a href="/users/{{ user_id }}">پروفایل کاربر</a></li>
-            <li class="notifications-dropdown">
-                <a href="/notifications/all" class="notifications-trigger">اعلان‌ها</a>
-                <div class="notifications-menu" id="notifications-menu"></div>
-            </li>
-        </ul>
-
-        <div class="auth-buttons">
-            <a href="/auth/logout" class="btn register-btn">خروج</a>
-        </div>
+{% block aside %}
+    <nav class="sidebar-nav">
+        <a class="nav-tab" style="text-decoration: none;" href="/dashboard" data-tab="overview">داشبورد</a>
+        <a class="nav-tab active" style="text-decoration: none;" data-tab="users">تمامی کاربران</a>
+        <a class="nav-tab" style="text-decoration: none;" href="/tickets" data-tab="tickets">تمامی تیکت‌ها</a>
+        <a class="nav-tab" style="text-decoration: none;" href="/notifications/all" data-tab="tickets">تمامی اعلان‌ها</a>
     </nav>
-</header>
+{% endblock %}
 
-<main class="dashboard">
-
+{% block content %}
     <section class="page-title">
         <h2>تمامی کاربران سامانه</h2>
         <p>مشاهده و مدیریت تمامی کاربران سامانه</p>
     </section>
 
     <section class="card">
-
         <div class="table-wrapper">
             <h2>جستجو کاربران</h2>
             <div class="search-bar-wrapper">
@@ -81,13 +62,10 @@
             </table>
         </div>
         <div class="search-empty-state"></div>
-
     </section>
+{% endblock %}
 
-</main>
-
-<script src="{{ url_for('static', path='js/notification.js') }}"></script>
-<script src="{{ url_for('static', path='js/user_search.js') }}"></script>
-
-</body>
-</html>
+{% block js %}
+    <script src="{{ url_for('static', path='js/notification.js') }}"></script>
+    <script src="{{ url_for('static', path='js/user_search.js') }}"></script>
+{% endblock%}
