@@ -40,23 +40,35 @@ def dashboard(request: Request, response: Response):
                 html_file = "user_dashboard.html"
             elif current_user.role == Role.IT_EXPERT:
                 tickets_list = helpdesk.ticket_api.list_tickets(assigned_to=current_user.id, limit=10)
+                assigned_tickets, open_tickets, resolved_tickets = helpdesk.statistics_api.it_expert_stats(it_expert_id=current_user.id)
                 context = {
                         "request": request,
                         "user_username": current_user.username, 
                         "user_id": current_user.id,
                         "tickets_list": tickets_list,
+                        "assigned_tickets": assigned_tickets,
+                        "open_tickets": open_tickets,
+                        "resolved_tickets": resolved_tickets,
                         "new_ticket_flash_message": new_ticket_flash_message,
                         }
                 html_file = "it_expert_dashboard.html"
             else:
                 tickets_list = helpdesk.ticket_api.list_tickets(limit=10)
                 users_list = helpdesk.admin_api.list_users(limit=10)
+                all_tickets_count, active_tickets_count, not_assigned_tickets, last_created = helpdesk.statistics_api.ticket_stats()
+                all_users_count, active_users_count = helpdesk.statistics_api.users_stats()
                 context = {
                     "request": request,
                     "user_username": current_user.username, 
                     "user_id": current_user.id,
                     "users_list": users_list,
                     "tickets_list": tickets_list,
+                    "all_tickets_count": all_tickets_count,
+                    "active_tickets_count": active_tickets_count,
+                    "not_assigned_tickets": not_assigned_tickets,
+                    "last_created": last_created,
+                    "all_users_count": all_users_count,
+                    "active_users_count": active_users_count,
                     "new_ticket_flash_message": new_ticket_flash_message,
                     "new_user_flash_message": new_user_flash_message,
                     "user_exists_flash_message": user_exists_flash_message,

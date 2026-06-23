@@ -43,6 +43,31 @@
         <p>مدیریت درخواست‌ها، مشاهده پاسخ‌ها و اطلاعات کاربران</p>
     </section>
     
+    <!-- KPI CARDS -->
+    <div class="metrics-grid">
+
+        <div class="metric-card">
+            <span>کاربران کل / کاربران فعال</span>
+            <h2>{{ all_users_count }} / {{ active_users_count }}</h2>
+        </div>
+
+        <div class="metric-card">
+            <span>کل تیکت‌ها / تیکت‌های باز</span>
+            <h2>{{ all_tickets_count }} / {{ active_tickets_count }}</h2>
+        </div>
+
+        <div class="metric-card">
+            <span>تیکت‌های بدون کارشناس</span>
+            <h2>{{ not_assigned_tickets }}</h2>
+        </div>
+
+        <div class="metric-card">
+            <span>تیکت‌های ۲۴ ساعت گذشته</span>
+            <h2>{{ last_created }}</h2>
+        </div>
+
+    </div>
+
     <!-- Ticket Form -->
     <section class="card">
         
