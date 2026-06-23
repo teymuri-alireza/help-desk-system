@@ -14,8 +14,8 @@ router = APIRouter(prefix="/auth", tags=["auth"])
 @router.get("")
 def authentication(request: Request):
     try:
-        logged_in_user = get_current_user(request=request)
-        if logged_in_user:
+        user_username = get_current_user(request=request)
+        if user_username:
             return RedirectResponse(url="/dashboard", status_code=status.HTTP_303_SEE_OTHER)
     except:
         login_error = request.session.pop("login_error", None)
