@@ -17,15 +17,10 @@ body{
 .navbar{
     background:#0f2747;
     color:white;
-
     padding:15px 7%;
-
     display:flex;
-
     justify-content:space-between;
-
     align-items:center;
-
     flex-wrap:wrap;
 }
 
@@ -35,17 +30,13 @@ body{
 
 .nav-links{
     display:flex;
-
     list-style:none;
-
     gap:25px;
 }
 
 .nav-links a{
     color:white;
-
     text-decoration:none;
-
     transition:.3s;
 }
 
@@ -214,54 +205,38 @@ body{
 /* PAGE */
 
 .dashboard{
-
     max-width:1400px;
-
     margin:auto;
-
     padding:45px 7%;
 }
 
 .page-title{
-
     text-align:center;
-
     margin-bottom:40px;
 }
 
 .page-title h1{
-
     color:#0f2747;
-
     margin-bottom:10px;
 }
 
 .page-title p{
-
     color:#6b7280;
 }
 
 .card{
-
     background:white;
-
     margin-bottom:35px;
-
     padding:30px;
-
     border-radius:14px;
-
-    box-shadow:
-    0 8px 30px rgba(0,0,0,.08);
+    box-shadow: 0 8px 30px rgba(0,0,0,.08);
 }
 
 .section-header{
-
     margin-bottom:25px;
 }
 
 .section-header h2{
-
     color:#0f2747;
 }
 
@@ -310,67 +285,46 @@ body{
 /* FORM */
 
 .form-group{
-
     margin-bottom:18px;
 }
 
 .form-group label{
-
     display:block;
-
     margin-bottom:8px;
 }
 
 .form-group input,
 .form-group textarea{
-
     width:100%;
-
     padding:14px;
-
     border:1px solid #d8dce4;
-
     border-radius:8px;
-
     font-family:inherit;
 }
 
 .form-group textarea{
-
     resize:vertical;
 }
 
 .form-group input:focus,
 .form-group textarea:focus{
-
     outline:none;
-
     border-color:#0f2747;
 }
 
 .submit-btn{
-
     width:100%;
-
     padding:14px;
-
     border:none;
-
     border-radius:8px;
-
     background:#0f2747;
-
     color:white;
-
     cursor:pointer;
-
     font-family:inherit;
-
     font-size:1rem;
 }
 
 .submit-btn:hover{
-
     background:#183b69;
 }
 
@@ -391,63 +345,43 @@ body{
 }
 
 /* TICKETS */
-
 .ticket-item{
-
     padding:20px;
-
     border:1px solid #e5e7eb;
-
     border-radius:10px;
-
     margin-bottom:18px;
 }
 
 .ticket-meta{
-
     display:flex;
-
     justify-content:space-between;
-
     margin-bottom:15px;
 }
 
 .status{
-
     padding:6px 12px;
-
     border-radius:999px;
-
     font-size:.85rem;
 }
 
 .answered{
-
     background:#d1fae5;
-
     color:#065f46;
 }
 
 .pending{
-
     background:#fef3c7;
-
     color:#92400e;
 }
 
 .ticket-item h3{
-
     color:#0f2747;
-
     margin-bottom:15px;
 }
 
 .ticket-reply{
-
     background:#f8fafc;
-
     padding:16px;
-
     border-radius:8px;
 }
 
@@ -459,97 +393,67 @@ body{
 }
 
 /* USERS */
-
 .table-wrapper{
-
     overflow:auto;
 }
 
 table{
-
     width:100%;
-
     border-collapse:collapse;
 }
 
 th{
-
     background:#0f2747;
-
     color:white;
 }
 
 th,
 td{
-
     padding:16px;
-
     text-align:right;
-
     border-bottom:1px solid #e5e7eb;
 }
 
 .role{
-
     padding:6px 14px;
-
     border-radius:999px;
-
     font-size:.85rem;
 }
 
 .admin{
-
     background:#fee2e2;
-
     color:#991b1b;
 }
 
 .support{
-
     background:#e0e7ff;
-
     color:#3730a3;
 }
 
 .student{
-
     background:#dcfce7;
-
     color:#166534;
 }
 
 /* RESPONSIVE */
 
 @media(max-width:900px){
-
     .navbar{
-
         flex-direction:column;
-
         gap:20px;
     }
-
     .nav-links{
-
         flex-wrap:wrap;
-
         justify-content:center;
     }
-
 }
 
 @media(max-width:650px){
-
     .card{
-
         padding:20px;
     }
-
     th,
     td{
-
         min-width:180px;
     }
-
 }
