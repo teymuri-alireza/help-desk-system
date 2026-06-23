@@ -27,6 +27,8 @@ def list_users(request: Request):
             context = {
                 "request": request,
                 "users_list": users_list,
+                "user_id": current_user.id,
+                "user_username": current_user.username
             }
             response = templates.TemplateResponse(
                 request=request,
@@ -60,6 +62,8 @@ def show_user(request: Request, user_id: int = Path(...)):
                     context = {
                         "request": request,
                         "user": user_to_show,
+                        "user_id": current_user.id,
+                        "user_username": current_user.username,
                         "Role": Role,
                         "user_role": current_user.role.value,
                         "UserStatus": UserStatus,

@@ -51,6 +51,7 @@ def list_all_notifications(request: Request):
                 "notifications_list": notifications_list,
                 "user_id": current_user.id,
                 "role": current_user.role.value,
+                "user_username": current_user.username,
             }
         )
     except HTTPException:

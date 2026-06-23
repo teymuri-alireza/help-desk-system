@@ -38,6 +38,7 @@ def list_tickets(request: Request):
                 "request": request,
                 "tickets_list": tickets_list,
                 "user_id": current_user.id,
+                "user_username": current_user.username,
                 "role": current_user.role.value,
             }
             response = templates.TemplateResponse(
@@ -87,6 +88,7 @@ def show_ticket(request: Request, ticket_id: int = Path(...)):
                         "attachment": found_attachment,
                         "user_id": current_user.id,
                         "user_role": user_role,
+                        "user_username": current_user.username,
                         "TicketStatus":TicketStatus,
                         "TicketPriority":TicketPriority,
                         "it_experts": it_experts,
