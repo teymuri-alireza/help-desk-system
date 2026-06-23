@@ -81,7 +81,11 @@
                         </span>
                     </div>
                     <p class="ticket-description">توضیحات: {{ ticket.description }}</p>
-
+                    {% if attachment %}
+                        <a href="/static/upload/{{ attachment.file_name }}" target="_blank">مشاهده فایل پیوست</a>
+                    {% else %}
+                        <p class="ticket-created">فایل پیوستی یافت نشد</p>
+                    {% endif %}
                     <div class="ticket-reply" id="ticket-reply"></div>
                     <br />
                     <p>کارشناس بررسی کننده: {{ ticket.assignee.username }}</p>

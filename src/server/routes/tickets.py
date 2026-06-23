@@ -75,12 +75,14 @@ def show_ticket(request: Request, ticket_id: int = Path(...)):
                 ticket_update_flash_message = request.cookies.get("ticket_update_flash_message")
                 user_role = found_user.role.value
                 it_experts = helpdesk.admin_api.list_it_experts()
+                found_attachment = helpdesk.attachment_api.find_attachment(ticket_id=ticket_id)
                 response = templates.TemplateResponse(
                     request=request, 
                     name="show_ticket.html", 
                     context={
                         "request": request,
                         "ticket": found_ticket,
+                        "attachment": found_attachment,
                         "user_id": found_user.id,
                         "user_role": user_role,
                         "TicketStatus":TicketStatus,
