@@ -28,7 +28,8 @@ def list_users(request: Request):
                 "request": request,
                 "users_list": users_list,
                 "user_id": current_user.id,
-                "user_username": current_user.username
+                "user_username": current_user.username,
+                "user_role": current_user.role.value,
             }
             response = templates.TemplateResponse(
                 request=request,

@@ -9,7 +9,9 @@
 {% block aside %}
     <nav class="sidebar-nav">
         <a class="nav-tab" style="text-decoration: none;" href="/dashboard" data-tab="overview">داشبورد</a>
-        <a class="nav-tab" style="text-decoration: none;" href="/users" data-tab="users">تمامی کاربران</a>
+        {% if user_role == "System Admin" %}
+            <a class="nav-tab" style="text-decoration: none;" href="/users" data-tab="users">تمامی کاربران</a>
+        {% endif %}
         <a class="nav-tab active" style="text-decoration: none;" data-tab="tickets">تمامی تیکت‌ها</a>
         <a class="nav-tab" style="text-decoration: none;" href="/notifications/all" data-tab="tickets">تمامی اعلان‌ها</a>
     </nav>
@@ -47,7 +49,7 @@
                         <p class="ticket-description">توضیحات: {{ ticket.description }}</p>
                         <div class="set-items-space-between">
                             <p class="ticket-created">ثبت شده در: {{ ticket.created_at }}</p>
-                            {% if role != "Student" and role != "Employee" %}
+                            {% if user_role != "Student" and user_role != "Employee" %}
                                 <p class="ticket-created">شناسه کاربر ایجاد کننده: 
                                     <a href="/users/{{ ticket.creator_id }}">{{ ticket.creator_id }}</a>
                                 </p>
