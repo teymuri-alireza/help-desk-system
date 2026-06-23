@@ -24,3 +24,15 @@ class AttachmentService:
             attachment: The Attachment object to be created.
         """
         self.storage.insert_attachment(attachment)
+
+    def find_attachment(self, ticket_id: int) -> Attachment | None:
+        """
+        Find an attachment by its ticket ID.
+
+        Args:
+            ticket_id: The ticket ID to search for.
+
+        Returns:
+            attachment|None: attachment object if found, None otherwise.
+        """
+        return self.storage.find_attachment(ticket_id)

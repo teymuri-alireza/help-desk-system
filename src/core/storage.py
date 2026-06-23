@@ -203,6 +203,24 @@ class StorageEngine:
             core_logger.error(f"Insert attachment failed - {e}")
             raise
 
+    def find_attachment(self, ticket_id: int) -> Attachment | None:
+        """
+        Find an attachment by its ticket ID.
+
+        Args:
+            ticket_id: The ticket ID to search for.
+
+        Returns:
+            attachment|None: attachment object if found, None otherwise.
+        """
+        try:
+            with self.session_factory() as session:
+                found_attachment = session.query(Attachment).filter(Attachment.ticket_id==ticket_id).one_or_none()
+                return found_attachment
+        except Exception as e:
+            core_logger.error(f"Find attachment failed - {e}")
+            raise
+
     def insert_notification(self, notification: Notification) -> None:
         """
         Insert a new notification into the database.
