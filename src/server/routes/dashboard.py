@@ -22,28 +22,28 @@ def dashboard(request: Request, response: Response):
 
     try:
         helpdesk = get_helpdesk()
-        found_user = helpdesk.admin_api.find_user_by_username(username=user_username)
+        current_user = helpdesk.admin_api.find_user_by_username(username=user_username)
 
-        if found_user is not None:
+        if current_user is not None:
             new_ticket_flash_message = request.cookies.get("new_ticket_flash_message")
             new_user_flash_message = request.cookies.get("new_user_flash_message")
             user_exists_flash_message = request.cookies.get("user_exists_flash_message")
-            if found_user.role == Role.STUDENT or found_user.role == Role.EMPLOYEE:
-                tickets_list = helpdesk.ticket_api.list_tickets(creator_id=found_user.id, limit=10)
+            if current_user.role == Role.STUDENT or current_user.role == Role.EMPLOYEE:
+                tickets_list = helpdesk.ticket_api.list_tickets(creator_id=current_user.id, limit=10)
                 context = {
                         "request": request,
-                        "user_username": found_user.username, 
-                        "user_id": found_user.id,
+                        "user_username": current_user.username, 
+                        "user_id": current_user.id,
                         "tickets_list": tickets_list,
                         "new_ticket_flash_message": new_ticket_flash_message,
                         }
                 html_file = "user_dashboard.html"
-            elif found_user.role == Role.IT_EXPERT:
-                tickets_list = helpdesk.ticket_api.list_tickets(assigned_to=found_user.id, limit=10)
+            elif current_user.role == Role.IT_EXPERT:
+                tickets_list = helpdesk.ticket_api.list_tickets(assigned_to=current_user.id, limit=10)
                 context = {
                         "request": request,
-                        "user_username": found_user.username, 
-                        "user_id": found_user.id,
+                        "user_username": current_user.username, 
+                        "user_id": current_user.id,
                         "tickets_list": tickets_list,
                         "new_ticket_flash_message": new_ticket_flash_message,
                         }
@@ -53,8 +53,8 @@ def dashboard(request: Request, response: Response):
                 users_list = helpdesk.admin_api.list_users(limit=10)
                 context = {
                     "request": request,
-                    "user_username": found_user.username, 
-                    "user_id": found_user.id,
+                    "user_username": current_user.username, 
+                    "user_id": current_user.id,
                     "users_list": users_list,
                     "tickets_list": tickets_list,
                     "new_ticket_flash_message": new_ticket_flash_message,

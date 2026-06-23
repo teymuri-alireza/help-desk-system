@@ -37,8 +37,8 @@ def sign_up(request: Request,
     ):
     try:
         helpdesk = get_helpdesk()
-        user_exist = helpdesk.admin_api.find_user_by_username(username=username)
-        if user_exist:
+        current_user = helpdesk.admin_api.find_user_by_username(username=username)
+        if current_user:
             redirect = RedirectResponse(url="/auth", status_code=status.HTTP_303_SEE_OTHER)
             request.session["signup_error"] = "این نام کاربری قبلا استفاده شده است."
             return redirect

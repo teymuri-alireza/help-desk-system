@@ -24,12 +24,12 @@ def list_tickets(request: Request):
         return RedirectResponse(url="/auth", status_code=status.HTTP_303_SEE_OTHER)
     try:
         helpdesk = get_helpdesk()
-        found_user = helpdesk.admin_api.find_user_by_username(username=user_username)
-        if found_user is not None:
-            if found_user.role == Role.STUDENT or found_user.role == Role.EMPLOYEE:
-                tickets_list = helpdesk.ticket_api.list_tickets(creator_id=found_user.id)
-            elif found_user.role == Role.IT_EXPERT:
-                tickets_list = helpdesk.ticket_api.list_tickets(assigned_to=found_user.id)
+        current_user = helpdesk.admin_api.find_user_by_username(username=user_username)
+        if current_user is not None:
+            if current_user.role == Role.STUDENT or current_user.role == Role.EMPLOYEE:
+                tickets_list = helpdesk.ticket_api.list_tickets(creator_id=current_user.id)
+            elif current_user.role == Role.IT_EXPERT:
+                tickets_list = helpdesk.ticket_api.list_tickets(assigned_to=current_user.id)
             else:
                 # For admins
                 tickets_list = helpdesk.ticket_api.list_tickets()
@@ -37,8 +37,8 @@ def list_tickets(request: Request):
             context = {
                 "request": request,
                 "tickets_list": tickets_list,
-                "user_id": found_user.id,
-                "role": found_user.role.value,
+                "user_id": current_user.id,
+                "role": current_user.role.value,
             }
             response = templates.TemplateResponse(
                 request=request,
@@ -62,20 +62,20 @@ def show_ticket(request: Request, ticket_id: int = Path(...)):
         return RedirectResponse(url="/auth", status_code=status.HTTP_303_SEE_OTHER)
     try:
         helpdesk = get_helpdesk()
-        found_user = helpdesk.admin_api.find_user_by_username(username=user_username)
-        if found_user is not None:
+        current_user = helpdesk.admin_api.find_user_by_username(username=user_username)
+        if current_user is not None:
             try:
                 found_ticket = helpdesk.ticket_api.find_ticket(ticket_id=ticket_id)
                 # Check if user has access
-                if found_user.role == Role.STUDENT or found_user.role == Role.EMPLOYEE:
-                    if found_ticket.creator_id != found_user.id:
+                if current_user.role == Role.STUDENT or current_user.role == Role.EMPLOYEE:
+                    if found_ticket.creator_id != current_user.id:
                         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Access denied")
                 # Raise 403 error for IT Expert without access
-                if found_user.role == Role.IT_EXPERT and found_ticket.assigned_to != found_user.id:
+                if current_user.role == Role.IT_EXPERT and found_ticket.assigned_to != current_user.id:
                         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Access denied")
 
                 ticket_update_flash_message = request.cookies.get("ticket_update_flash_message")
-                user_role = found_user.role.value
+                user_role = current_user.role.value
                 it_experts = helpdesk.admin_api.list_it_experts()
                 found_attachment = helpdesk.attachment_api.find_attachment(ticket_id=ticket_id)
                 response = templates.TemplateResponse(
@@ -85,7 +85,7 @@ def show_ticket(request: Request, ticket_id: int = Path(...)):
                         "request": request,
                         "ticket": found_ticket,
                         "attachment": found_attachment,
-                        "user_id": found_user.id,
+                        "user_id": current_user.id,
                         "user_role": user_role,
                         "TicketStatus":TicketStatus,
                         "TicketPriority":TicketPriority,
@@ -121,13 +121,13 @@ def new_ticket(
         return RedirectResponse(url="/auth", status_code=status.HTTP_303_SEE_OTHER)
     try:
         helpdesk = get_helpdesk()
-        found_user = helpdesk.admin_api.find_user_by_username(username=user_username)
-        if found_user is None:
+        current_user = helpdesk.admin_api.find_user_by_username(username=user_username)
+        if current_user is None:
             return RedirectResponse(url="/auth", status_code=status.HTTP_303_SEE_OTHER)
 
         os.makedirs(f"{STATIC_DIR}/upload/", exist_ok=True)
 
-        ticket = Ticket(title=title, description=description, creator_id=found_user.id)
+        ticket = Ticket(title=title, description=description, creator_id=current_user.id)
         helpdesk.ticket_api.new_ticket(ticket=ticket)
 
         if attachment.size != 0:
@@ -146,7 +146,7 @@ def new_ticket(
             with open(f"{upload.path}/{upload.file_name}", "wb") as file:
                 file.write(content)
 
-        notification = Notification(receiver_id=found_user.id, title="تیکت جدید ثبت شد", text=f"عنوان تیکت: {title}")
+        notification = Notification(receiver_id=current_user.id, title="تیکت جدید ثبت شد", text=f"عنوان تیکت: {title}")
         helpdesk.notification_api.new_notification(notification=notification)
 
         redirect = RedirectResponse(url="/dashboard", status_code=status.HTTP_303_SEE_OTHER)
@@ -175,10 +175,10 @@ def patch_ticket(        request: Request,
         return RedirectResponse(url="/auth", status_code=status.HTTP_303_SEE_OTHER)
     try:
         helpdesk = get_helpdesk()
-        found_user = helpdesk.admin_api.find_user_by_username(username=user_username)
+        current_user = helpdesk.admin_api.find_user_by_username(username=user_username)
         # Check if user is admin first
-        if found_user is not None:
-            if found_user.role == Role.SYSTEM_ADMIN or found_user.role == Role.IT_EXPERT:
+        if current_user is not None:
+            if current_user.role == Role.SYSTEM_ADMIN or current_user.role == Role.IT_EXPERT:
                 ticket_to_update = Ticket(title=title, description=description, status=ticket_status, priority=priority, assigned_to=assigned_to)
                 helpdesk.ticket_api.update_ticket(new_ticket=ticket_to_update, old_ticket_id=ticket_id)
                 redirect = RedirectResponse(url=f"/tickets/{ticket_id}", status_code=status.HTTP_303_SEE_OTHER)

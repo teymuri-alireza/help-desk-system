@@ -20,8 +20,8 @@ def list_unread_notifications(request: Request):
         return RedirectResponse(url="/auth", status_code=status.HTTP_303_SEE_OTHER)
     try:
         helpdesk = get_helpdesk()
-        found_user = helpdesk.admin_api.find_user_by_username(username=user_username)
-        notifications_list = helpdesk.notification_api.list_unread(receiver_id=found_user.id)
+        current_user = helpdesk.admin_api.find_user_by_username(username=user_username)
+        notifications_list = helpdesk.notification_api.list_unread(receiver_id=current_user.id)
         
         count_notifications = None
         if notifications_list is not None:
@@ -40,8 +40,8 @@ def list_all_notifications(request: Request):
         return RedirectResponse(url="/auth", status_code=status.HTTP_303_SEE_OTHER)
     try:
         helpdesk = get_helpdesk()
-        found_user = helpdesk.admin_api.find_user_by_username(username=user_username)
-        notifications_list = helpdesk.notification_api.list_all(receiver_id=found_user.id)
+        current_user = helpdesk.admin_api.find_user_by_username(username=user_username)
+        notifications_list = helpdesk.notification_api.list_all(receiver_id=current_user.id)
         return templates.TemplateResponse(
             request=request,
             name="notifications.html",
@@ -49,8 +49,8 @@ def list_all_notifications(request: Request):
             context={
                 "request": request,
                 "notifications_list": notifications_list,
-                "user_id": found_user.id,
-                "role": found_user.role.value,
+                "user_id": current_user.id,
+                "role": current_user.role.value,
             }
         )
     except HTTPException:

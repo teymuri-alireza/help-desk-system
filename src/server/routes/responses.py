@@ -18,8 +18,8 @@ def list_responses(request: Request, ticket_id: int):
         return RedirectResponse(url="/auth", status_code=status.HTTP_303_SEE_OTHER)
     try:
         helpdesk = get_helpdesk()
-        found_user = helpdesk.admin_api.find_user_by_username(username=user_username)
-        if found_user is not None:
+        current_user = helpdesk.admin_api.find_user_by_username(username=user_username)
+        if current_user is not None:
             responses_list = helpdesk.response_api.list_responses(ticket_id=ticket_id)
             return {"responses": responses_list}
         else:
@@ -41,9 +41,9 @@ def new_response(
         return RedirectResponse(url="/auth", status_code=status.HTTP_303_SEE_OTHER)
     try:
         helpdesk = get_helpdesk()
-        found_user = helpdesk.admin_api.find_user_by_username(username=user_username)
-        if found_user is not None:
-            creator_id = found_user.id
+        current_user = helpdesk.admin_api.find_user_by_username(username=user_username)
+        if current_user is not None:
+            creator_id = current_user.id
             response = Response(text=text, ticket_id=response_ticket_id, creator_id=creator_id)
             helpdesk.response_api.new_response(response=response)
             return RedirectResponse(url=f"/tickets/{response_ticket_id}", status_code=status.HTTP_303_SEE_OTHER)

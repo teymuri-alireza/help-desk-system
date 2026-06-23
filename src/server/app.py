@@ -47,8 +47,8 @@ def root(request: Request):
         user_username = get_current_user(request=request)
 
         helpdesk = get_helpdesk()
-        logged_in_user = helpdesk.admin_api.find_user_by_username(username=user_username)
-        context = {"user": logged_in_user}
+        current_user = helpdesk.admin_api.find_user_by_username(username=user_username)
+        context = {"user": current_user}
     except:
         # Use default value for context
         pass

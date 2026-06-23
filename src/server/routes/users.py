@@ -21,8 +21,8 @@ def list_users(request: Request):
         return RedirectResponse(url="/auth", status_code=status.HTTP_303_SEE_OTHER)
     try:
         helpdesk = get_helpdesk()
-        found_user = helpdesk.admin_api.find_user_by_username(username=user_username)
-        if found_user is not None and found_user.role == Role.SYSTEM_ADMIN:
+        current_user = helpdesk.admin_api.find_user_by_username(username=user_username)
+        if current_user is not None and current_user.role == Role.SYSTEM_ADMIN:
             users_list = helpdesk.admin_api.list_users()
             context = {
                 "request": request,
@@ -50,10 +50,10 @@ def show_user(request: Request, user_id: int = Path(...)):
         return RedirectResponse(url="/auth", status_code=status.HTTP_303_SEE_OTHER)
     try:
         helpdesk = get_helpdesk()
-        found_user = helpdesk.admin_api.find_user_by_username(username=user_username)
+        current_user = helpdesk.admin_api.find_user_by_username(username=user_username)
         # Check if user is admin first
-        if found_user is not None:
-            if found_user.role == Role.SYSTEM_ADMIN or found_user.id == user_id:
+        if current_user is not None:
+            if current_user.role == Role.SYSTEM_ADMIN or current_user.id == user_id:
                 user_to_show = helpdesk.admin_api.find_user(user_id=user_id)
                 if user_to_show is not None:
                     update_user_flash_message = request.cookies.get("update_user_flash_message")
@@ -61,7 +61,7 @@ def show_user(request: Request, user_id: int = Path(...)):
                         "request": request,
                         "user": user_to_show,
                         "Role": Role,
-                        "user_role": found_user.role.value,
+                        "user_role": current_user.role.value,
                         "UserStatus": UserStatus,
                         "update_user_flash_message": update_user_flash_message,
                     }
@@ -102,9 +102,9 @@ def new_user(
         return RedirectResponse(url="/auth", status_code=status.HTTP_303_SEE_OTHER)
     try:
         helpdesk = get_helpdesk()
-        found_user = helpdesk.admin_api.find_user_by_username(username=user_username)
+        current_user = helpdesk.admin_api.find_user_by_username(username=user_username)
         # Check if user is admin first
-        if found_user is not None and found_user.role == Role.SYSTEM_ADMIN:
+        if current_user is not None and current_user.role == Role.SYSTEM_ADMIN:
             new_user_exist = helpdesk.admin_api.find_user_by_username(username=username)
             if new_user_exist is not None:
                 redirect = RedirectResponse(url="/dashboard", status_code=status.HTTP_303_SEE_OTHER)
@@ -145,10 +145,10 @@ def patch_user(
         return RedirectResponse(url="/auth", status_code=status.HTTP_303_SEE_OTHER)
     try:
         helpdesk = get_helpdesk()
-        found_user = helpdesk.admin_api.find_user_by_username(username=user_username)
+        current_user = helpdesk.admin_api.find_user_by_username(username=user_username)
         # Check if user is admin first
-        if found_user is not None:
-            if found_user.role == Role.SYSTEM_ADMIN or found_user.id == user_id:
+        if current_user is not None:
+            if current_user.role == Role.SYSTEM_ADMIN or current_user.id == user_id:
                 user_to_update = User(name=name, email=email, username=username, role=role, status=user_status)
                 helpdesk.admin_api.update_user(new_user=user_to_update, old_user_id=user_id)
 
@@ -171,9 +171,9 @@ def delete_user(request: Request, user_id: int = Path(...)):
         return RedirectResponse(url="/auth", status_code=status.HTTP_303_SEE_OTHER)
     try:
         helpdesk = get_helpdesk()
-        found_user = helpdesk.admin_api.find_user_by_username(username=user_username)
+        current_user = helpdesk.admin_api.find_user_by_username(username=user_username)
         # Check if user is admin first
-        if found_user is not None and found_user.role == Role.SYSTEM_ADMIN:
+        if current_user is not None and current_user.role == Role.SYSTEM_ADMIN:
             helpdesk.admin_api.delete_user(user_id=user_id)
             return RedirectResponse(url="/users", status_code=status.HTTP_303_SEE_OTHER)
         else:
