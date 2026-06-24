@@ -161,7 +161,8 @@ def assign_ticket():
     return {"response": "Assign Ticket Page"}
 
 @router.patch("/{ticket_id}")
-def patch_ticket(        request: Request, 
+def patch_ticket(
+        request: Request, 
         ticket_id: int = Path(...),
         title: str | None = Form(None),
         description: str | None = Form(None),
