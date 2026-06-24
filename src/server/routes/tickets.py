@@ -124,7 +124,8 @@ def new_ticket(
         helpdesk = get_helpdesk()
         current_user = helpdesk.admin_api.find_user_by_username(username=user_username)
         if current_user is None:
-            return RedirectResponse(url="/auth", status_code=status.HTTP_303_SEE_OTHER)
+            # Error handler for when db is removed but session exists
+            return RedirectResponse(url="/auth/logout", status_code=status.HTTP_303_SEE_OTHER)
 
         os.makedirs(f"{STATIC_DIR}/upload/", exist_ok=True)
 
@@ -153,6 +154,8 @@ def new_ticket(
         redirect = RedirectResponse(url="/dashboard", status_code=status.HTTP_303_SEE_OTHER)
         redirect.set_cookie(key="new_ticket_flash_message", value="successful")
         return redirect
+    except Exception:
+        raise
     except HTTPException:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Internal server error")
 
@@ -186,8 +189,11 @@ def patch_ticket(
                 redirect = RedirectResponse(url=f"/tickets/{ticket_id}", status_code=status.HTTP_303_SEE_OTHER)
                 redirect.set_cookie(key="ticket_update_flash_message", value="successful")
                 return redirect
+            else:
+                raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Access denied")
         else:
-            raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Access denied")
+            # Error handler for when db is removed but session exists
+            return RedirectResponse(url="/auth/logout", status_code=status.HTTP_303_SEE_OTHER)
     except HTTPException:
         raise
     except Exception:
