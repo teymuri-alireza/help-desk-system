@@ -3,3 +3,5 @@ fastapi-swagger==0.4.50
 uvicorn==0.47.0
 sqlalchemy==2.0.47
 python-jose==3.5.0
+numpy==2.5.0
+matplotlib==3.11.0
