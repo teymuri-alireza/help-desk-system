@@ -167,7 +167,7 @@ class StatsService:
             core_logger.error(f"Tickets Status Pie Chart failed: {e}")
             raise
 
-def create_empty_chart(self, filename: str, message: str) -> None:
+    def create_empty_chart(self, filename: str, message: str) -> None:
         """
         Create and save a fallback chart when no valid data is available.
 
