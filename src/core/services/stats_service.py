@@ -104,6 +104,12 @@ class StatsService:
             for role, count in user_role_grouped:
                 roles.append(role.fa)
                 data.append(count)
+            if not data:
+                self.create_empty_chart(
+                    f"{CHARTS_DIR}/user_role.png",
+                    "کاربری یافت نشد"
+                )
+                return
 
             colors = plt.cm.tab10.colors
             wedge_properties = {'linewidth': 1, 'edgecolor': "black"}
@@ -128,3 +134,18 @@ class StatsService:
         except Exception as e:
             core_logger.error(f"Users Role Pie Chart failed: {e}")
             raise
+
+def create_empty_chart(self, filename: str, message: str) -> None:
+        """
+        Create and save a fallback chart when no valid data is available.
+
+        Args:
+            filename: Path to save the generated chart image.
+            message: Text to display in the chart explaining the absence of data.
+        """
+        fig, ax = plt.subplots(figsize=(10, 7))
+        ax.pie([1], colors=["lightgray"])
+        ax.text(0, 0, message, ha="center", va="center", fontsize=12, fontweight="bold")
+
+        plt.savefig(filename)
+        plt.close(fig)
