@@ -135,12 +135,12 @@ class StatsService:
             core_logger.error(f"Users Role Pie Chart failed: {e}")
             raise
 
-    def tickets_status_pie_chart(self) -> None:
+    def tickets_status_bar_chart(self) -> None:
         """
-        Generate and save a pie chart showing the distribution of ticket statuses.
+        Generate and save a bar chart showing the distribution of ticket statuses.
 
         This method queries the database for ticket statuses and their counts, then
-        generates a pie chart and saves it to the configured charts directory.
+        generates a bar chart and saves it to the configured charts directory.
         If there is no status data, it falls back to creating an empty chart
         indicating that no tickets were found.
         """
