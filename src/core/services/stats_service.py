@@ -1,7 +1,14 @@
+import logging
+import numpy as np
+import matplotlib.pyplot as plt
+from pathlib import Path
 from datetime import datetime, timedelta
 from sqlalchemy import func
 from sqlalchemy.orm import Session, sessionmaker
 from src.database.tables import User, Ticket, UserStatus, TicketStatus
+
+core_logger = logging.getLogger("core")
+CHARTS_DIR = Path(__file__).parent.parent.parent / "server" / "static" / "charts"
 
 
 class StatsService:
@@ -79,3 +86,45 @@ class StatsService:
             ])).scalar()
 
             return all_users, active_users
+
+    def users_role_pie_chart(self) -> None:
+        """
+        Generate and save a pie chart showing the distribution of user roles.
+
+        This method queries the database for user roles and their counts, then
+        generates a pie chart and saves it to the configured charts directory.
+        If there is no role data, it falls back to creating an empty chart
+        indicating that no users were found.
+        """
+        try:
+            with self.session_factory() as session:
+                user_role_grouped = session.query(User.role, func.count(User.id)).group_by(User.role).all()
+            roles = []
+            data = []
+            for role, count in user_role_grouped:
+                roles.append(role.fa)
+                data.append(count)
+
+            colors = plt.cm.tab10.colors
+            wedge_properties = {'linewidth': 1, 'edgecolor': "black"}
+
+            def create_autocpt(pct, allvalues):
+                absolute = int(pct / 100.*np.sum(allvalues))
+                return "{:.1f}%\n({:d} نفر)".format(pct, absolute)
+
+            fig, ax = plt.subplots(figsize=(10, 7))
+            wedges, texts, autotexts = ax.pie(data,
+                autopct=lambda pct: create_autocpt(pct, data),
+                labels=roles,
+                colors=colors,
+                startangle=90,
+                wedgeprops=wedge_properties,
+                textprops=dict(color="black")
+            )
+
+            plt.setp(autotexts, size=8, weight="bold")
+            plt.savefig(f"{CHARTS_DIR}/user_role.png")
+            plt.close(fig)
+        except Exception as e:
+            core_logger.error(f"Users Role Pie Chart failed: {e}")
+            raise
