@@ -14,6 +14,9 @@
         {% endif %}
         <a class="nav-tab" style="text-decoration: none;" href="/tickets" data-tab="tickets">تمامی تیکت‌ها</a>
         <a class="nav-tab" style="text-decoration: none;" href="/notifications/all" data-tab="tickets">تمامی اعلان‌ها</a>
+        {% if user_role == "System Admin" %}
+            <a class="nav-tab" style="text-decoration: none;" href="/dashboard/stats" data-tab="stats">آمار‌های سامانه</a>
+        {% endif %}
     </nav>
 {% endblock %}
 
