@@ -14,11 +14,10 @@
         <a class="nav-tab" style="text-decoration: none;" href="/notifications/all" data-tab="notifications">تمامی اعلان‌ها</a>
         <a class="nav-tab active" style="text-decoration: none;" data-tab="stats">آمار‌های سامانه</a>
 
-                    <!-- WIP -->
         <!-- Divider -->
-        <!-- <div style="padding-bottom:25px; border-bottom:1px solid rgba(255,255,255,.1); margin-bottom:20px;"></div>
-        <a class="nav-tab stats-active" style="text-decoration: none;" data-tab="stats">آمار کاربران</a>
-        <a class="nav-tab" style="text-decoration: none;" data-tab="stats">آمار تیکت‌ها</a> -->
+        <div style="padding-bottom:25px; border-bottom:1px solid rgba(255,255,255,.1); margin-bottom:20px;"></div>
+        <a class="nav-tab stats-active" style="text-decoration: none;" data-tab="stats" id="users-charts-btn">آمار کاربران</a>
+        <a class="nav-tab" style="text-decoration: none;" data-tab="stats" id="tickets-charts-btn">آمار تیکت‌ها</a>
     </nav>
 {% endblock %}
 
@@ -46,21 +45,25 @@
         </div>
     </div>
 
-    <!-- User Pie Chart based on Role -->
-    <section class="card">
-        <div class="section-header">
-            <h2>آمار کاربران بر اساس نقش‌ها</h2>
-        </div>
-        <img class="chart-image"  src="/static/charts/user_role.png" />
-    </section>
+    <div id="users-charts">
+        <!-- User Pie Chart based on Role -->
+        <section class="card">
+            <div class="section-header">
+                <h2>آمار کاربران بر اساس نقش‌ها</h2>
+            </div>
+            <img class="chart-image"  src="/static/charts/user_role.png" />
+        </section>
+    </div>
 
-    <!-- Ticket Pie Chart based on Status -->
-    <section class="card">
-        <div class="section-header">
-            <h2>آمار تیکت‌ها بر اساس وضعیت</h2>
-        </div>
-        <img class="chart-image"  src="/static/charts/ticket_status.png" />
-    </section>
+    <div id="tickets-charts">
+        <!-- Ticket Pie Chart based on Status -->
+        <section class="card">
+            <div class="section-header">
+                <h2>آمار تیکت‌ها بر اساس وضعیت</h2>
+            </div>
+            <img class="chart-image"  src="/static/charts/ticket_status.png" />
+        </section>
+    </div>
 {% endblock %}
 
 {% block js %}
@@ -68,4 +71,5 @@
     <script src="{{ url_for('static', path='js/alerts.js') }}"></script>
     <script src="{{ url_for('static', path='js/toggle_btn.js') }}"></script>
     <script src="{{ url_for('static', path='js/ticket_search.js') }}"></script>
+    <script src="{{ url_for('static', path='js/toggle_charts.js') }}"></script>
 {% endblock%}
