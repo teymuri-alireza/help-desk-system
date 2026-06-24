@@ -135,6 +135,38 @@ class StatsService:
             core_logger.error(f"Users Role Pie Chart failed: {e}")
             raise
 
+    def tickets_status_pie_chart(self) -> None:
+        """
+        Generate and save a pie chart showing the distribution of ticket statuses.
+
+        This method queries the database for ticket statuses and their counts, then
+        generates a pie chart and saves it to the configured charts directory.
+        If there is no status data, it falls back to creating an empty chart
+        indicating that no tickets were found.
+        """
+        try:
+            with self.session_factory() as session:
+                ticket_status_grouped = session.query(Ticket.status, func.count(Ticket.id)).group_by(Ticket.status).all()
+            counts = {
+                status: count
+                for status, count in ticket_status_grouped
+            }
+            statuses = []
+            data = []
+            for status in TicketStatus:
+                statuses.append(status.fa)
+                data.append(counts.get(status, 0))
+            if not data:
+                self.create_empty_chart(f"{CHARTS_DIR}/ticket_status.png", "تیکتی یافت نشد")
+                return
+
+            plt.bar(statuses, data)
+            plt.savefig(f"{CHARTS_DIR}/ticket_status.png")
+            plt.close()
+        except Exception as e:
+            core_logger.error(f"Tickets Status Pie Chart failed: {e}")
+            raise
+
 def create_empty_chart(self, filename: str, message: str) -> None:
         """
         Create and save a fallback chart when no valid data is available.

@@ -108,6 +108,7 @@ def stats(request: Request):
         all_tickets_count, active_tickets_count, not_assigned_tickets, last_created = helpdesk.statistics_api.ticket_stats()
         all_users_count, active_users_count = helpdesk.statistics_api.users_stats()
         helpdesk.statistics_api.users_role_pie_chart()
+        helpdesk.statistics_api.tickets_status_pie_chart()
         context = {
             "request": request,
             "user_username": current_user.username, 
