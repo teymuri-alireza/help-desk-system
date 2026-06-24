@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title%}{% endblock %} | دانشگاه دانش و فناوری</title>
+    {% block css %}{% endblock %}
+</head>
+<body>
+
+<header>
+    <nav class="navbar">
+        <div class="logo">
+            <h2>دانشگاه دانش و فناوری</h2>
+        </div>
+
+        <ul class="nav-links">
+            <li><a href="/">صفحه اصلی</a></li>
+            <li><a href="/users/{{ user_id }}">پروفایل کاربر</a></li>
+            <li class="notifications-dropdown">
+                <a href="/notifications/all" class="notifications-trigger">اعلان‌ها</a>
+                <div class="notifications-menu" id="notifications-menu"></div>
+            </li>
+        </ul>
+
+        <div class="auth-buttons">
+            <a href="/auth/logout" class="btn register-btn">خروج</a>
+        </div>
+    </nav>
+</header>
+
+{% block early_js %}{% endblock %}
+
+<main class="ops-dashboard">
+
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <h3>داشبورد - کاربر {{ user_username }}</h3>
+        </div>
+        {% block aside %}{% endblock %}
+    </aside>
+
+    <section class="dashboard-content">
+        {% block content %}{% endblock %}
+    </section>
+</main>
+
+{% block js %}{% endblock %}
+
+</body>
+</html>

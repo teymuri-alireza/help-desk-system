@@ -38,7 +38,8 @@ def list_tickets(request: Request):
                 "request": request,
                 "tickets_list": tickets_list,
                 "user_id": current_user.id,
-                "role": current_user.role.value,
+                "user_username": current_user.username,
+                "user_role": current_user.role.value,
             }
             response = templates.TemplateResponse(
                 request=request,
@@ -75,7 +76,6 @@ def show_ticket(request: Request, ticket_id: int = Path(...)):
                         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Access denied")
 
                 ticket_update_flash_message = request.cookies.get("ticket_update_flash_message")
-                user_role = current_user.role.value
                 it_experts = helpdesk.admin_api.list_it_experts()
                 found_attachment = helpdesk.attachment_api.find_attachment(ticket_id=ticket_id)
                 response = templates.TemplateResponse(
@@ -86,7 +86,8 @@ def show_ticket(request: Request, ticket_id: int = Path(...)):
                         "ticket": found_ticket,
                         "attachment": found_attachment,
                         "user_id": current_user.id,
-                        "user_role": user_role,
+                        "user_role": current_user.role.value,
+                        "user_username": current_user.username,
                         "TicketStatus":TicketStatus,
                         "TicketPriority":TicketPriority,
                         "it_experts": it_experts,
