@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% block title %}آمار سامانه{% endblock %}
+{% block css %}
+    <link rel="stylesheet" href="{{ url_for('static', path='css/dashboard.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', path='css/tickets.css') }}">
+{% endblock %}
+
+{% block aside %}
+    <nav class="sidebar-nav">
+        <a class="nav-tab" style="text-decoration: none;" href="/dashboard" data-tab="overview">داشبورد</a>
+        <a class="nav-tab" style="text-decoration: none;" href="/users" data-tab="users">تمامی کاربران</a>
+        <a class="nav-tab" style="text-decoration: none;" href="/tickets" data-tab="tickets">تمامی تیکت‌ها</a>
+        <a class="nav-tab" style="text-decoration: none;" href="/notifications/all" data-tab="notifications">تمامی اعلان‌ها</a>
+        <a class="nav-tab active" style="text-decoration: none;" data-tab="stats">آمار‌های سامانه</a>
+
+                    <!-- WIP -->
+        <!-- Divider -->
+        <!-- <div style="padding-bottom:25px; border-bottom:1px solid rgba(255,255,255,.1); margin-bottom:20px;"></div>
+        <a class="nav-tab stats-active" style="text-decoration: none;" data-tab="stats">آمار کاربران</a>
+        <a class="nav-tab" style="text-decoration: none;" data-tab="stats">آمار تیکت‌ها</a> -->
+    </nav>
+{% endblock %}
+
+{% block content %}
+    <!-- KPI CARDS -->
+    <div class="metrics-grid">
+        <div class="metric-card">
+            <span>کاربران کل / کاربران فعال</span>
+            <h2>{{ all_users_count }} / {{ active_users_count }}</h2>
+        </div>
+
+        <div class="metric-card">
+            <span>کل تیکت‌ها / تیکت‌های باز</span>
+            <h2>{{ all_tickets_count }} / {{ active_tickets_count }}</h2>
+        </div>
+
+        <div class="metric-card">
+            <span>تیکت‌های بدون کارشناس</span>
+            <h2>{{ not_assigned_tickets }}</h2>
+        </div>
+
+        <div class="metric-card">
+            <span>تیکت‌های ۲۴ ساعت گذشته</span>
+            <h2>{{ last_created }}</h2>
+        </div>
+    </div>
+
+    <!-- User Pie Chart based on Role -->
+    <section class="card">
+        <div class="section-header">
+            <h2>آمار کاربران بر اساس نقش‌ها</h2>
+        </div>
+        <img src="/static/charts/user_role.png" />
+    </section>
+{% endblock %}
+
+{% block js %}
+    <script src="{{ url_for('static', path='js/notification.js') }}"></script>
+    <script src="{{ url_for('static', path='js/alerts.js') }}"></script>
+    <script src="{{ url_for('static', path='js/toggle_btn.js') }}"></script>
+    <script src="{{ url_for('static', path='js/ticket_search.js') }}"></script>
+{% endblock%}

@@ -576,6 +576,7 @@ td{
     color:#0f2747;
     font-weight:700;
 }
+.stats-active {background:#183b69;}
 .dashboard-content{
     flex:1;
     padding:30px;

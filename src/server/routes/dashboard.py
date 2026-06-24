@@ -91,3 +91,38 @@ def dashboard(request: Request, response: Response):
             return RedirectResponse(url="/auth/logout", status_code=status.HTTP_303_SEE_OTHER)
     except HTTPException:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Internal server error")
+
+@router.get("/stats")
+def stats(request: Request):
+    try:
+        user_username = get_current_user(request=request)
+    except HTTPException as e:
+        core_logger.error(f"{e} - The access token is missing.")
+        return RedirectResponse(url="/auth", status_code=status.HTTP_303_SEE_OTHER)
+
+    try:
+        helpdesk = get_helpdesk()
+        current_user = helpdesk.admin_api.find_user_by_username(username=user_username)
+        if current_user.role != Role.SYSTEM_ADMIN:
+            raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Access denied")
+        all_tickets_count, active_tickets_count, not_assigned_tickets, last_created = helpdesk.statistics_api.ticket_stats()
+        all_users_count, active_users_count = helpdesk.statistics_api.users_stats()
+        helpdesk.statistics_api.users_role_pie_chart()
+        context = {
+            "request": request,
+            "user_username": current_user.username, 
+            "user_id": current_user.id,
+            "all_tickets_count": all_tickets_count,
+            "active_tickets_count": active_tickets_count,
+            "not_assigned_tickets": not_assigned_tickets,
+            "last_created": last_created,
+            "all_users_count": all_users_count,
+            "active_users_count": active_users_count,
+        }
+        return templates.TemplateResponse(
+            request=request,
+            name="statistics.html",
+            context=context
+        )
+    except HTTPException:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Internal server error")
