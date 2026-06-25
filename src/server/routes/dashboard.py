@@ -109,6 +109,7 @@ def stats(request: Request):
         all_users_count, active_users_count = helpdesk.statistics_api.users_stats()
         helpdesk.statistics_api.users_role_pie_chart()
         helpdesk.statistics_api.tickets_status_bar_chart()
+        helpdesk.statistics_api.it_experts_performance_bar_chart()
         context = {
             "request": request,
             "user_username": current_user.username, 

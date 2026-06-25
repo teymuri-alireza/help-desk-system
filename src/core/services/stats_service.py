@@ -5,7 +5,7 @@ from pathlib import Path
 from datetime import datetime, timedelta
 from sqlalchemy import func
 from sqlalchemy.orm import Session, sessionmaker
-from src.database.tables import User, Ticket, UserStatus, TicketStatus
+from src.database.tables import User, Ticket, Role, UserStatus, TicketStatus
 
 core_logger = logging.getLogger("core")
 CHARTS_DIR = Path(__file__).parent.parent.parent / "server" / "static" / "charts"
@@ -165,6 +165,45 @@ class StatsService:
             plt.close()
         except Exception as e:
             core_logger.error(f"Tickets Status Pie Chart failed: {e}")
+            raise
+
+    def it_experts_performance_bar_chart(self) -> None:
+        """
+        Generate and save a bar chart showing the distribution of it experts performances
+        based on resolved tickets.
+
+        This method queries the database for it experts performances and their counts, then
+        generates a bar chart and saves it to the configured charts directory.
+        If there is no tickets data, it falls back to creating an empty chart
+        indicating that no tickets were found.
+        """
+        try:
+            with self.session_factory() as session:
+                it_expert_tickets_grouped = (
+                    session.query(User.name, func.count(Ticket.id))
+                    .join(Ticket, Ticket.assigned_to == User.id)
+                    .filter(User.role == Role.IT_EXPERT, Ticket.status == TicketStatus.RESOLVED,)
+                    .group_by(User.id, User.name).all()
+                )
+
+            experts = []
+            data = []
+            for name, count in it_expert_tickets_grouped:
+                experts.append(name)
+                data.append(count)
+
+            if not data:
+                self.create_empty_chart(
+                    f"{CHARTS_DIR}/it_experts_performance.png",
+                    "کارشناس یا تیکت یافت نشد",
+                )
+                return
+
+            plt.bar(experts, data)
+            plt.savefig(f"{CHARTS_DIR}/it_experts_performance.png", transparent=True)
+            plt.close()
+        except Exception as e:
+            core_logger.error(f"It experts performance chart failed: {e}")
             raise
 
     def create_empty_chart(self, filename: str, message: str) -> None:
