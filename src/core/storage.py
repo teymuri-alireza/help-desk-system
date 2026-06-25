@@ -1,6 +1,6 @@
 import logging
 from sqlalchemy.orm import Session, sessionmaker
-from src.database.tables import User, Ticket, Response, Attachment, Notification
+from src.database.tables import User, Ticket, Response, Attachment, Notification, TicketStatus
 from sqlalchemy.orm import joinedload
 
 core_logger = logging.getLogger("core")
@@ -147,6 +147,10 @@ class StorageEngine:
                         value = getattr(new_ticket, field)
                         if value is not None:
                             setattr(found_ticket, field, value)
+                    if new_ticket.assigned_to is not None:
+                        if new_ticket.status == TicketStatus.NEW.name and found_ticket.status == TicketStatus.NEW.name:
+                            # Update ticket status if it's assigned if it's not chnaged before.
+                            found_ticket.status = TicketStatus.IN_PROGRESS
                     session.commit()
                     session.refresh(found_ticket)
         except Exception as e:
