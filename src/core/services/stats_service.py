@@ -129,7 +129,7 @@ class StatsService:
             )
 
             plt.setp(autotexts, size=8, weight="bold")
-            plt.savefig(f"{CHARTS_DIR}/user_role.png")
+            plt.savefig(f"{CHARTS_DIR}/user_role.png", transparent=True)
             plt.close(fig)
         except Exception as e:
             core_logger.error(f"Users Role Pie Chart failed: {e}")
@@ -161,7 +161,7 @@ class StatsService:
                 return
 
             plt.bar(statuses, data)
-            plt.savefig(f"{CHARTS_DIR}/ticket_status.png")
+            plt.savefig(f"{CHARTS_DIR}/ticket_status.png", transparent=True)
             plt.close()
         except Exception as e:
             core_logger.error(f"Tickets Status Pie Chart failed: {e}")
@@ -179,5 +179,5 @@ class StatsService:
         ax.pie([1], colors=["lightgray"])
         ax.text(0, 0, message, ha="center", va="center", fontsize=12, fontweight="bold")
 
-        plt.savefig(filename)
+        plt.savefig(filename, transparent=True)
         plt.close(fig)
