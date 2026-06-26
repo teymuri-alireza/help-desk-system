@@ -108,6 +108,7 @@
     </section>
 
     {% if ticket and user_role != "Student" and user_role != "Employee" %}
+    {% if ticket.status.name != "RESOLVED" and ticket.status.name != "CLOSED" %}
     <section class="card">
         <div class="section-header">
             <h2>ویرایش اطلاعات تیکت</h2>
@@ -125,6 +126,8 @@
                 <input type="text" name="description" value="{{ ticket.description }}" required placeholder="توضیحات تیکت">
             </div>
             {% endif %}
+
+            {% if user_role != "IT Expert" %}
             <div class="form-group">
                 <label>وضعیت</label>
                 <select name="ticket_status" required>
@@ -136,6 +139,17 @@
                     {% endfor %}
                 </select>
             </div>
+            {% else %}
+                {% if ticket.status.name == "IN_PROGRESS" %}
+                <div class="form-group">
+                    <input type="checkbox" id="ticket_status" name="ticket_status" value="RESOLVED">
+                    <label for="ticket_status">مشکل تیکت حل شد</label><br>
+                {% elif ticket.status.name == "WAITING_FOR_USER" %}
+                    <p>تیکت در انتظار پاسخ کاربر میباشد.</p>
+                </div>
+                {% endif %}
+            {% endif %}
+
             {% if user_role != "IT Expert" %}
             <div class="form-group">
                 <label>اولویت</label>
@@ -165,6 +179,7 @@
             <button class="submit-btn" type="submit">آپدیت تیکت</button>
         </form>
     </section>
+    {% endif %}
     {% endif %}
 
 {% endblock %}
