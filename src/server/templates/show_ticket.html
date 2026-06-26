@@ -51,6 +51,12 @@
             تیکت با موفقیت آپدیت شد.
         </div>
 
+        {% if ticket_closed_flash_message %}
+        <div id="ticket-closed-flash-alert" class="alert alert-danger">
+            امکان ثبت پاسخ وجود ندارد. تیکت بسته شده است.
+        </div>
+        {% endif %}
+
         <div class="section-header">
             <h2>اطلاعات تیکت</h2>
         </div>
@@ -188,6 +194,7 @@
 <script src="{{ url_for('static', path='js/notification.js') }}"></script>
 <script src="{{ url_for('static', path='js/toggle_btn.js') }}"></script>
 <script src="{{ url_for('static', path='js/responses.js') }}"></script>
+<script src="{{ url_for('static', path='js/alerts.js') }}"></script>
 <script>
     //Sending PATCH request using JS
     document.getElementById("editForm").addEventListener("submit", async function (e) {

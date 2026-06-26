@@ -76,6 +76,7 @@ def show_ticket(request: Request, ticket_id: int = Path(...)):
                         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Access denied")
 
                 ticket_update_flash_message = request.cookies.get("ticket_update_flash_message")
+                ticket_closed_flash_message = request.cookies.get("ticket_closed_flash_message")
                 it_experts = helpdesk.admin_api.list_it_experts()
                 found_attachment = helpdesk.attachment_api.find_attachment(ticket_id=ticket_id)
                 response = templates.TemplateResponse(
@@ -92,9 +93,11 @@ def show_ticket(request: Request, ticket_id: int = Path(...)):
                         "TicketPriority":TicketPriority,
                         "it_experts": it_experts,
                         "ticket_update_flash_message": ticket_update_flash_message,
+                        "ticket_closed_flash_message": ticket_closed_flash_message,
                     }
                 )
                 response.delete_cookie("ticket_update_flash_message")
+                response.delete_cookie("ticket_closed_flash_message")
                 return response
             except AttributeError as e:
                 if "has no attribute 'creator_id'" in str(e):

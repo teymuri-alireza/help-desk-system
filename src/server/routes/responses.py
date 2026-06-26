@@ -2,7 +2,7 @@ import logging
 from fastapi import APIRouter, Request, status, Form, HTTPException
 from fastapi.responses import RedirectResponse
 from src.server.dependencies import get_helpdesk, get_current_user
-from src.database.tables import Response
+from src.database.tables import Response, TicketStatus
 
 core_logger = logging.getLogger("core")
 
@@ -44,9 +44,17 @@ def new_response(
         current_user = helpdesk.admin_api.find_user_by_username(username=user_username)
         if current_user is not None:
             creator_id = current_user.id
-            response = Response(text=text, ticket_id=response_ticket_id, creator_id=creator_id)
-            helpdesk.response_api.new_response(response=response)
-            return RedirectResponse(url=f"/tickets/{response_ticket_id}", status_code=status.HTTP_303_SEE_OTHER)
+            
+            redirect = RedirectResponse(url=f"/tickets/{response_ticket_id}", status_code=status.HTTP_303_SEE_OTHER)
+
+            ticket = helpdesk.ticket_api.find_ticket(ticket_id=response_ticket_id)
+            if ticket.status in (TicketStatus.RESOLVED, TicketStatus.CLOSED):
+                redirect.set_cookie(key="ticket_closed_flash_message", value="successful")
+            else:
+                response = Response(text=text, ticket_id=response_ticket_id, creator_id=creator_id)
+                helpdesk.response_api.new_response(response=response)
+
+            return redirect
         else:
             # Error handler for when db is removed but session exists
             return RedirectResponse(url="/auth/logout", status_code=status.HTTP_303_SEE_OTHER)

@@ -1,6 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
     const ticketAlert = document.getElementById("ticket-flash-alert");
     const userAlert = document.getElementById("user-flash-alert");
+    const ticketClosedAlert = document.getElementById("ticket-closed-flash-alert");
 
     if (ticketAlert) {
         setTimeout(() => {
@@ -18,6 +19,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
             setTimeout(() => {
                 userAlert.remove();
+            }, 500);
+        }, 3500);
+    }
+
+    if (ticketClosedAlert) {
+        setTimeout(() => {
+            ticketClosedAlert.style.opacity = "0";
+
+            setTimeout(() => {
+                ticketClosedAlert.remove();
             }, 500);
         }, 3500);
     }
