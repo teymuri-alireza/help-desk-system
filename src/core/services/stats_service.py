@@ -182,8 +182,12 @@ class StatsService:
             with self.session_factory() as session:
                 it_expert_tickets_grouped = (
                     session.query(User.name, func.count(Ticket.id))
-                    .join(Ticket, Ticket.assigned_to == User.id)
-                    .filter(User.role == Role.IT_EXPERT, Ticket.status == TicketStatus.RESOLVED,)
+                    .outerjoin(
+                        Ticket,
+                        (Ticket.assigned_to == User.id) &
+                        (Ticket.status == TicketStatus.RESOLVED),
+                    )
+                    .filter(User.role == Role.IT_EXPERT)
                     .group_by(User.id, User.name).all()
                 )
 
@@ -191,7 +195,7 @@ class StatsService:
             data = []
             for name, count in it_expert_tickets_grouped:
                 experts.append(name)
-                data.append(count)
+                data.append(count or 0)
 
             if not data:
                 self.create_empty_chart(
