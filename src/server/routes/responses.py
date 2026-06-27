@@ -2,7 +2,7 @@ import logging
 from fastapi import APIRouter, Request, status, Form, HTTPException
 from fastapi.responses import RedirectResponse
 from src.server.dependencies import get_helpdesk, get_current_user
-from src.database.tables import Response, TicketStatus
+from src.database.tables import Response, TicketStatus, Notification
 
 core_logger = logging.getLogger("core")
 
@@ -53,6 +53,9 @@ def new_response(
             else:
                 response = Response(text=text, ticket_id=response_ticket_id, creator_id=creator_id)
                 helpdesk.response_api.new_response(response=response)
+
+                notification = Notification(receiver_id=ticket.creator_id, title="پاسخ جدید", text=f"برای تیکت شماره {ticket.id} پاسخ جدید ثبت شده است.")
+                helpdesk.notification_api.new_notification(notification=notification)
 
             return redirect
         else:
