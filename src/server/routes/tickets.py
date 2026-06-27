@@ -196,6 +196,10 @@ def patch_ticket(
                     notification = Notification(receiver_id=assigned_to, title="تیکت جدید ارجاع شد", text=f"تیکت به شماره {ticket_id} به شما ارجاع داده شده است.")
                     helpdesk.notification_api.new_notification(notification=notification)
 
+                if old_ticket.status not in (TicketStatus.CLOSED, TicketStatus.RESOLVED) and ticket_to_update.status in (TicketStatus.CLOSED.name, TicketStatus.RESOLVED.name):
+                    notification = Notification(receiver_id=old_ticket.creator_id, title="تیکت بسته شد", text=f"تیکت به شماره {ticket_id} بسته شد.")
+                    helpdesk.notification_api.new_notification(notification=notification)
+
                 redirect = RedirectResponse(url=f"/tickets/{ticket_id}", status_code=status.HTTP_303_SEE_OTHER)
                 redirect.set_cookie(key="ticket_update_flash_message", value="successful")
                 return redirect
