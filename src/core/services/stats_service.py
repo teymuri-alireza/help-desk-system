@@ -160,9 +160,10 @@ class StatsService:
                 self.create_empty_chart(f"{CHARTS_DIR}/ticket_status.png", "تیکتی یافت نشد")
                 return
 
-            plt.bar(statuses, data)
-            plt.savefig(f"{CHARTS_DIR}/ticket_status.png", transparent=True)
-            plt.close()
+            fig, ax = plt.subplots(figsize=(16, 8), dpi=150)
+            ax.bar(statuses, data)
+            fig.savefig(f"{CHARTS_DIR}/ticket_status.png", transparent=True)
+            plt.close(fig)
         except Exception as e:
             core_logger.error(f"Tickets Status Pie Chart failed: {e}")
             raise
@@ -199,9 +200,10 @@ class StatsService:
                 )
                 return
 
-            plt.bar(experts, data)
-            plt.savefig(f"{CHARTS_DIR}/it_experts_performance.png", transparent=True)
-            plt.close()
+            fig, ax = plt.subplots(figsize=(16, 8), dpi=150)
+            ax.bar(experts, data)
+            fig.savefig(f"{CHARTS_DIR}/it_experts_performance.png", transparent=True)
+            plt.close(fig)
         except Exception as e:
             core_logger.error(f"It experts performance chart failed: {e}")
             raise
