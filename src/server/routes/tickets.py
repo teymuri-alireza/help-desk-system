@@ -187,8 +187,15 @@ def patch_ticket(
         # Check if user is admin first
         if current_user is not None:
             if current_user.role == Role.SYSTEM_ADMIN or current_user.role == Role.IT_EXPERT:
+                old_ticket = helpdesk.ticket_api.find_ticket(ticket_id=ticket_id)
+
                 ticket_to_update = Ticket(title=title, description=description, status=ticket_status, priority=priority, assigned_to=assigned_to)
                 helpdesk.ticket_api.update_ticket(new_ticket=ticket_to_update, old_ticket_id=ticket_id)
+
+                if current_user.role == Role.SYSTEM_ADMIN and ticket_to_update.assigned_to is not None and old_ticket.assigned_to is None:
+                    notification = Notification(receiver_id=assigned_to, title="تیکت جدید ارجاع شد", text=f"تیکت به شماره {ticket_id} به شما ارجاع داده شده است.")
+                    helpdesk.notification_api.new_notification(notification=notification)
+
                 redirect = RedirectResponse(url=f"/tickets/{ticket_id}", status_code=status.HTTP_303_SEE_OTHER)
                 redirect.set_cookie(key="ticket_update_flash_message", value="successful")
                 return redirect
