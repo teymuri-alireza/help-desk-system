@@ -70,11 +70,11 @@ The project includes:
 - Python
 - FastAPI
 - SQLAlchemy
-- SQLite (or another SQL-based DBMS)
+- SQLite
 
 ### Frontend
 
-- To be determined.
+- HTML, CSS static pages.
 
 ## Repository Structure
 
