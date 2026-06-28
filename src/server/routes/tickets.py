@@ -162,9 +162,6 @@ def new_ticket(
     except HTTPException:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Internal server error")
 
-@router.post("/{ticket_id}/assign")
-def assign_ticket():
-    return {"response": "Assign Ticket Page"}
 
 @router.patch("/{ticket_id}")
 def patch_ticket(

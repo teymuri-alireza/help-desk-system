@@ -92,8 +92,3 @@ def log_out(response: Response):
     response.delete_cookie("access_token")
 
     return response
-
-# Session management
-@router.get("/me")
-def session_information():
-    return {"response": "Session Information Page"}
