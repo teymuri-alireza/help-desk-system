@@ -18,7 +18,7 @@
             <a class="nav-tab active" style="text-decoration: none;" href="/tickets" data-tab="tickets">تمامی تیکت‌ها</a>
         {% endif %}
         <a class="nav-tab" style="text-decoration: none;" href="/notifications/all" data-tab="tickets">تمامی اعلان‌ها</a>
-        {% if user_role == "System Admin" %}
+        {% if user_role == "System Admin" or user_role == "Help Desk Manager" %}
             <a class="nav-tab" style="text-decoration: none;" href="/dashboard/stats" data-tab="stats">آمار‌های سامانه</a>
         {% endif %}
     </nav>

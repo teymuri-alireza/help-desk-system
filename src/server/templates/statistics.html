@@ -23,12 +23,15 @@
 {% endblock %}
 
 {% block content %}
+    <p data-user_role="{{ user_role }}" id="user-role-data"></p>
     <!-- KPI CARDS -->
     <div class="metrics-grid">
+        {% if user_role == "System Admin" %}
         <div class="metric-card">
             <span>کاربران کل / کاربران فعال</span>
             <h2>{{ all_users_count }} / {{ active_users_count }}</h2>
         </div>
+        {% endif %}
 
         <div class="metric-card">
             <span>کل تیکت‌ها / تیکت‌های باز</span>
@@ -46,6 +49,7 @@
         </div>
     </div>
 
+    {% if user_role == "System Admin" %}
     <div id="users-charts">
         <!-- User Pie Chart based on Role -->
         <section class="card">
@@ -55,6 +59,7 @@
             <img class="chart-image"  src="/static/charts/user_role.png" />
         </section>
     </div>
+    {% endif %}
 
     <div id="tickets-charts">
         <!-- Ticket Bar Chart based on Status -->
