@@ -52,6 +52,23 @@ def dashboard(request: Request, response: Response):
                         "new_ticket_flash_message": new_ticket_flash_message,
                         }
                 html_file = "it_expert_dashboard.html"
+            elif current_user.role == Role.HELP_DESK_MANAGER:
+                tickets_list = helpdesk.ticket_api.list_tickets(limit=10)
+                all_tickets_count, active_tickets_count, not_assigned_tickets, last_created = helpdesk.statistics_api.ticket_stats()
+                context = {
+                    "request": request,
+                    "user_username": current_user.username, 
+                    "user_id": current_user.id,
+                    "user_role": current_user.role.value,
+                    "tickets_list": tickets_list,
+                    "all_tickets_count": all_tickets_count,
+                    "active_tickets_count": active_tickets_count,
+                    "not_assigned_tickets": not_assigned_tickets,
+                    "last_created": last_created,
+                    "new_ticket_flash_message": new_ticket_flash_message,
+                    "Role": Role,
+                    }
+                html_file = "admin_dashboard.html"
             else:
                 tickets_list = helpdesk.ticket_api.list_tickets(limit=10)
                 users_list = helpdesk.admin_api.list_users(limit=10)
