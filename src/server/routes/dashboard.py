@@ -107,7 +107,9 @@ def stats(request: Request):
             raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Access denied")
         all_tickets_count, active_tickets_count, not_assigned_tickets, last_created = helpdesk.statistics_api.ticket_stats()
         all_users_count, active_users_count = helpdesk.statistics_api.users_stats()
-        helpdesk.statistics_api.users_role_pie_chart()
+        # Only generate user role pie chart for system admins
+        if current_user.role == Role.SYSTEM_ADMIN:
+            helpdesk.statistics_api.users_role_pie_chart()
         helpdesk.statistics_api.tickets_status_bar_chart()
         helpdesk.statistics_api.it_experts_performance_bar_chart()
         context = {

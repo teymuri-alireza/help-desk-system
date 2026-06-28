@@ -9,7 +9,9 @@
 {% block aside %}
     <nav class="sidebar-nav">
         <a class="nav-tab active" style="text-decoration: none;" data-tab="overview">داشبورد</a>
-        <a class="nav-tab" style="text-decoration: none;" href="/users" data-tab="users">تمامی کاربران</a>
+        {% if user_role == "System Admin" %}
+            <a class="nav-tab" style="text-decoration: none;" href="/users" data-tab="users">تمامی کاربران</a>
+        {% endif %}
         <a class="nav-tab" style="text-decoration: none;" href="/tickets" data-tab="tickets">تمامی تیکت‌ها</a>
         <a class="nav-tab" style="text-decoration: none;" href="/notifications/all" data-tab="tickets">تمامی اعلان‌ها</a>
         <a class="nav-tab" style="text-decoration: none;" href="/dashboard/stats" data-tab="stats">آمار‌های سامانه</a>
@@ -19,10 +21,12 @@
 {% block content %}
     <!-- KPI CARDS -->
     <div class="metrics-grid">
+        {% if user_role == "System Admin" %}
         <div class="metric-card">
             <span>کاربران کل / کاربران فعال</span>
             <h2>{{ all_users_count }} / {{ active_users_count }}</h2>
         </div>
+        {% endif %}
 
         <div class="metric-card">
             <span>کل تیکت‌ها / تیکت‌های باز</span>
@@ -68,6 +72,7 @@
         </form>
     </section>
 
+    {% if user_role == "System Admin" %}
     <!-- User Form -->
     <section class="card">
         {% if new_user_flash_message %}
@@ -110,6 +115,7 @@
             <button class="submit-btn" type="submit">ثبت کاربر</button>
         </form>
     </section>
+    {% endif %}
 
     <!-- Tickets TAB -->
     <section class="card">
@@ -139,9 +145,13 @@
                         <td>
                             <span class="status-badge status-{{ ticket.status.name }}">{{ ticket.status.fa }}</span>
                         </td>
+                        {% if user_role == "System Admin" %}
                         <td>
                             <a href="/users/{{ ticket.creator_id }}">{{ ticket.creator.name }}</a>
                         </td>
+                        {% else %}
+                        <td>{{ ticket.creator.name }}</td>
+                        {% endif %}
                         <td>{{ ticket.created_at }}</td>
                         <td>
                             <a href="/tickets/{{ ticket.id }}" class="btn-small btn submit-btn">مشاهده</a>
@@ -153,6 +163,7 @@
         </div>
     </section>
 
+    {% if user_role == "System Admin" %}
     <!-- Users TAB -->
     <section class="card">
         <div class="section-header">
@@ -187,6 +198,7 @@
             </table>
         </div>
     </section>
+    {% endif %}
 {% endblock %}
 
 {% block js %}
