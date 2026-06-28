@@ -119,7 +119,7 @@
         </div>
     </section>
 
-    {% if ticket and user_role != "Student" and user_role != "Employee" %}
+    {% if ticket and user_role != "Student" and user_role != "Employee" and user_role != "IT Manager" %}
     {% if ticket.status.name != "RESOLVED" and ticket.status.name != "CLOSED" %}
     <section class="card">
         <div class="section-header">
