@@ -177,8 +177,8 @@
 
             <div class="form-group">
                 <label>کارشناس بررسی کننده</label>
-                <select name="assigned_to" required>
-                    <option>-- کارشناس را انتخاب کنید --</option>
+                <select name="assigned_to">
+                    <option value="">-- کارشناس را انتخاب کنید --</option>
                     {% for it_expert in it_experts %}
                     <option value="{{ it_expert.id }}"
                         {% if ticket.assigned_to == it_expert.id %}selected{% endif %}>
