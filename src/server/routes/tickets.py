@@ -177,6 +177,8 @@ def patch_ticket(
         ticket_status: str | None = Form(None),
         priority: str | None = Form(None),
         assigned_to: str | None = Form(None),
+        category_id: int | None = Form(None),
+        department_id: int | None = Form(None),
     ):
     try:
         user_username = get_current_user(request=request)
@@ -191,7 +193,7 @@ def patch_ticket(
             if current_user.role in (Role.SYSTEM_ADMIN, Role.HELP_DESK_MANAGER, Role.IT_EXPERT):
                 old_ticket = helpdesk.ticket_api.find_ticket(ticket_id=ticket_id)
 
-                ticket_to_update = Ticket(title=title, description=description, status=ticket_status, priority=priority, assigned_to=assigned_to)
+                ticket_to_update = Ticket(title=title, description=description, status=ticket_status, priority=priority, assigned_to=assigned_to, category_id=category_id, department_id=department_id)
                 helpdesk.ticket_api.update_ticket(new_ticket=ticket_to_update, old_ticket_id=ticket_id)
 
                 if current_user.role in (Role.SYSTEM_ADMIN, Role.HELP_DESK_MANAGER) and ticket_to_update.assigned_to is not None and old_ticket.assigned_to is None:

@@ -143,7 +143,7 @@ class StorageEngine:
             with self.session_factory() as session:
                 found_ticket = session.query(Ticket).filter(Ticket.id==old_ticket_id).one_or_none()
                 if found_ticket is not None:
-                    for field in ["title", "description", "status", "priority", "assigned_to"]:
+                    for field in ["title", "description", "status", "priority", "assigned_to", "category_id", "department_id"]:
                         value = getattr(new_ticket, field)
                         if value is not None:
                             setattr(found_ticket, field, value)
