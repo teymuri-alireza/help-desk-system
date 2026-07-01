@@ -79,6 +79,9 @@ def show_ticket(request: Request, ticket_id: int = Path(...)):
                 ticket_closed_flash_message = request.cookies.get("ticket_closed_flash_message")
                 it_experts = helpdesk.admin_api.list_it_experts()
                 found_attachment = helpdesk.attachment_api.find_attachment(ticket_id=ticket_id)
+                categories = helpdesk.admin_api.list_ticket_categories()
+                departments = helpdesk.admin_api.list_ticket_departments()
+
                 response = templates.TemplateResponse(
                     request=request, 
                     name="show_ticket.html", 
@@ -92,6 +95,8 @@ def show_ticket(request: Request, ticket_id: int = Path(...)):
                         "TicketStatus":TicketStatus,
                         "TicketPriority":TicketPriority,
                         "it_experts": it_experts,
+                        "categories": categories,
+                        "departments": departments,
                         "ticket_update_flash_message": ticket_update_flash_message,
                         "ticket_closed_flash_message": ticket_closed_flash_message,
                     }
