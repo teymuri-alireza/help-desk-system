@@ -34,6 +34,7 @@ def dashboard(request: Request, response: Response):
                         "request": request,
                         "user_username": current_user.username, 
                         "user_id": current_user.id,
+                        "user_role": current_user.role.value,
                         "tickets_list": tickets_list,
                         "new_ticket_flash_message": new_ticket_flash_message,
                         }
@@ -45,6 +46,7 @@ def dashboard(request: Request, response: Response):
                         "request": request,
                         "user_username": current_user.username, 
                         "user_id": current_user.id,
+                        "user_role": current_user.role.value,
                         "tickets_list": tickets_list,
                         "assigned_tickets": assigned_tickets,
                         "open_tickets": open_tickets,
@@ -78,6 +80,7 @@ def dashboard(request: Request, response: Response):
                     "request": request,
                     "user_username": current_user.username, 
                     "user_id": current_user.id,
+                    "user_role": current_user.role.value,
                     "users_list": users_list,
                     "tickets_list": tickets_list,
                     "all_tickets_count": all_tickets_count,
