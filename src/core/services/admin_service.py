@@ -1,5 +1,5 @@
 from src.core.storage import StorageEngine
-from src.database.tables import User, Role
+from src.database.tables import User, Role, Category, Department
 
 
 class AdminService:
@@ -88,3 +88,21 @@ class AdminService:
             user_id: The ID of the user to delete.
         """
         self.storage.delete_user(user_id=user_id)
+
+    def list_ticket_categories(self) -> list[Category]:
+        """
+        List ticket categories.
+
+        Returns:
+            list[Category]: A list of Category objects.
+        """
+        return self.storage.list_ticket_categories()
+
+    def list_ticket_departments(self) -> list[Department]:
+        """
+        List all ticket departments.
+
+        Returns:
+            list[Department]: A list of Department objects.
+        """
+        return self.storage.list_ticket_departments()

@@ -1,6 +1,6 @@
 import logging
 from sqlalchemy.orm import Session, sessionmaker
-from src.database.tables import User, Ticket, Response, Attachment, Notification, TicketStatus
+from src.database.tables import User, Ticket, Response, Attachment, Notification, TicketStatus, Category, Department
 from sqlalchemy.orm import joinedload
 
 core_logger = logging.getLogger("core")
@@ -382,4 +382,32 @@ class StorageEngine:
                     session.commit()
         except Exception as e:
             core_logger.error(f"Delete user failed - {e}")
+            raise
+
+    def list_ticket_categories(self) -> list[Category]:
+        """
+        Retrieve all ticket categories from the database.
+
+        Returns:
+            list[Category]: A list of Category objects.
+        """
+        try:
+            with self.session_factory() as session:
+                return session.query(Category).all()
+        except Exception as e:
+            core_logger.error(f"List Ticket Categories failed - {e}")
+            raise
+
+    def list_ticket_departments(self) -> list[Department]:
+        """
+        Retrieve all ticket departments from the database.
+
+        Returns:
+            list[Department]: A list of Department objects.
+        """
+        try:
+            with self.session_factory() as session:
+                return session.query(Department).all()
+        except Exception as e:
+            core_logger.error(f"List Ticket Departments failed - {e}")
             raise
