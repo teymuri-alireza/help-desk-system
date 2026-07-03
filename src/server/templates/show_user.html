@@ -65,7 +65,9 @@
                             <p><strong>ایمیل:</strong> {{ user.email }}</p>
                             <p><strong>نقش:</strong> <span class="role">{{ user.role.fa }}</span></p>
                             <p><strong>وضعیت:</strong> {{ user.status.fa }}</p>
-                            <p><strong>دپارتمان مربوطه کارشناس:</strong> {{ user.department.name }}</p>
+                            {% if user.role.value == "IT Expert" %}
+                                <p><strong>دپارتمان مربوطه کارشناس:</strong> {{ user.department.name }}</p>
+                            {% endif %}
                             <p class="ticket-created"><strong>تاریخ عضویت:</strong> {{ user.created_at }}</p>
                         </div>
                     </div>
