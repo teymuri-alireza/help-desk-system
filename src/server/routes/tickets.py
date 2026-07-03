@@ -77,6 +77,7 @@ def show_ticket(request: Request, ticket_id: int = Path(...)):
 
                 ticket_update_flash_message = request.cookies.get("ticket_update_flash_message")
                 ticket_closed_flash_message = request.cookies.get("ticket_closed_flash_message")
+                assign_ticket_flash_message = request.session.pop("assign_ticket_flash_message", None)
                 it_experts = helpdesk.admin_api.list_it_experts()
                 found_attachment = helpdesk.attachment_api.find_attachment(ticket_id=ticket_id)
                 categories = helpdesk.admin_api.list_ticket_categories()
@@ -99,6 +100,7 @@ def show_ticket(request: Request, ticket_id: int = Path(...)):
                         "departments": departments,
                         "ticket_update_flash_message": ticket_update_flash_message,
                         "ticket_closed_flash_message": ticket_closed_flash_message,
+                        "assign_ticket_flash_message": assign_ticket_flash_message,
                     }
                 )
                 response.delete_cookie("ticket_update_flash_message")
@@ -165,6 +167,49 @@ def new_ticket(
     except Exception:
         raise
     except HTTPException:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Internal server error")
+
+
+@router.post("/{ticket_id}/assign")
+def assign_ticket(request: Request, ticket_id: int = Path(...)):
+    try:
+        user_username = get_current_user(request=request)
+    except HTTPException as e:
+        core_logger.error(f"{e} - The access token is missing.")
+        return RedirectResponse(url="/auth", status_code=status.HTTP_303_SEE_OTHER)
+    try:
+        helpdesk = get_helpdesk()
+        current_user = helpdesk.admin_api.find_user_by_username(username=user_username)
+        if current_user is not None:
+            if current_user.role in (Role.SYSTEM_ADMIN, Role.HELP_DESK_MANAGER):
+                found_ticket = helpdesk.ticket_api.find_ticket(ticket_id=ticket_id)
+                helpdesk.ticket_api.auto_assign_ticket(ticket_id=ticket_id, department_id=found_ticket.department_id)
+                request.session["assign_ticket_flash_message"] = "اختصاص اتوماتیک کارشناس به تیکت با موفقیت انجام شد"
+
+                found_ticket = helpdesk.ticket_api.find_ticket(ticket_id=ticket_id)
+                notification = Notification(receiver_id=found_ticket.assigned_to, title="تیکت جدید ارجاع شد", text=f"تیکت به شماره {ticket_id} به شما ارجاع داده شده است.")
+                helpdesk.notification_api.new_notification(notification=notification)
+
+                return RedirectResponse(url=f"/tickets/{ticket_id}", status_code=status.HTTP_303_SEE_OTHER)
+            else:
+                raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Access denied")
+        else:
+            # Error handler for when db is removed but session exists
+            return RedirectResponse(url="/auth/logout", status_code=status.HTTP_303_SEE_OTHER)
+    except AttributeError as e:
+        e = str(e)
+        redirect = RedirectResponse(url=f"/tickets/{ticket_id}", status_code=status.HTTP_303_SEE_OTHER)
+
+        if e == "Can not auto assign ticket. Department field is None.":
+            request.session["assign_ticket_flash_message"] = "اختصاص اتوماتیک تیکت به کارشناس ممکن نیست. علت: هیچ دپارتمانی برای تیکت ثبت نشده است"
+
+        elif e == "Can not auto assign ticket. No IT expert was found for this department.":
+            request.session["assign_ticket_flash_message"] = "اختصاص اتوماتیک تیکت به کارشناس ممکن نیست. علت: هیچ کارشناسی در دپارتمان ثبت شده‌ی تیکت فعالیت نمیکند"
+
+        return redirect
+    except HTTPException:
+        raise
+    except Exception:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Internal server error")
 
 

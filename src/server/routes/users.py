@@ -59,6 +59,7 @@ def show_user(request: Request, user_id: int = Path(...)):
             if current_user.role == Role.SYSTEM_ADMIN or current_user.id == user_id:
                 user_to_show = helpdesk.admin_api.find_user(user_id=user_id)
                 if user_to_show is not None:
+                    departments = helpdesk.admin_api.list_ticket_departments()
                     update_user_flash_message = request.cookies.get("update_user_flash_message")
                     context = {
                         "request": request,
@@ -66,6 +67,7 @@ def show_user(request: Request, user_id: int = Path(...)):
                         "user_id": current_user.id,
                         "user_username": current_user.username,
                         "Role": Role,
+                        "departments": departments,
                         "user_role": current_user.role.value,
                         "UserStatus": UserStatus,
                         "update_user_flash_message": update_user_flash_message,
@@ -141,7 +143,8 @@ def patch_user(
         email: str | None = Form(None), 
         username: str | None = Form(None), 
         role: str | None = Form(None), 
-        user_status: str | None = Form(None)
+        user_status: str | None = Form(None),
+        department_id: int | None = Form(None),
     ):
     try:
         user_username = get_current_user(request=request)
@@ -154,7 +157,7 @@ def patch_user(
         # Check if user is admin first
         if current_user is not None:
             if current_user.role == Role.SYSTEM_ADMIN or current_user.id == user_id:
-                user_to_update = User(name=name, email=email, username=username, role=role, status=user_status)
+                user_to_update = User(name=name, email=email, username=username, role=role, status=user_status, department_id=department_id)
                 helpdesk.admin_api.update_user(new_user=user_to_update, old_user_id=user_id)
 
                 redirect = RedirectResponse(url=f"/users/{user_id}", status_code=status.HTTP_303_SEE_OTHER)

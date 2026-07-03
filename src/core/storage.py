@@ -1,6 +1,7 @@
 import logging
+from sqlalchemy import func
 from sqlalchemy.orm import Session, sessionmaker
-from src.database.tables import User, Ticket, Response, Attachment, Notification, TicketStatus, Category, Department
+from src.database.tables import User, Ticket, Response, Attachment, Notification, TicketStatus, Category, Department, Role
 from sqlalchemy.orm import joinedload
 
 core_logger = logging.getLogger("core")
@@ -108,7 +109,9 @@ class StorageEngine:
                 found_ticket = session.query(Ticket).options(
                     joinedload(Ticket.creator),
                     joinedload(Ticket.responses).joinedload(Response.creator),
-                    joinedload(Ticket.assignee)
+                    joinedload(Ticket.assignee),
+                    joinedload(Ticket.category),
+                    joinedload(Ticket.department),
                     ).filter(Ticket.id==ticket_id).one_or_none()
                 return found_ticket
         except Exception as e:
@@ -150,6 +153,28 @@ class StorageEngine:
                     if new_ticket.assigned_to is not None:
                         if new_ticket.status == TicketStatus.NEW.name and found_ticket.status == TicketStatus.NEW.name:
                             # Update ticket status if it's assigned if it's not chnaged before.
+                            found_ticket.status = TicketStatus.IN_PROGRESS
+                    session.commit()
+                    session.refresh(found_ticket)
+        except Exception as e:
+            core_logger.error(f"Update ticket failed - {e}")
+            raise
+
+    def assign_ticket(self, ticket_id: int, assigned_to: int) -> None:
+        """
+        Assign a ticket to an IT expert.
+
+        Args:
+            ticket_id: The ID of the ticket to assign.
+            assigned_to: The ID of the IT expert to assign the ticket to.
+        """
+        try:
+            with self.session_factory() as session:
+                found_ticket = session.query(Ticket).filter(Ticket.id==ticket_id).one_or_none()
+                if found_ticket is not None:
+                    found_ticket.assigned_to = assigned_to
+                    if found_ticket.status == TicketStatus.NEW:
+                            # Update ticket status if it's assigned and not chnaged before.
                             found_ticket.status = TicketStatus.IN_PROGRESS
                     session.commit()
                     session.refresh(found_ticket)
@@ -322,10 +347,33 @@ class StorageEngine:
         """
         try:
             with self.session_factory() as session:
-                found_user = session.query(User).filter(User.id==user_id).one_or_none()
+                found_user = session.query(User).filter(User.id==user_id).options(
+                    joinedload(User.department)
+                ).one_or_none()
                 return found_user
         except Exception as e:
             core_logger.error(f"Find user failed - {e}")
+            raise
+
+    def find_free_it_expert(self, department_id: int) -> User | None:
+        """
+        Find an available IT expert in a department with the fewest assigned tickets.
+
+        Args:
+            department_id: The department ID to search for available IT experts.
+
+        Returns:
+            User|None: IT expert user object with fewest assignments, None if none found.
+        """
+        try:
+            with self.session_factory() as session:
+                free_it_expert = session.query(User).outerjoin(Ticket, Ticket.assigned_to == User.id).filter(
+                        User.role == Role.IT_EXPERT,
+                        User.department_id == department_id,
+                    ).group_by(User.id).order_by(func.count(Ticket.id).asc()).first()
+                return free_it_expert
+        except Exception as e:
+            core_logger.error(f"Find free IT expert failed - {e}")
             raise
 
     def find_user_by_username(self, username: str) -> User | None:
@@ -357,7 +405,7 @@ class StorageEngine:
             with self.session_factory() as session:
                 found_user = session.query(User).filter(User.id==old_user_id).one_or_none()
                 if found_user is not None:
-                    for field in ["name", "username", "email", "role", "status"]:
+                    for field in ["name", "username", "email", "role", "status", "department_id"]:
                         value = getattr(new_user, field)
                         if value is not None:
                             setattr(found_user, field, value)

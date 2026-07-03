@@ -65,6 +65,9 @@
                             <p><strong>ایمیل:</strong> {{ user.email }}</p>
                             <p><strong>نقش:</strong> <span class="role">{{ user.role.fa }}</span></p>
                             <p><strong>وضعیت:</strong> {{ user.status.fa }}</p>
+                            {% if user.role.value == "IT Expert" %}
+                                <p><strong>دپارتمان مربوطه کارشناس:</strong> {{ user.department.name }}</p>
+                            {% endif %}
                             <p class="ticket-created"><strong>تاریخ عضویت:</strong> {{ user.created_at }}</p>
                         </div>
                     </div>
@@ -130,6 +133,21 @@
                     {% endfor %}
                 </select>
             </div>
+
+                {% if user.role.value == "IT Expert" %}
+                <div class="form-group">
+                    <label>دپارتمان مربوطه کارشناس</label>
+                    <select name="department_id">
+                        <option value="">-- دپارتمان را انتخاب کنید --</option>
+                        {% for department in departments %}
+                        <option value="{{ department.id }}"
+                            {% if user.department_id == department.id %}selected{% endif %}>
+                            {{ department.name }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                {% endif %}
             {% endif %}
 
             <button class="submit-btn" type="submit">آپدیت کاربر</button>
