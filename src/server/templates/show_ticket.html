@@ -124,7 +124,7 @@
 
                         <input type="hidden" name="response_ticket_id" value="{{ ticket.id }}">
 
-                        <button type="submit" class="submit-btn">ارسال پاسخ</button>
+                        <button type="submit" class="submit-btn btn-small">ارسال پاسخ</button>
                     </form>
                     {% endif %}
 
@@ -145,7 +145,7 @@
             <h2>اختصاص اتوماتیک تیکت به کارشناس</h2>
         </div>
         <form class="ticket-form" action="/tickets/{{ ticket.id }}/assign" method="post" style="font-size: 1.5em;">
-            <button class="submit-btn" type="submit">اجرای فرایند اختصاص</button>
+            <button class="submit-btn btn-small" type="submit">اجرای فرایند اختصاص</button>
         </form>
     </section>
 
@@ -157,7 +157,7 @@
     <section class="card">
         <div class="section-header">
             <h2>ویرایش اطلاعات تیکت</h2>
-            <button class="toggle-form-btn submit-btn" id="toggleFormBtn" type="button">نمایش فرم</button>
+            <button class="toggle-form-btn submit-btn btn-small" id="toggleFormBtn" type="button">نمایش فرم</button>
         </div>
         <form class="ticket-form" id="editForm" action="/tickets/{{ ticket.id }}" method="post" style="display: none; font-size: 1.5em;">
             {% if user_role != "IT Expert" %}

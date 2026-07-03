@@ -361,6 +361,13 @@ body{
     background:#183b69;
 }
 
+.btn-small {
+    justify-content: center;
+    display: flex;
+    margin: auto;
+    max-width: 200px;
+}
+
 .alert {
     padding: 1rem 1.25rem;
     margin: 1rem 0;
