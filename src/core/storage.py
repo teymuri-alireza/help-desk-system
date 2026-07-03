@@ -1,6 +1,6 @@
 import logging
 from sqlalchemy.orm import Session, sessionmaker
-from src.database.tables import User, Ticket, Response, Attachment, Notification, TicketStatus, Category, Department
+from src.database.tables import User, Ticket, Response, Attachment, Notification, TicketStatus, Category, Department, Role
 from sqlalchemy.orm import joinedload
 
 core_logger = logging.getLogger("core")
@@ -328,6 +328,27 @@ class StorageEngine:
                 return found_user
         except Exception as e:
             core_logger.error(f"Find user failed - {e}")
+            raise
+
+    def find_free_it_expert(self, department_id: int) -> User | None:
+        """
+        Find an available IT expert in a department with the fewest assigned tickets.
+
+        Args:
+            department_id: The department ID to search for available IT experts.
+
+        Returns:
+            User|None: IT expert user object with fewest assignments, None if none found.
+        """
+        try:
+            with self.session_factory() as session:
+                free_it_expert = session.query(User).outerjoin(Ticket, Ticket.assigned_to == User.id).filter(
+                        User.role == Role.IT_EXPERT,
+                        User.department_id == department_id,
+                    ).group_by(User.id).order_by(func.count(Ticket.id).asc()).first()
+                return free_it_expert
+        except Exception as e:
+            core_logger.error(f"Find free IT expert failed - {e}")
             raise
 
     def find_user_by_username(self, username: str) -> User | None:
