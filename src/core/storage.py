@@ -109,7 +109,9 @@ class StorageEngine:
                 found_ticket = session.query(Ticket).options(
                     joinedload(Ticket.creator),
                     joinedload(Ticket.responses).joinedload(Response.creator),
-                    joinedload(Ticket.assignee)
+                    joinedload(Ticket.assignee),
+                    joinedload(Ticket.category),
+                    joinedload(Ticket.department),
                     ).filter(Ticket.id==ticket_id).one_or_none()
                 return found_ticket
         except Exception as e:

@@ -95,6 +95,18 @@
                     {% else %}
                         <p>به این تیکت هنوز کارشناسی ارجاع داده نشده.</p>
                     {% endif %}
+
+                    {% if ticket.category.name %}
+                        <p>دسته بندی تیکت: {{ ticket.category.name }}</p>
+                    {% else %}
+                        <p>برای این تیکت دسته بندی انتخاب نشده.</p>
+                    {% endif %}
+
+                    {% if ticket.department.name %}
+                        <p>دپارتمان تیکت: {{ ticket.department.name }}</p>
+                    {% else %}
+                        <p>برای این تیکت دپارتمان انتخاب نشده.</p>
+                    {% endif %}
                     <small><p class="ticket-created">ثبت شده در: {{ ticket.created_at }}</p></small>
                     {% if user_role != "Student" and user_role != "Employee" %}
                         <small><p class="ticket-created">شناسه کاربر ایجاد کننده: 
