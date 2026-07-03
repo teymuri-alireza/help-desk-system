@@ -322,7 +322,9 @@ class StorageEngine:
         """
         try:
             with self.session_factory() as session:
-                found_user = session.query(User).filter(User.id==user_id).one_or_none()
+                found_user = session.query(User).filter(User.id==user_id).options(
+                    joinedload(User.department)
+                ).one_or_none()
                 return found_user
         except Exception as e:
             core_logger.error(f"Find user failed - {e}")
