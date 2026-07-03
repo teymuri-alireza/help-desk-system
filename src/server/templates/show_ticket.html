@@ -57,6 +57,12 @@
         </div>
         {% endif %}
 
+        {% if assign_ticket_flash_message %}
+        <div class="alert alert-{% if assign_ticket_flash_message == "اختصاص اتوماتیک کارشناس به تیکت با موفقیت انجام شد" %}success{% else %}danger{% endif %}">
+            {{ assign_ticket_flash_message }}
+        </div>
+        {% endif %}
+
         <div class="section-header">
             <h2>اطلاعات تیکت</h2>
         </div>
@@ -118,6 +124,21 @@
             {% endif %}
         </div>
     </section>
+
+    {% if ticket and user_role not in ("Student", "Employee", "IT Manager", "IT Expert") %}
+    {% if ticket.status.name != "RESOLVED" and ticket.status.name != "CLOSED" %}
+
+    <section class="card">
+        <div class="section-header">
+            <h2>اختصاص اتوماتیک تیکت به کارشناس</h2>
+        </div>
+        <form class="ticket-form" action="/tickets/{{ ticket.id }}/assign" method="post" style="font-size: 1.5em;">
+            <button class="submit-btn" type="submit">اجرای فرایند اختصاص</button>
+        </form>
+    </section>
+
+    {% endif %}
+    {% endif %}
 
     {% if ticket and user_role != "Student" and user_role != "Employee" and user_role != "IT Manager" %}
     {% if ticket.status.name != "RESOLVED" and ticket.status.name != "CLOSED" %}
