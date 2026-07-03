@@ -357,7 +357,7 @@ class StorageEngine:
             with self.session_factory() as session:
                 found_user = session.query(User).filter(User.id==old_user_id).one_or_none()
                 if found_user is not None:
-                    for field in ["name", "username", "email", "role", "status"]:
+                    for field in ["name", "username", "email", "role", "status", "department_id"]:
                         value = getattr(new_user, field)
                         if value is not None:
                             setattr(found_user, field, value)
