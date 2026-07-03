@@ -186,6 +186,10 @@ def assign_ticket(request: Request, ticket_id: int = Path(...)):
                 helpdesk.ticket_api.auto_assign_ticket(ticket_id=ticket_id, department_id=found_ticket.department_id)
                 request.session["assign_ticket_flash_message"] = "اختصاص اتوماتیک کارشناس به تیکت با موفقیت انجام شد"
 
+                found_ticket = helpdesk.ticket_api.find_ticket(ticket_id=ticket_id)
+                notification = Notification(receiver_id=found_ticket.assigned_to, title="تیکت جدید ارجاع شد", text=f"تیکت به شماره {ticket_id} به شما ارجاع داده شده است.")
+                helpdesk.notification_api.new_notification(notification=notification)
+
                 return RedirectResponse(url=f"/tickets/{ticket_id}", status_code=status.HTTP_303_SEE_OTHER)
             else:
                 raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Access denied")
