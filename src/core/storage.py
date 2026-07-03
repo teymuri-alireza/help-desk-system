@@ -1,4 +1,5 @@
 import logging
+from sqlalchemy import func
 from sqlalchemy.orm import Session, sessionmaker
 from src.database.tables import User, Ticket, Response, Attachment, Notification, TicketStatus, Category, Department, Role
 from sqlalchemy.orm import joinedload
@@ -150,6 +151,28 @@ class StorageEngine:
                     if new_ticket.assigned_to is not None:
                         if new_ticket.status == TicketStatus.NEW.name and found_ticket.status == TicketStatus.NEW.name:
                             # Update ticket status if it's assigned if it's not chnaged before.
+                            found_ticket.status = TicketStatus.IN_PROGRESS
+                    session.commit()
+                    session.refresh(found_ticket)
+        except Exception as e:
+            core_logger.error(f"Update ticket failed - {e}")
+            raise
+
+    def assign_ticket(self, ticket_id: int, assigned_to: int) -> None:
+        """
+        Assign a ticket to an IT expert.
+
+        Args:
+            ticket_id: The ID of the ticket to assign.
+            assigned_to: The ID of the IT expert to assign the ticket to.
+        """
+        try:
+            with self.session_factory() as session:
+                found_ticket = session.query(Ticket).filter(Ticket.id==ticket_id).one_or_none()
+                if found_ticket is not None:
+                    found_ticket.assigned_to = assigned_to
+                    if found_ticket.status == TicketStatus.NEW:
+                            # Update ticket status if it's assigned and not chnaged before.
                             found_ticket.status = TicketStatus.IN_PROGRESS
                     session.commit()
                     session.refresh(found_ticket)
