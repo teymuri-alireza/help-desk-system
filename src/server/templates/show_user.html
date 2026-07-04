@@ -29,7 +29,7 @@
 
 {% block aside %}
     <nav class="sidebar-nav">
-        <a class="nav-tab" style="text-decoration: none;" data-tab="overview">داشبورد</a>
+        <a class="nav-tab" style="text-decoration: none;" href="/dashboard" data-tab="overview">داشبورد</a>
         {% if user_role == "System Admin" %}
             <a class="nav-tab" style="text-decoration: none;" href="/users" data-tab="users">تمامی کاربران</a>
         {% endif %}
