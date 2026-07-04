@@ -132,6 +132,7 @@ def stats(request: Request):
             helpdesk.statistics_api.users_role_pie_chart()
         helpdesk.statistics_api.tickets_status_bar_chart()
         helpdesk.statistics_api.tickets_category_bar_chart()
+        helpdesk.statistics_api.tickets_department_bar_chart()
         helpdesk.statistics_api.it_experts_performance_bar_chart()
         context = {
             "request": request,

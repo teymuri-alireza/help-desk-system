@@ -5,7 +5,7 @@ from pathlib import Path
 from datetime import datetime, timedelta
 from sqlalchemy import func
 from sqlalchemy.orm import Session, sessionmaker
-from src.database.tables import User, Ticket, Role, UserStatus, TicketStatus, Category
+from src.database.tables import User, Ticket, Role, UserStatus, TicketStatus, Category, Department
 
 core_logger = logging.getLogger("core")
 CHARTS_DIR = Path(__file__).parent.parent.parent / "server" / "static" / "charts"
@@ -194,6 +194,34 @@ class StatsService:
             plt.close(fig)
         except Exception as e:
             core_logger.error(f"Tickets Category Bar Chart failed: {e}")
+            raise
+
+    def tickets_department_bar_chart(self) -> None:
+        """
+        Generate and save a bar chart showing the distribution of ticket departments.
+
+        This method queries the database for ticket departments and their counts, then
+        generates a bar chart and saves it to the configured charts directory.
+        If there is no department data, it falls back to creating an empty chart
+        indicating that no tickets were found.
+        """
+        try:
+            with self.session_factory() as session:
+                ticket_department_grouped = session.query(Department.name, func.count(Ticket.id)).outerjoin(
+                    Ticket, Ticket.department_id == Department.id).group_by(Department.id, Department.name).all()
+
+            categories = [name for name, _ in ticket_department_grouped]
+            data = [count for _, count in ticket_department_grouped]
+            if not data:
+                self.create_empty_chart(f"{CHARTS_DIR}/ticket_department.png", "تیکتی یافت نشد")
+                return
+
+            fig, ax = plt.subplots(figsize=(16, 8), dpi=150)
+            ax.bar(categories, data)
+            fig.savefig(f"{CHARTS_DIR}/ticket_department.png", transparent=True)
+            plt.close(fig)
+        except Exception as e:
+            core_logger.error(f"Tickets Department Bar Chart failed: {e}")
             raise
 
     def it_experts_performance_bar_chart(self) -> None:
