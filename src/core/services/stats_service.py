@@ -5,7 +5,7 @@ from pathlib import Path
 from datetime import datetime, timedelta
 from sqlalchemy import func
 from sqlalchemy.orm import Session, sessionmaker
-from src.database.tables import User, Ticket, Role, UserStatus, TicketStatus
+from src.database.tables import User, Ticket, Role, UserStatus, TicketStatus, Category
 
 core_logger = logging.getLogger("core")
 CHARTS_DIR = Path(__file__).parent.parent.parent / "server" / "static" / "charts"
@@ -166,6 +166,34 @@ class StatsService:
             plt.close(fig)
         except Exception as e:
             core_logger.error(f"Tickets Status Pie Chart failed: {e}")
+            raise
+
+    def tickets_category_bar_chart(self) -> None:
+        """
+        Generate and save a bar chart showing the distribution of ticket categories.
+
+        This method queries the database for ticket categories and their counts, then
+        generates a bar chart and saves it to the configured charts directory.
+        If there is no category data, it falls back to creating an empty chart
+        indicating that no tickets were found.
+        """
+        try:
+            with self.session_factory() as session:
+                ticket_category_grouped = session.query(Category.name, func.count(Ticket.id)).outerjoin(
+                    Ticket, Ticket.category_id == Category.id).group_by(Category.id, Category.name).all()
+
+            categories = [name for name, _ in ticket_category_grouped]
+            data = [count for _, count in ticket_category_grouped]
+            if not data:
+                self.create_empty_chart(f"{CHARTS_DIR}/ticket_category.png", "تیکتی یافت نشد")
+                return
+
+            fig, ax = plt.subplots(figsize=(16, 8), dpi=150)
+            ax.bar(categories, data)
+            fig.savefig(f"{CHARTS_DIR}/ticket_category.png", transparent=True)
+            plt.close(fig)
+        except Exception as e:
+            core_logger.error(f"Tickets Category Bar Chart failed: {e}")
             raise
 
     def it_experts_performance_bar_chart(self) -> None:
