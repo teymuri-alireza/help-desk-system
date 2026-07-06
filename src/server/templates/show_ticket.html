@@ -229,7 +229,7 @@
                     <option value="">-- دسته بندی را انتخاب کنید --</option>
                     {% for category in categories %}
                     <option value="{{ category.id }}"
-                        {% if ticket.categoty_id == category.id %}selected{% endif %}>
+                        {% if ticket.category_id == category.id %}selected{% endif %}>
                         {{ category.name }}
                     </option>
                     {% endfor %}
