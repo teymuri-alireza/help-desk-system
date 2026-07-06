@@ -1,0 +1,89 @@
+.courses-hero {
+    margin: 20px;
+}
+
+.page-title{
+    margin-bottom:30px;
+}
+
+.page-title h1{
+    color:#0f2747;
+    margin-bottom:8px;
+}
+
+.page-title p{
+    color:#6b7280;
+}
+
+.courses-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(380px,1fr));
+    gap:32px;
+    margin-top:30px;
+}
+
+.course-card{
+    background:#fff;
+    border-radius:16px;
+    box-shadow:0 8px 24px rgba(0,0,0,.08);
+    overflow:hidden;
+    display:flex;
+    flex-direction:column;
+}
+
+.course-header{
+    background:#0f2747;
+    color:white;
+    padding:20px;
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+}
+
+.course-header h2{
+    margin-bottom:8px;
+    font-size:1.2rem;
+}
+
+.course-code{
+    color:#d4af37;
+    font-size:.9rem;
+}
+
+.credits{
+    background:#d4af37;
+    color:#0f2747;
+    padding:6px 12px;
+    border-radius:999px;
+    font-weight:700;
+}
+
+.course-body{
+    padding:20px;
+    color:#4b5563;
+    line-height:1.8;
+    flex:1;
+}
+
+.course-meta{
+    padding:0 20px 20px;
+    display:grid;
+    gap:10px;
+    color:#374151;
+    font-size:.95rem;
+}
+
+.course-footer{
+    padding:20px;
+    border-top:1px solid #e5e7eb;
+}
+
+.course-footer .submit-btn{
+    width:100%;
+}
+
+.empty-state{
+    grid-column:1/-1;
+    text-align:center;
+    padding:80px;
+}

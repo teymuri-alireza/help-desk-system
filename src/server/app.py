@@ -1,3 +1,5 @@
+import csv
+from pathlib import Path
 from fastapi import FastAPI, Request, HTTPException, status
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
@@ -16,6 +18,7 @@ from src.core.engine import HelpDeskCore
 from src.utilities.logger import get_logger
 
 TEMPLATES_DIR, STATIC_DIR = get_static_path()
+DATA_DIR = Path(__file__).parent.parent / "data"
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -53,6 +56,35 @@ def root(request: Request):
         # Use default value for context
         pass
     return templates.TemplateResponse(request=request, name="home.html", context=context)
+
+# Home Page
+@app.get("/courses", response_class=HTMLResponse)
+def courses(request: Request):
+    context = {}
+    try:
+        user_username = get_current_user(request=request)
+
+        helpdesk = get_helpdesk()
+        current_user = helpdesk.admin_api.find_user_by_username(username=user_username)
+        context = {"user": current_user}
+    except:
+        pass
+    with open(DATA_DIR / "courses.csv", "r", newline="") as file:
+        reader = csv.reader(file)
+        context["courses_data"] = [
+            {
+                "code": row[0],
+                "name": row[1],
+                "department": row[2],
+                "professor": row[3],
+                "credits": row[4],
+                "semester": row[5],
+                "capacity": row[6],
+                "description": row[7],
+            }
+            for row in reader
+        ]
+    return templates.TemplateResponse(request=request, name="courses.html", context=context)
 
 # Forbidden page
 @app.get("/forbidden")

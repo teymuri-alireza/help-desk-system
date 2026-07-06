@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لیست دروس</title>
+    <link rel="stylesheet" href="{{ url_for('static', path='css/dashboard.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', path='css/courses.css') }}">
+</head>
+<body>
+
+    <header>
+        <nav class="navbar">
+            <div class="logo">
+                <h2>دانشگاه دانش و فناوری</h2>
+            </div>
+
+            <ul class="nav-links">
+                <li><a href="/">صفحه اصلی</a></li>
+                {% if user %}
+                    <li><a href="/dashboard">داشبورد</a></li>
+                    <li><a href="/tickets">تیکت‌ها</a></li>
+                    <li><a href="/users/{{ user.id }}">پروفایل کاربر</a></li>
+                    {% if user.role.value == "System Admin" %}
+                        <li><a href="/users">کاربران سامانه</a></li>
+                    {% endif %}
+                    <li><a href="/notifications/all">اعلان‌ها</a></li>
+                {% endif %}
+            </ul>
+
+            <div class="auth-buttons">
+            {% if user %}
+                <a href="/auth/logout" class="btn register-btn">خروج</a>
+            {% else %}
+                <a href="/auth" class="btn register-btn">ورود به سامانه</a>
+            {% endif %}
+            </div>
+        </nav>
+    </header>
+
+    <section class="hero courses-hero">
+
+        <div class="page-title">
+            <h1>دروس ارائه شده</h1>
+            <p>
+                فهرست دروس قابل ارائه توسط دانشگاه دانش و فناوری
+            </p>
+        </div>
+
+        <div class="courses-grid">
+            {% for course in courses_data %}
+            <article class="course-card">
+
+                <div class="course-header">
+                    <div>
+                        <h2>{{ course.name }}</h2>
+                        <span class="course-code">{{ course.code }}</span>
+                    </div>
+
+                    <span class="credits">{{ course.credits }} واحد</span>
+                </div>
+
+                <div class="course-body">
+                    <p>{{ course.description }}</p>
+                </div>
+
+                <div class="course-meta">
+
+                    <div>
+                        <strong>استاد:</strong> {{ course.professor }}
+                    </div>
+                    <div>
+                        <strong>دانشکده:</strong> {{ course.department }}
+                    </div>
+                    <div>
+                        <strong>ترم:</strong> {{ course.semester }}
+                    </div>
+                    <div>
+                        <strong>ظرفیت:</strong> {{ course.capacity }}
+                    </div>
+
+                </div>
+
+            </article>
+            {% else %}
+            <div class="empty-state">
+                <h2>درسی یافت نشد</h2>
+                <p>در حال حاضر هیچ درسی برای نمایش وجود ندارد.</p>
+            </div>
+            {% endfor %}
+    </section>
+
+<script src="{{ url_for('static', path='js/notification.js') }}"></script>
+
+</body>
+</html>
