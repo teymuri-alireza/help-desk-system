@@ -54,7 +54,7 @@ def dashboard(request: Request, response: Response):
                         "new_ticket_flash_message": new_ticket_flash_message,
                         }
                 html_file = "it_expert_dashboard.html"
-            elif current_user.role in (Role.IT_MANAGER):
+            elif current_user.role == Role.IT_MANAGER:
                 tickets_list = helpdesk.ticket_api.list_tickets(limit=10)
                 all_tickets_count, active_tickets_count, not_assigned_tickets, last_created = helpdesk.statistics_api.ticket_stats()
                 context = {
