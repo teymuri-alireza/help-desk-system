@@ -22,8 +22,11 @@ def list_users(request: Request):
     try:
         helpdesk = get_helpdesk()
         current_user = helpdesk.admin_api.find_user_by_username(username=user_username)
-        if current_user is not None and current_user.role == Role.SYSTEM_ADMIN:
-            users_list = helpdesk.admin_api.list_users()
+        if current_user is not None and current_user.role in (Role.SYSTEM_ADMIN, Role.IT_MANAGER):
+            if current_user.role == Role.SYSTEM_ADMIN:
+                users_list = helpdesk.admin_api.list_users()
+            else:
+                users_list = helpdesk.admin_api.list_it_experts()
             context = {
                 "request": request,
                 "users_list": users_list,

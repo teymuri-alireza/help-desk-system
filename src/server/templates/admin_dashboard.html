@@ -11,6 +11,8 @@
         <a class="nav-tab active" style="text-decoration: none;" data-tab="overview">داشبورد</a>
         {% if user_role == "System Admin" %}
             <a class="nav-tab" style="text-decoration: none;" href="/users" data-tab="users">تمامی کاربران</a>
+        {% elif user_role == "IT Manager" %}
+            <a class="nav-tab" style="text-decoration: none;" href="/users" data-tab="users">تمامی کارشناسان</a>
         {% endif %}
         <a class="nav-tab" style="text-decoration: none;" href="/tickets" data-tab="tickets">تمامی تیکت‌ها</a>
         <a class="nav-tab" style="text-decoration: none;" href="/notifications/all" data-tab="tickets">تمامی اعلان‌ها</a>
