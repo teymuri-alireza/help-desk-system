@@ -54,7 +54,7 @@ def dashboard(request: Request, response: Response):
                         "new_ticket_flash_message": new_ticket_flash_message,
                         }
                 html_file = "it_expert_dashboard.html"
-            elif current_user.role in (Role.IT_MANAGER, Role.HELP_DESK_MANAGER):
+            elif current_user.role in (Role.IT_MANAGER):
                 tickets_list = helpdesk.ticket_api.list_tickets(limit=10)
                 all_tickets_count, active_tickets_count, not_assigned_tickets, last_created = helpdesk.statistics_api.ticket_stats()
                 context = {
@@ -123,7 +123,7 @@ def stats(request: Request):
     try:
         helpdesk = get_helpdesk()
         current_user = helpdesk.admin_api.find_user_by_username(username=user_username)
-        if current_user.role not in (Role.SYSTEM_ADMIN, Role.IT_MANAGER, Role.HELP_DESK_MANAGER):
+        if current_user.role not in (Role.SYSTEM_ADMIN, Role.IT_MANAGER):
             raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Access denied")
         all_tickets_count, active_tickets_count, not_assigned_tickets, last_created = helpdesk.statistics_api.ticket_stats()
         all_users_count, active_users_count = helpdesk.statistics_api.users_stats()

@@ -9,7 +9,6 @@ class Role(Enum):
     STUDENT = "Student"
     EMPLOYEE = "Employee"
     IT_EXPERT = "IT Expert"
-    HELP_DESK_MANAGER = "Help Desk Manager"
     IT_MANAGER = "IT Manager"
     SYSTEM_ADMIN = "System Admin"
 
@@ -19,7 +18,6 @@ class Role(Enum):
             self.STUDENT: "دانشجو",
             self.EMPLOYEE: "کارمند",
             self.IT_EXPERT: "کارشناس فناوری اطلاعات",
-            self.HELP_DESK_MANAGER: "مدیر میز خدمت",
             self.IT_MANAGER: "مدیر فناوری اطلاعات",
             self.SYSTEM_ADMIN: "مدیر سیستم",
         }[self]

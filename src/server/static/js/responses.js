@@ -2,7 +2,6 @@ const roleMap = {
     "Student": "دانشجو",
     "Employee": "کارمند",
     "IT Expert": "کارشناس فناوری اطلاعات",
-    "Help Desk Manager": "مدیر میز خدمت",
     "IT Manager": "مدیر فناوری اطلاعات",
     "System Admin": "مدیر سیستم"
 };

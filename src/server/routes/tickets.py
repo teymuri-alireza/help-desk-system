@@ -181,7 +181,7 @@ def assign_ticket(request: Request, ticket_id: int = Path(...)):
         helpdesk = get_helpdesk()
         current_user = helpdesk.admin_api.find_user_by_username(username=user_username)
         if current_user is not None:
-            if current_user.role in (Role.SYSTEM_ADMIN, Role.HELP_DESK_MANAGER):
+            if current_user.role in (Role.SYSTEM_ADMIN, Role.IT_MANAGER):
                 found_ticket = helpdesk.ticket_api.find_ticket(ticket_id=ticket_id)
                 helpdesk.ticket_api.auto_assign_ticket(ticket_id=ticket_id, department_id=found_ticket.department_id)
                 request.session["assign_ticket_flash_message"] = "اختصاص اتوماتیک کارشناس به تیکت با موفقیت انجام شد"
@@ -235,13 +235,13 @@ def patch_ticket(
         current_user = helpdesk.admin_api.find_user_by_username(username=user_username)
         # Check if user is admin first
         if current_user is not None:
-            if current_user.role in (Role.SYSTEM_ADMIN, Role.HELP_DESK_MANAGER, Role.IT_EXPERT):
+            if current_user.role in (Role.SYSTEM_ADMIN, Role.IT_MANAGER, Role.IT_EXPERT):
                 old_ticket = helpdesk.ticket_api.find_ticket(ticket_id=ticket_id)
 
                 ticket_to_update = Ticket(title=title, description=description, status=ticket_status, priority=priority, assigned_to=assigned_to, category_id=category_id, department_id=department_id)
                 helpdesk.ticket_api.update_ticket(new_ticket=ticket_to_update, old_ticket_id=ticket_id)
 
-                if current_user.role in (Role.SYSTEM_ADMIN, Role.HELP_DESK_MANAGER) and ticket_to_update.assigned_to is not None and old_ticket.assigned_to is None:
+                if current_user.role in (Role.SYSTEM_ADMIN, Role.IT_MANAGER) and ticket_to_update.assigned_to is not None and old_ticket.assigned_to is None:
                     notification = Notification(receiver_id=assigned_to, title="تیکت جدید ارجاع شد", text=f"تیکت به شماره {ticket_id} به شما ارجاع داده شده است.")
                     helpdesk.notification_api.new_notification(notification=notification)
 
