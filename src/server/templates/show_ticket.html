@@ -114,7 +114,6 @@
                         </p></small>
                     {% endif %}
 
-                    {% if user_role != "IT Manager" %}
                     <form action="/tickets/{{ ticket.id }}/responses" method="post" class="ticket-form">
 
                         <div class="form-group">
@@ -126,7 +125,6 @@
 
                         <button type="submit" class="submit-btn btn-small">ارسال پاسخ</button>
                     </form>
-                    {% endif %}
 
                 </div>
             {% else %}
@@ -137,7 +135,7 @@
         </div>
     </section>
 
-    {% if ticket and user_role not in ("Student", "Employee", "IT Manager", "IT Expert") %}
+    {% if ticket and user_role not in ("Student", "Employee", "IT Expert") %}
     {% if ticket.status.name != "RESOLVED" and ticket.status.name != "CLOSED" %}
 
     <section class="card">
@@ -152,7 +150,7 @@
     {% endif %}
     {% endif %}
 
-    {% if ticket and user_role != "Student" and user_role != "Employee" and user_role != "IT Manager" %}
+    {% if ticket and user_role != "Student" and user_role != "Employee" %}
     {% if ticket.status.name != "RESOLVED" and ticket.status.name != "CLOSED" %}
     <section class="card">
         <div class="section-header">

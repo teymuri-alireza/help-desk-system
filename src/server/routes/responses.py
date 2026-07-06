@@ -43,9 +43,6 @@ def new_response(
         helpdesk = get_helpdesk()
         current_user = helpdesk.admin_api.find_user_by_username(username=user_username)
         if current_user is not None:
-            if current_user.role == Role.IT_MANAGER:
-                raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Access denied")
-
             creator_id = current_user.id
             
             redirect = RedirectResponse(url=f"/tickets/{response_ticket_id}", status_code=status.HTTP_303_SEE_OTHER)
