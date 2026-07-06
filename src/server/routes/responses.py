@@ -57,8 +57,19 @@ def new_response(
                 response = Response(text=text, ticket_id=response_ticket_id, creator_id=creator_id)
                 helpdesk.response_api.new_response(response=response)
 
-                notification = Notification(receiver_id=ticket.creator_id, title="پاسخ جدید", text=f"برای تیکت شماره {ticket.id} پاسخ جدید ثبت شده است.")
-                helpdesk.notification_api.new_notification(notification=notification)
+                if current_user.role in (Role.STUDENT, Role.EMPLOYEE):
+                    ticket.status = TicketStatus.IN_PROGRESS
+                    helpdesk.ticket_api.update_ticket(new_ticket=ticket, old_ticket_id=ticket.id)
+
+                    notification = Notification(receiver_id=ticket.assigned_to, title="پاسخ جدید", text=f"برای تیکت شماره {ticket.id} پاسخ جدید ثبت شده است.")
+                    helpdesk.notification_api.new_notification(notification=notification)
+
+                elif current_user.role == Role.IT_EXPERT:
+                    ticket.status = TicketStatus.WAITING_FOR_USER
+                    helpdesk.ticket_api.update_ticket(new_ticket=ticket, old_ticket_id=ticket.id)
+
+                    notification = Notification(receiver_id=ticket.creator_id, title="پاسخ جدید", text=f"برای تیکت شماره {ticket.id} پاسخ جدید ثبت شده است.")
+                    helpdesk.notification_api.new_notification(notification=notification)
 
             return redirect
         else:
