@@ -67,7 +67,6 @@ def dashboard(request: Request, response: Response):
                     "active_tickets_count": active_tickets_count,
                     "not_assigned_tickets": not_assigned_tickets,
                     "last_created": last_created,
-                    "new_ticket_flash_message": new_ticket_flash_message,
                     "Role": Role,
                     }
                 html_file = "admin_dashboard.html"
@@ -89,7 +88,6 @@ def dashboard(request: Request, response: Response):
                     "last_created": last_created,
                     "all_users_count": all_users_count,
                     "active_users_count": active_users_count,
-                    "new_ticket_flash_message": new_ticket_flash_message,
                     "new_user_flash_message": new_user_flash_message,
                     "user_exists_flash_message": user_exists_flash_message,
                     "Role": Role,
