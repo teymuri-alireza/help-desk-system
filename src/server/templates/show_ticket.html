@@ -116,6 +116,7 @@
                         </p></small>
                     {% endif %}
 
+                    {% if ticket.status == TicketStatus.IN_PROGRESS and user_role != "Student" or ticket.status == TicketStatus.WAITING_FOR_USER and user_role == "Student" %}
                     <form action="/tickets/{{ ticket.id }}/responses" method="post" class="ticket-form">
 
                         <div class="form-group">
@@ -125,6 +126,7 @@
 
                         <button type="submit" class="submit-btn btn-small">ارسال پاسخ</button>
                     </form>
+                    {% endif %}
 
                 </div>
             {% else %}
