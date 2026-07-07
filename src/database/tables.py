@@ -121,6 +121,7 @@ class Response(Base):
     parent_response_id: Mapped[int] = mapped_column(ForeignKey("responses.id"), nullable=True)
     text: Mapped[str] = mapped_column(Text, nullable=False)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=False), default=datetime.now, nullable=False)
+    updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=False), default=datetime.now, onupdate=datetime.now, nullable=False)
 
     creator = relationship("User", back_populates="responses")
     ticket = relationship("Ticket", back_populates="responses")
