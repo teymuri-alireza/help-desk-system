@@ -254,7 +254,7 @@ class StorageEngine:
                     session.commit()
                     session.refresh(found_response)
         except Exception as e:
-            core_logger.error(f"Update ticket failed - {e}")
+            core_logger.error(f"Update response failed - {e}")
             raise
 
     def insert_attachment(self, attachment: Attachment) -> None:
