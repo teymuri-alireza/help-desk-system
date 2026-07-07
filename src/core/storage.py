@@ -201,6 +201,27 @@ class StorageEngine:
             core_logger.error(f"List responses failed - {e}")
             raise
 
+    def find_response(self, response_id: int) -> Response | None:
+        """
+        Find a response by ID.
+
+        Args:
+            response_id: The Response ID to search for.
+
+        Returns:
+            Response|None: Response object if found, otherwise None.
+        """
+        try:
+            with self.session_factory() as session:
+                found_response = session.query(Response).options(
+                    joinedload(Response.creator),
+                    joinedload(Response.ticket),
+                    ).filter(Response.id==response_id).one_or_none()
+                return found_response
+        except Exception as e:
+            core_logger.error(f"Find response failed - {e}")
+            raise
+
     def insert_response(self, response: Response) -> None:
         """
         Insert a new response into the database.

@@ -27,7 +27,19 @@ class ResponseService:
             list[Response]: A list of Response objects.
         """
         return self.storage.list_responses(ticket_id=ticket_id)
-    
+
+    def find_response(self, response_id: int) -> Response | None:
+        """
+        Find a response by their ID.
+
+        Args:
+            response_id: The ID of the response to find.
+
+        Returns:
+            Response | None: The Response object if found, otherwise None.
+        """
+        return self.storage.find_response(response_id=response_id)
+
     def new_response(self, response: Response) -> None:
         """
         Create a new response.
