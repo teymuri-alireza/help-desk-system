@@ -1,5 +1,5 @@
 import logging
-from fastapi import APIRouter, Request, status, Form, HTTPException
+from fastapi import APIRouter, Request, status, Form, HTTPException, Path
 from fastapi.responses import RedirectResponse
 from src.server.dependencies import get_helpdesk, get_current_user
 from src.database.tables import Response, TicketStatus, Notification, Role
@@ -31,8 +31,8 @@ def list_responses(request: Request, ticket_id: int):
 @router.post("")
 def new_response(
         request: Request, 
+        ticket_id: int = Path(...), 
         text: str = Form(...), 
-        response_ticket_id: int = Form(...), 
     ):
     try:
         user_username = get_current_user(request=request)
@@ -45,13 +45,13 @@ def new_response(
         if current_user is not None:
             creator_id = current_user.id
             
-            redirect = RedirectResponse(url=f"/tickets/{response_ticket_id}", status_code=status.HTTP_303_SEE_OTHER)
+            redirect = RedirectResponse(url=f"/tickets/{ticket_id}", status_code=status.HTTP_303_SEE_OTHER)
 
-            ticket = helpdesk.ticket_api.find_ticket(ticket_id=response_ticket_id)
+            ticket = helpdesk.ticket_api.find_ticket(ticket_id=ticket_id)
             if ticket.status in (TicketStatus.RESOLVED, TicketStatus.CLOSED):
                 redirect.set_cookie(key="ticket_closed_flash_message", value="successful")
             else:
-                response = Response(text=text, ticket_id=response_ticket_id, creator_id=creator_id)
+                response = Response(text=text, ticket_id=ticket_id, creator_id=creator_id)
                 helpdesk.response_api.new_response(response=response)
 
                 if current_user.role in (Role.STUDENT, Role.EMPLOYEE):
