@@ -21,7 +21,22 @@ def list_responses(request: Request, ticket_id: int):
         current_user = helpdesk.admin_api.find_user_by_username(username=user_username)
         if current_user is not None:
             responses_list = helpdesk.response_api.list_responses(ticket_id=ticket_id)
-            return {"responses": responses_list}
+            serialized_responses = [{
+                    "id": response.id,
+                    "ticket_id": response.ticket_id,
+                    "creator_id": response.creator_id,
+                    "text": response.text,
+                    "created_at": response.created_at.isoformat() if response.created_at is not None else None,
+                    "updated_at": response.updated_at.isoformat() if response.updated_at is not None else None,
+                    "creator": {
+                        "id": response.creator.id if response.creator is not None else None,
+                        "name": response.creator.name if response.creator is not None else None,
+                        "username": response.creator.username if response.creator is not None else None,
+                        "role": response.creator.role.value if response.creator is not None and hasattr(response.creator.role, "value") else str(response.creator.role) if response.creator is not None else None,
+                    }
+                } for response in responses_list
+            ]
+            return {"responses": serialized_responses}
         else:
             # Error handler for when db is removed but session exists
             return RedirectResponse(url="/auth/logout", status_code=status.HTTP_303_SEE_OTHER)
