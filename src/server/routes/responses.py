@@ -91,3 +91,39 @@ def new_response(
         raise
     except Exception:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Internal server error")
+
+
+@router.patch("/{response_id}")
+def edit_response(
+        request: Request,
+        ticket_id: int = Path(...),
+        response_id: int = Path(...),
+        text: str = Form(...),
+    ):
+    try:
+        user_username = get_current_user(request=request)
+    except HTTPException as e:
+        core_logger.error(f"{e} - The access token is missing.")
+        return RedirectResponse(url="/auth", status_code=status.HTTP_303_SEE_OTHER)
+    try:
+        helpdesk = get_helpdesk()
+        current_user = helpdesk.admin_api.find_user_by_username(username=user_username)
+        if current_user is not None:
+            found_response = helpdesk.response_api.find_response(response_id=response_id)
+            if current_user.id != found_response.creator_id:
+                raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Access denied")
+
+            new_response = Response(text=text)
+            helpdesk.response_api.update_response(new_response=new_response, old_response_id=response_id)
+
+            notification = Notification(receiver_id=found_response.creator_id, title="ویرایش پاسخ", text=f"پاسخ به شماره {response_id} با موفقیت ویرایش شد")
+            helpdesk.notification_api.new_notification(notification=notification)
+
+            return RedirectResponse(url=f"/tickets/{ticket_id}", status_code=status.HTTP_303_SEE_OTHER)
+        else:
+            # Error handler for when db is removed but session exists
+            return RedirectResponse(url="/auth/logout", status_code=status.HTTP_303_SEE_OTHER)
+    except HTTPException:
+        raise
+    except Exception:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Internal server error")

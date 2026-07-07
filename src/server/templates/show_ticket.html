@@ -90,7 +90,7 @@
                     {% else %}
                         <p class="ticket-created">فایل پیوستی یافت نشد</p>
                     {% endif %}
-                    <div class="ticket-reply" id="ticket-reply"></div>
+                    <div class="ticket-reply" id="ticket-reply" data-current-user-id="{{ user_id }}"></div>
                     <br />
                     {% if ticket.assignee.username %}
                         <p>کارشناس بررسی کننده: {{ ticket.assignee.username }}</p>
