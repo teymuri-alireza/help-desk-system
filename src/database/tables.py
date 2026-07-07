@@ -80,6 +80,7 @@ class User(Base):
     status: Mapped[str] = mapped_column(SQLEnum(UserStatus), default=UserStatus.ACTIVE, nullable=False, index=True)
     department_id: Mapped[int] = mapped_column(ForeignKey("departments.id"), nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=False), default=datetime.now, nullable=False)
+    updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=False), default=datetime.now, onupdate=datetime.now, nullable=False)
 
     created_tickets = relationship("Ticket", foreign_keys="Ticket.creator_id", back_populates="creator", cascade="all, delete-orphan")
     assigned_tickets = relationship("Ticket", foreign_keys="Ticket.assigned_to", back_populates="assignee", cascade="all, delete-orphan")
