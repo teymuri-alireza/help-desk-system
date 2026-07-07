@@ -136,6 +136,8 @@ def new_ticket(
         if current_user is None:
             # Error handler for when db is removed but session exists
             return RedirectResponse(url="/auth/logout", status_code=status.HTTP_303_SEE_OTHER)
+        if current_user.role in (Role.SYSTEM_ADMIN, Role.IT_MANAGER):
+            raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Access denied")
 
         os.makedirs(f"{STATIC_DIR}/upload/", exist_ok=True)
 
