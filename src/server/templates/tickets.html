@@ -58,9 +58,13 @@
                         <p class="ticket-description">توضیحات: {{ ticket.description }}</p>
                         <div class="set-items-space-between">
                             <p class="ticket-created">ثبت شده در: {{ ticket.created_at }}</p>
-                            {% if user_role != "Student" and user_role != "Employee" %}
-                                <p class="ticket-created">شناسه کاربر ایجاد کننده: 
-                                    <a href="/users/{{ ticket.creator_id }}">{{ ticket.creator_id }}</a>
+                            {% if user_role == "System Admin" %}
+                                <p class="ticket-created">کاربر ایجاد کننده: 
+                                    <a href="/users/{{ ticket.creator_id }}">{{ ticket.creator.username }}</a>
+                                </p>
+                            {% else %}
+                                <p class="ticket-created">کاربر ایجاد کننده: 
+                                    <a>{{ ticket.creator.username }}</a>
                                 </p>
                             {% endif %}
                         </div>

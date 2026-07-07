@@ -121,10 +121,10 @@
                         </td>
                         {% if user_role == "System Admin" %}
                         <td>
-                            <a href="/users/{{ ticket.creator_id }}">{{ ticket.creator.name }}</a>
+                            <a href="/users/{{ ticket.creator_id }}">{{ ticket.creator.username }}</a>
                         </td>
                         {% else %}
-                        <td>{{ ticket.creator.name }}</td>
+                        <td>{{ ticket.creator.username }}</td>
                         {% endif %}
                         <td>{{ ticket.created_at }}</td>
                         <td>
