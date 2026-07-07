@@ -160,7 +160,7 @@ def new_ticket(
             with open(f"{upload.path}/{upload.file_name}", "wb") as file:
                 file.write(content)
 
-        notification = Notification(receiver_id=current_user.id, title="تیکت جدید ثبت شد", text=f"عنوان تیکت: {title}")
+        notification = Notification(receiver_id=current_user.id, title="تیکت جدید ثبت شد", text=f"عنوان تیکت: {title}", url=f"/tickets/{ticket.id}")
         helpdesk.notification_api.new_notification(notification=notification)
 
         redirect = RedirectResponse(url="/dashboard", status_code=status.HTTP_303_SEE_OTHER)
@@ -189,7 +189,7 @@ def assign_ticket(request: Request, ticket_id: int = Path(...)):
                 request.session["assign_ticket_flash_message"] = "اختصاص اتوماتیک کارشناس به تیکت با موفقیت انجام شد"
 
                 found_ticket = helpdesk.ticket_api.find_ticket(ticket_id=ticket_id)
-                notification = Notification(receiver_id=found_ticket.assigned_to, title="تیکت جدید ارجاع شد", text=f"تیکت به شماره {ticket_id} به شما ارجاع داده شده است.")
+                notification = Notification(receiver_id=found_ticket.assigned_to, title="تیکت جدید ارجاع شد", text=f"تیکت به شماره {ticket_id} به شما ارجاع داده شده است.", url=f"/tickets/{ticket_id}")
                 helpdesk.notification_api.new_notification(notification=notification)
 
                 return RedirectResponse(url=f"/tickets/{ticket_id}", status_code=status.HTTP_303_SEE_OTHER)
@@ -244,11 +244,11 @@ def patch_ticket(
                 helpdesk.ticket_api.update_ticket(new_ticket=ticket_to_update, old_ticket_id=ticket_id)
 
                 if current_user.role in (Role.SYSTEM_ADMIN, Role.IT_MANAGER) and ticket_to_update.assigned_to is not None and old_ticket.assigned_to is None:
-                    notification = Notification(receiver_id=assigned_to, title="تیکت جدید ارجاع شد", text=f"تیکت به شماره {ticket_id} به شما ارجاع داده شده است.")
+                    notification = Notification(receiver_id=assigned_to, title="تیکت جدید ارجاع شد", text=f"تیکت به شماره {ticket_id} به شما ارجاع داده شده است.", url=f"/tickets/{ticket_id}")
                     helpdesk.notification_api.new_notification(notification=notification)
 
                 if old_ticket.status not in (TicketStatus.CLOSED, TicketStatus.RESOLVED) and ticket_to_update.status in (TicketStatus.CLOSED.name, TicketStatus.RESOLVED.name):
-                    notification = Notification(receiver_id=old_ticket.creator_id, title="تیکت بسته شد", text=f"تیکت به شماره {ticket_id} بسته شد.")
+                    notification = Notification(receiver_id=old_ticket.creator_id, title="تیکت بسته شد", text=f"تیکت به شماره {ticket_id} بسته شد.", url=f"/tickets/{ticket_id}")
                     helpdesk.notification_api.new_notification(notification=notification)
 
                 redirect = RedirectResponse(url=f"/tickets/{ticket_id}", status_code=status.HTTP_303_SEE_OTHER)

@@ -38,7 +38,7 @@ async function loadNotifications() {
         title.style.cursor = 'pointer';
         title.style.textDecoration = 'underline';
         title.onclick = () => {
-            window.open(`/notifications/all/#${notification.id}`, '_blank');
+            window.open(notification.url, '_blank');
         };
 
         const text = document.createElement('div');

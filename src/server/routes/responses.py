@@ -73,14 +73,14 @@ def new_response(
                     ticket.status = TicketStatus.IN_PROGRESS
                     helpdesk.ticket_api.update_ticket(new_ticket=ticket, old_ticket_id=ticket.id)
 
-                    notification = Notification(receiver_id=ticket.assigned_to, title="پاسخ جدید", text=f"برای تیکت شماره {ticket.id} پاسخ جدید ثبت شده است.")
+                    notification = Notification(receiver_id=ticket.assigned_to, title="پاسخ جدید", text=f"برای تیکت شماره {ticket.id} پاسخ جدید ثبت شده است.", url=f"/tickets/{ticket_id}")
                     helpdesk.notification_api.new_notification(notification=notification)
 
                 elif current_user.role == Role.IT_EXPERT:
                     ticket.status = TicketStatus.WAITING_FOR_USER
                     helpdesk.ticket_api.update_ticket(new_ticket=ticket, old_ticket_id=ticket.id)
 
-                    notification = Notification(receiver_id=ticket.creator_id, title="پاسخ جدید", text=f"برای تیکت شماره {ticket.id} پاسخ جدید ثبت شده است.")
+                    notification = Notification(receiver_id=ticket.creator_id, title="پاسخ جدید", text=f"برای تیکت شماره {ticket.id} پاسخ جدید ثبت شده است.", url=f"/tickets/{ticket_id}")
                     helpdesk.notification_api.new_notification(notification=notification)
 
             return redirect
@@ -116,7 +116,7 @@ def edit_response(
             new_response = Response(text=text)
             helpdesk.response_api.update_response(new_response=new_response, old_response_id=response_id)
 
-            notification = Notification(receiver_id=found_response.creator_id, title="ویرایش پاسخ", text=f"پاسخ به شماره {response_id} با موفقیت ویرایش شد")
+            notification = Notification(receiver_id=found_response.creator_id, title="ویرایش پاسخ", text=f"پاسخ به شماره {response_id} با موفقیت ویرایش شد", url=f"/tickets/{ticket_id}")
             helpdesk.notification_api.new_notification(notification=notification)
 
             return RedirectResponse(url=f"/tickets/{ticket_id}", status_code=status.HTTP_303_SEE_OTHER)

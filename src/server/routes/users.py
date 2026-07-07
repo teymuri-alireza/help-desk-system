@@ -124,7 +124,7 @@ def new_user(
             new_user = User(name=name, email=email, username=username, role=role)
             helpdesk.admin_api.new_user(user=new_user)
 
-            notification = Notification(receiver_id=new_user.id, title="کاربر جدید", text=f"خوش آمدید {new_user.name}")
+            notification = Notification(receiver_id=new_user.id, title="کاربر جدید", text=f"خوش آمدید {new_user.name}", url=f"/users/{new_user.id}")
             helpdesk.notification_api.new_notification(notification=notification)
 
             redirect = RedirectResponse(url="/dashboard", status_code=status.HTTP_303_SEE_OTHER)

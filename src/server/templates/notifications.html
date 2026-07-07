@@ -57,6 +57,7 @@
                     </div>
                     {% endif %}
 
+                    <a href="{{ notification.url }}" class="notification-btn btn submit-btn show-ticket" style="max-width: 20%;">مشاهده جزییات بیشتر</a>
                     {% if not notification.is_read %}
                     <button class="notification-btn" data-id="{{ notification.id }}" class="btn submit-btn show-ticket" style="max-width: 20%;">مشاهده شد</button>
                     {% endif %}

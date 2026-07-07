@@ -46,7 +46,7 @@ def sign_up(request: Request,
         new_user = User(name=name, username=username, email=email, role=Role.STUDENT)
         helpdesk.authentication_api.signup(user=new_user)
 
-        notification = Notification(receiver_id=new_user.id, title="کاربر جدید", text=f"خوش آمدید {new_user.name}")
+        notification = Notification(receiver_id=new_user.id, title="کاربر جدید", text=f"خوش آمدید {new_user.name}", url=f"/users/{new_user.id}")
         helpdesk.notification_api.new_notification(notification=notification)
 
         token = create_access_token({"sub": username})
