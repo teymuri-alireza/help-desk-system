@@ -36,3 +36,13 @@ class ResponseService:
             response: The Response object to be created.
         """
         self.storage.insert_response(response)
+
+    def update_response(self, new_response: Response, old_response_id: int) -> None:
+        """
+        Update an existing response.
+
+        Args:
+            new_response: The updated Response object with new data.
+            old_response_id: The ID of the Response to be updated.
+        """
+        self.storage.update_response(new_response=new_response, old_response_id=old_response_id)

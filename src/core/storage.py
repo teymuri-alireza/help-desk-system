@@ -216,6 +216,26 @@ class StorageEngine:
             core_logger.error(f"Insert response failed - {e}")
             raise
 
+    def update_response(self, new_response: Response, old_response_id: int) -> None:
+        """
+        Update an existing response in the database.
+
+        Args:
+            new_response: The Response object with updated values.
+            old_response_id: The old Response ID to search for.
+        """
+        try:
+            with self.session_factory() as session:
+                found_response = session.query(Response).filter(Response.id==old_response_id).one_or_none()
+                if found_response is not None:
+                    if new_response.text is not None:
+                        found_response.text = new_response.text
+                    session.commit()
+                    session.refresh(found_response)
+        except Exception as e:
+            core_logger.error(f"Update ticket failed - {e}")
+            raise
+
     def insert_attachment(self, attachment: Attachment) -> None:
         """
         Insert a new attachment into the database.
