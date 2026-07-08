@@ -144,9 +144,29 @@
         <div class="section-header">
             <h2>اختصاص اتوماتیک تیکت به کارشناس</h2>
         </div>
-        <form class="ticket-form" action="/tickets/{{ ticket.id }}/assign" method="post" style="font-size: 1.5em;">
-            <button class="submit-btn btn-small" type="submit">اجرای فرایند اختصاص</button>
-        </form>
+
+        {% if preview_assign_ticket_flash_message %}
+            <div class="alert alert-info">
+                کارشناس پیشنهادی:
+                    {{ preview_assign_ticket_flash_message }}
+            </div>
+
+            <p>آیا می‌خواهید این کارشناس به این تیکت اختصاص داده شود؟</p>
+
+            <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center;">
+                <form action="/tickets/{{ ticket.id }}/assign" method="post" class="ticket-form" style="margin: 0;">
+                    <button class="submit-btn btn-small" type="submit">بله، انجام شود</button>
+                </form>
+
+                <a href="/tickets/{{ ticket.id }}" class="submit-btn btn-small" style="text-decoration: none; display: inline-block;">
+                    خیر، لغو شود
+                </a>
+            </div>
+        {% else %}
+            <a href="/tickets/{{ ticket.id }}/assign/preview" class="submit-btn btn-small" style="text-decoration: none;">
+                اجرای فرایند اختصاص
+            </a>
+        {% endif %}
     </section>
 
     {% endif %}
