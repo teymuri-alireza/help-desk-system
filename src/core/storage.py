@@ -351,22 +351,29 @@ class StorageEngine:
             core_logger.error(f"List notifications failed - {e}")
             raise
 
-    def list_users(self, limit: int | None = None, role: str | None = None) -> list[User]:
+    def list_users(self, limit: int | None = None, role: str | None = None, department_id: int | None = None) -> list[User]:
         """
-        Retrieve all users.
+        Retrieve users, optionally filtered by role and department.
 
         Args:
-            limit: The maximum number of tickets to retrieve.
+            limit: The maximum number of users to retrieve.
+            role: Filter users by role if provided.
+            department_id: Filter users by department ID if provided.
 
         Returns:
-            list[User]: List of all User objects.
+            list[User]: List of User objects.
         """
         try:
             with self.session_factory() as session:
                 if role is not None:
-                    users_list = session.query(User).order_by(User.id.desc()).options(
-                        joinedload(User.department)
-                    ).limit(limit=limit).filter(User.role==role).all()
+                    if department_id is None:
+                        users_list = session.query(User).order_by(User.id.desc()).options(
+                            joinedload(User.department)
+                        ).limit(limit=limit).filter(User.role==role).all()
+                    else:
+                        users_list = session.query(User).order_by(User.id.desc()).options(
+                            joinedload(User.department)
+                        ).limit(limit=limit).filter(User.role==role, User.department_id==department_id).all()
                 else:
                     users_list = session.query(User).order_by(User.id.desc()).options(
                         joinedload(User.department)

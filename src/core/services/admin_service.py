@@ -37,14 +37,17 @@ class AdminService:
         """
         return self.storage.list_users(limit=limit)
 
-    def list_it_experts(self) -> list[User]:
+    def list_it_experts(self, department_id: int | None = None) -> list[User]:
         """
         List all IT expert users.
+
+        Args:
+            department_id: The department ID to filter IT expert users by, if provided.
 
         Returns:
             list[User]: A list of User objects with IT_EXPERT role.
         """
-        return self.storage.list_users(role=Role.IT_EXPERT)
+        return self.storage.list_users(role=Role.IT_EXPERT, department_id=department_id)
 
     def find_user(self, user_id: int) -> User | None:
         """
