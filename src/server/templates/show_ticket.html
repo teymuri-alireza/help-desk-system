@@ -252,7 +252,8 @@
             {% endif %}
 
         <!-- User access for updating ticket -->
-        {% else %}
+        {% endif %}
+        {% if ticket and user_role in ("Student", "Employee") %}
         <div class="form-group">
             <label class="custom-checkbox" for="ticket_status">
                 <input type="checkbox" id="ticket_status" name="ticket_status" value="CLOSED">
@@ -260,11 +261,11 @@
             </label>
         </div>
         
-            <button class="submit-btn" type="submit">آپدیت تیکت</button>
-        </form>
+        {% endif %}
+        <button class="submit-btn" type="submit">آپدیت تیکت</button>
+    </form>
     </section>
-    {% endif %}
-    {% endif %}
+{% endif %}
 
 {% endblock %}
 
