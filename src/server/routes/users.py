@@ -103,7 +103,8 @@ def new_user(
         name: str = Form(...),
         username: str = Form(...),
         email: str = Form(...),
-        role: str = Form(...)
+        role: str = Form(...),
+        department: str | None = Form(None),
     ):
     try:
         user_username = get_current_user(request=request)
@@ -121,7 +122,7 @@ def new_user(
                 redirect.set_cookie(key="user_exists_flash_message", value="successful")
                 return redirect
 
-            new_user = User(name=name, email=email, username=username, role=role)
+            new_user = User(name=name, email=email, username=username, role=role, department_id=department)
             helpdesk.admin_api.new_user(user=new_user)
 
             notification = Notification(receiver_id=new_user.id, title="کاربر جدید", text=f"خوش آمدید {new_user.name}", url=f"/users/{new_user.id}")

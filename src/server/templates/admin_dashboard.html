@@ -80,8 +80,19 @@
                 <label>نقش کاربر</label>
                 <select name="role" required>
                     {% for role in Role %}
-                    <option value="{{ role.name }}">
+                    <option value="{{ role.name }}" id="new-user-status-value">
                         {{ role.fa }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group" id="new-user-department" style="display: none;">
+                <label>دپارتمان مربوطه کارشناس</label>
+                <select name="department">
+                    <option value="">-- دپارتمان را انتخاب کنید --</option>
+                    {% for department in departments %}
+                    <option value="{{ department.id }}">
+                        {{ department.name }}
                     </option>
                     {% endfor %}
                 </select>
@@ -180,4 +191,19 @@
     <script src="{{ url_for('static', path='js/alerts.js') }}"></script>
     <script src="{{ url_for('static', path='js/toggle_btn.js') }}"></script>
     <script src="{{ url_for('static', path='js/ticket_search.js') }}"></script>
+    <script>
+        const userDepartmentField = document.getElementById("new-user-department");
+        const userRoleSelect = document.querySelector('select[name="role"]');
+
+        function toggleDepartmentField() {
+            if (userRoleSelect.value === "IT_EXPERT") {
+                userDepartmentField.style.display = "block";
+            } else {
+                userDepartmentField.style.display = "none";
+            }
+        }
+
+        userRoleSelect.addEventListener("change", toggleDepartmentField);
+        toggleDepartmentField();
+    </script>
 {% endblock%}

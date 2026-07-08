@@ -73,6 +73,7 @@ def dashboard(request: Request, response: Response):
             else:
                 tickets_list = helpdesk.ticket_api.list_tickets(limit=10)
                 users_list = helpdesk.admin_api.list_users(limit=10)
+                departments = helpdesk.admin_api.list_ticket_departments()
                 all_tickets_count, active_tickets_count, not_assigned_tickets, last_created = helpdesk.statistics_api.ticket_stats()
                 all_users_count, active_users_count = helpdesk.statistics_api.users_stats()
                 context = {
@@ -82,6 +83,7 @@ def dashboard(request: Request, response: Response):
                     "user_role": current_user.role.value,
                     "users_list": users_list,
                     "tickets_list": tickets_list,
+                    "departments": departments,
                     "all_tickets_count": all_tickets_count,
                     "active_tickets_count": active_tickets_count,
                     "not_assigned_tickets": not_assigned_tickets,
