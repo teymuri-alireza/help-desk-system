@@ -233,6 +233,15 @@
 
             <div class="form-group">
                 <label>کارشناس بررسی کننده</label>
+
+                {% if not it_experts %}
+                    {% if ticket.department_id %}
+                        <div class="alert alert-info">در دپارتمان تعیین شده برای تیکت، کارشناسی فعالیت نمیکند.</div>
+                    {% else %}
+                        <div class="alert alert-info">برای انتخاب کارشناس، ابتدا دپارتمان تیکت را مشخص کنید و دکمه "آپدیت تیکت" را بزنید</div>
+                    {% endif %}
+                {% endif %}
+
                 <select name="assigned_to">
                     <option value="">-- کارشناس را انتخاب کنید --</option>
                     {% for it_expert in it_experts %}
