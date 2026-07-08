@@ -1,6 +1,6 @@
 import logging
 from src.core.storage import StorageEngine
-from src.database.tables import Ticket
+from src.database.tables import Ticket, User
 
 core_logger = logging.getLogger("core")
 
@@ -63,6 +63,35 @@ class TicketService:
             old_ticket_id: The ID of the ticket to be updated.
         """
         self.storage.update_ticket(new_ticket=new_ticket, old_ticket_id=old_ticket_id)
+
+    def preview_auto_assign_ticket(self, department_id: int) -> User:
+        """
+        Preview which IT expert would be auto-assigned for a ticket in the specified department.
+
+        Args:
+            department_id: The ID of the department to find a free IT expert from.
+
+        Returns:
+            User: The User object of the free IT expert that would be assigned.
+
+        Raises:
+            AttributeError: If department_id is None.
+            AttributeError: If no free IT expert is found for the specified department.
+        """
+        try:
+            if department_id == None:
+                raise AttributeError("Can not show preview for auto assign ticket. Department field is None.")
+
+            free_it_expert = self.storage.find_free_it_expert(department_id=department_id)
+            if free_it_expert is None:
+                raise AttributeError("Can not show preview for auto assign ticket. No IT expert was found for this department.")
+            return free_it_expert
+
+        except AttributeError as e:
+            e = str(e)
+            core_logger.error(e)
+
+            raise AttributeError(e)
 
     def auto_assign_ticket(self, ticket_id: int, department_id: int) -> None:
         """
