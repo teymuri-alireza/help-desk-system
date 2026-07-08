@@ -237,8 +237,12 @@ def patch_ticket(
         current_user = helpdesk.admin_api.find_user_by_username(username=user_username)
         # Check if user is admin first
         if current_user is not None:
-            if current_user.role in (Role.SYSTEM_ADMIN, Role.IT_MANAGER, Role.IT_EXPERT):
-                old_ticket = helpdesk.ticket_api.find_ticket(ticket_id=ticket_id)
+            old_ticket = helpdesk.ticket_api.find_ticket(ticket_id=ticket_id)
+
+            if (
+                current_user.role in (Role.SYSTEM_ADMIN, Role.IT_MANAGER, Role.IT_EXPERT)
+                or old_ticket.creator_id == current_user.id
+            ):
 
                 ticket_to_update = Ticket(title=title, description=description, status=ticket_status, priority=priority, assigned_to=assigned_to, category_id=category_id, department_id=department_id)
                 helpdesk.ticket_api.update_ticket(new_ticket=ticket_to_update, old_ticket_id=ticket_id)

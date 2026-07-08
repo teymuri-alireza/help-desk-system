@@ -152,7 +152,6 @@
     {% endif %}
     {% endif %}
 
-    {% if ticket and user_role != "Student" and user_role != "Employee" %}
     {% if ticket.status.name != "RESOLVED" and ticket.status.name != "CLOSED" %}
     <section class="card">
         <div class="section-header">
@@ -160,6 +159,8 @@
             <button class="toggle-form-btn submit-btn btn-small" id="toggleFormBtn" type="button">نمایش فرم</button>
         </div>
         <form class="ticket-form" id="editForm" action="/tickets/{{ ticket.id }}" method="post" style="display: none; font-size: 1.5em;">
+        {% if ticket and user_role != "Student" and user_role != "Employee" %}
+
             {% if user_role != "IT Expert" %}
             <div class="form-group">
                 <label>عنوان</label>
@@ -249,6 +250,16 @@
                 </select>
             </div>
             {% endif %}
+
+        <!-- User access for updating ticket -->
+        {% else %}
+        <div class="form-group">
+            <label class="custom-checkbox" for="ticket_status">
+                <input type="checkbox" id="ticket_status" name="ticket_status" value="CLOSED">
+                <span>آیا میخواهید تیکت را ببندید؟</span>
+            </label>
+        </div>
+        
             <button class="submit-btn" type="submit">آپدیت تیکت</button>
         </form>
     </section>
