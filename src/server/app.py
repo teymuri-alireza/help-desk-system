@@ -57,7 +57,7 @@ def root(request: Request):
         pass
     return templates.TemplateResponse(request=request, name="home.html", context=context)
 
-# Home Page
+# Courses Page
 @app.get("/courses", response_class=HTMLResponse)
 def courses(request: Request):
     context = {}
