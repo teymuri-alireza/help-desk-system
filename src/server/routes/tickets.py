@@ -79,7 +79,12 @@ def show_ticket(request: Request, ticket_id: int = Path(...)):
                 ticket_closed_flash_message = request.cookies.get("ticket_closed_flash_message")
                 assign_ticket_flash_message = request.session.pop("assign_ticket_flash_message", None)
                 preview_assign_ticket_flash_message = request.session.pop("preview_assign_ticket_flash_message", None)
-                it_experts = helpdesk.admin_api.list_it_experts()
+
+                if found_ticket.department_id is None:
+                    it_experts = []
+                else:
+                    it_experts = helpdesk.admin_api.list_it_experts(department_id=found_ticket.department_id)
+
                 found_attachment = helpdesk.attachment_api.find_attachment(ticket_id=ticket_id)
                 categories = helpdesk.admin_api.list_ticket_categories()
                 departments = helpdesk.admin_api.list_ticket_departments()
