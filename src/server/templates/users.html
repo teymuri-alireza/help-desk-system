@@ -46,6 +46,7 @@
                         <th>ایمیل</th>
                         <th>نقش</th>
                         <th>وضعیت حساب</th>
+                        <th>دپارتمان کارشناس</th>
                         {% if user_role == "System Admin" %}
                             <th>مدیریت کاربر</th>
                         {% endif %}
@@ -60,6 +61,13 @@
                         <td>{{ user.email }}</td>
                         <td class="user-role">{{ user.role.fa }}</td>
                         <td class="user-status">{{ user.status.fa }}</td>
+
+                        {% if user.role.value == "IT Expert" %}
+                        <td class="user-department">{{ user.department.name }}</td>
+                        {% else %}
+                        <td class="user-department">-</td>
+                        {% endif %}
+
                         {% if user_role == "System Admin" %}
                         <td>
                             <div class="auth-buttons">

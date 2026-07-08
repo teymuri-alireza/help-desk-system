@@ -364,12 +364,12 @@ class StorageEngine:
         try:
             with self.session_factory() as session:
                 if role is not None:
-                    users_list = session.query(User).order_by(
-                        User.id.desc()
+                    users_list = session.query(User).order_by(User.id.desc()).options(
+                        joinedload(User.department)
                     ).limit(limit=limit).filter(User.role==role).all()
                 else:
-                    users_list = session.query(User).order_by(
-                        User.id.desc()
+                    users_list = session.query(User).order_by(User.id.desc()).options(
+                        joinedload(User.department)
                     ).limit(limit=limit).all()
                 return users_list
         except Exception as e:
