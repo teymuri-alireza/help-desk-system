@@ -325,16 +325,12 @@
                 </select>
             </div>
             {% else %}
-                {% if ticket.status.name == "IN_PROGRESS" %}
                 <div class="form-group">
                     <label class="custom-checkbox" for="ticket_status">
                         <input type="checkbox" id="ticket_status" name="ticket_status" value="RESOLVED">
                         <span>مشکل تیکت حل شد</span>
                     </label>
-                {% elif ticket.status.name == "WAITING_FOR_USER" %}
-                    <p>تیکت در انتظار پاسخ کاربر میباشد.</p>
                 </div>
-                {% endif %}
             {% endif %}
 
             {% if user_role != "IT Expert" %}
