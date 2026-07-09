@@ -67,6 +67,12 @@ def log_in(request: Request, username: str = Form(...)):
         helpdesk = get_helpdesk()
         user_exist = helpdesk.authentication_api.login(username=username)
         if user_exist:
+            is_user_suspended = not helpdesk.authentication_api.validate_user_status(username=username)
+            if is_user_suspended:
+                response = RedirectResponse(url="/auth", status_code=status.HTTP_303_SEE_OTHER)
+                request.session["login_error"] = "این نام کابری مسدود شده است. امکان ورود وجود ندارد."
+                return response
+
             token = create_access_token({"sub": username})
             response = RedirectResponse(url="/dashboard", status_code=status.HTTP_303_SEE_OTHER)
             response.set_cookie(
