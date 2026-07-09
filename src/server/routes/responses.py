@@ -113,6 +113,11 @@ def edit_response(
             if current_user.id != found_response.creator_id:
                 raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Access denied")
 
+            found_ticket = helpdesk.ticket_api.find_ticket(ticket_id=ticket_id)
+            if found_ticket.status in (TicketStatus.CLOSED, TicketStatus.RESOLVED):
+                request.session["edit_response_unavailable"] = "error"
+                return RedirectResponse(url=f"/tickets/{ticket_id}", status_code=status.HTTP_303_SEE_OTHER)
+
             new_response = Response(text=text)
             helpdesk.response_api.update_response(new_response=new_response, old_response_id=response_id)
 

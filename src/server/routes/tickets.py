@@ -80,6 +80,7 @@ def show_ticket(request: Request, ticket_id: int = Path(...)):
                 assign_ticket_flash_message = request.session.pop("assign_ticket_flash_message", None)
                 preview_assign_ticket_flash_message = request.session.pop("preview_assign_ticket_flash_message", None)
                 rate_ticket_flash_message = request.session.pop("rate_ticket_flash_message", None)
+                edit_response_unavailable = request.session.pop("edit_response_unavailable", None)
 
                 if found_ticket.department_id is None:
                     it_experts = []
@@ -110,6 +111,7 @@ def show_ticket(request: Request, ticket_id: int = Path(...)):
                         "assign_ticket_flash_message": assign_ticket_flash_message,
                         "preview_assign_ticket_flash_message": preview_assign_ticket_flash_message,
                         "rate_ticket_flash_message": rate_ticket_flash_message,
+                        "edit_response_unavailable": edit_response_unavailable,
                     }
                 )
                 response.delete_cookie("ticket_update_flash_message")

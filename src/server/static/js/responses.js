@@ -133,6 +133,7 @@ function createResponseElement(response, currentUserId, ticketId) {
 
             if (responsePatch.ok) {
                 modalOverlay.style.display = "none";
+                localStorage.setItem('edit_response_unavailable', 'error');
                 window.location.reload();
             } else if (responsePatch.status === 403) {
                 modalOverlay.style.display = "none";

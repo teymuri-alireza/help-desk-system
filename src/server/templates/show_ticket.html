@@ -24,6 +24,20 @@
             localStorage.removeItem('ticket_update_flash_message');
         }
 
+        if (localStorage.getItem('edit_response_unavailable')) {
+            const responseFlashDiv = document.getElementById('response-flash-alert');
+            if (responseFlashDiv) {
+                responseFlashDiv.style.display = 'block';
+                setTimeout(() => {
+                    responseFlashDiv.style.opacity = "0";
+                    setTimeout(() => {
+                        responseFlashDiv.remove();
+                    }, 500);
+                }, 3500);
+            }
+            localStorage.removeItem('edit_response_unavailable');
+        }
+
         const modal = document.getElementById('ratingModal');
         const backdrop = document.getElementById('ratingModalBackdrop');
         const openBtn = document.querySelector('[data-modal-target="ratingModal"]');
@@ -122,6 +136,10 @@
             {{ rate_ticket_flash_message }}
         </div>
         {% endif %}
+
+        <div id="response-flash-alert" class="alert alert-danger" style="display: none;">
+            ویرایش پاسخ ممکن نیست. علت: تیکت بسته شده است
+        </div>
 
         <div class="section-header">
             <h2>اطلاعات تیکت</h2>
