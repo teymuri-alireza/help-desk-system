@@ -1,7 +1,7 @@
 import logging
 from sqlalchemy import func
 from sqlalchemy.orm import Session, sessionmaker
-from src.database.tables import User, Ticket, Response, Attachment, Notification, TicketStatus, Category, Department, Role
+from src.database.tables import User, Ticket, Response, Attachment, Notification, TicketStatus, Category, Department, Role, UserStatus
 from sqlalchemy.orm import joinedload
 
 core_logger = logging.getLogger("core")
@@ -54,6 +54,26 @@ class StorageEngine:
             with self.session_factory() as session:
                 found_user = session.query(User).filter(User.username==username).one_or_none()
                 if found_user is not None:
+                    return True
+                return False
+        except Exception as e:
+            core_logger.error(f"Validate user failed - {e}")
+            raise
+
+    def validate_user_status(self, username: str) -> bool:
+        """
+        Validate if a user is not suspended.
+
+        Args:
+            username: The username to search for.
+
+        Returns:
+            bool: True if user is not suspended, otherwise False.
+        """
+        try:
+            with self.session_factory() as session:
+                found_user = session.query(User).filter(User.username==username).one_or_none()
+                if found_user.status != UserStatus.SUSPENDED:
                     return True
                 return False
         except Exception as e:

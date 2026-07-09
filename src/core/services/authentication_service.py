@@ -36,3 +36,15 @@ class AuthenticationService:
             bool: True if user validation is successful, False otherwise.
         """
         return self.storage.validate_user(username)
+
+    def validate_user_status(self, username: str) -> bool:
+        """
+        Validate if a user is not suspended.
+
+        Args:
+            username: The username to search for.
+
+        Returns:
+            bool: True if user is not suspended, otherwise False.
+        """
+        return self.storage.validate_user_status(username=username)
