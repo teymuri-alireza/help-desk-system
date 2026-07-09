@@ -82,6 +82,7 @@ def show_ticket(request: Request, ticket_id: int = Path(...)):
                 rate_ticket_flash_message = request.session.pop("rate_ticket_flash_message", None)
                 edit_response_unavailable = request.session.pop("edit_response_unavailable", None)
                 reopen_ticket_unprocessable = request.session.pop("reopen_ticket_unprocessable", None)
+                ticket_remove_assignee = request.session.pop("ticket_remove_assignee", None)
 
                 if found_ticket.department_id is None:
                     it_experts = []
@@ -114,6 +115,7 @@ def show_ticket(request: Request, ticket_id: int = Path(...)):
                         "rate_ticket_flash_message": rate_ticket_flash_message,
                         "edit_response_unavailable": edit_response_unavailable,
                         "reopen_ticket_unprocessable": reopen_ticket_unprocessable,
+                        "ticket_remove_assignee": ticket_remove_assignee,
                     }
                 )
                 response.delete_cookie("ticket_update_flash_message")
@@ -261,6 +263,39 @@ def assign_ticket(request: Request, ticket_id: int = Path(...)):
             request.session["assign_ticket_flash_message"] = "اختصاص اتوماتیک تیکت به کارشناس ممکن نیست. علت: هیچ کارشناسی در دپارتمان ثبت شده‌ی تیکت فعالیت نمیکند"
 
         return redirect
+    except HTTPException:
+        raise
+    except Exception:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Internal server error")
+
+
+@router.post("/{ticket_id}/remove_assignee")
+def remove_assignee(
+        request: Request,
+        ticket_id: int = Path(...),
+        checkbox: bool = Form(...)
+    ):
+    try:
+        user_username = get_current_user(request=request)
+    except HTTPException as e:
+        core_logger.error(f"{e} - The access token is missing.")
+        return RedirectResponse(url="/auth", status_code=status.HTTP_303_SEE_OTHER)
+    try:
+        helpdesk = get_helpdesk()
+        current_user = helpdesk.admin_api.find_user_by_username(username=user_username)
+
+        if current_user is not None:
+            if current_user.role not in (Role.SYSTEM_ADMIN, Role.IT_MANAGER):
+                raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Access denied")
+
+            if checkbox:
+                helpdesk.ticket_api.remove_assignee(ticket_id=ticket_id)            
+                request.session["ticket_remove_assignee"] = "کارشناس تیکت با موفقیت حذف شد"
+
+            return RedirectResponse(url=f"/tickets/{ticket_id}", status_code=status.HTTP_303_SEE_OTHER)
+        else:
+            # Error handler for when db is removed but session exists
+            return RedirectResponse(url="/auth/logout", status_code=status.HTTP_303_SEE_OTHER)
     except HTTPException:
         raise
     except Exception:

@@ -131,6 +131,12 @@
         </div>
         {% endif %}
 
+        {% if ticket_remove_assignee %}
+        <div class="alert alert-success">
+            {{ ticket_remove_assignee }}
+        </div>
+        {% endif %}
+
         {% if rate_ticket_flash_message %}
         <div id="ticket-closed-flash-alert" class="alert alert-success">
             {{ rate_ticket_flash_message }}
@@ -172,8 +178,19 @@
                     {% endif %}
                     <div class="ticket-reply" id="ticket-reply" data-current-user-id="{{ user_id }}"></div>
                     <br />
+
                     {% if ticket.assignee.username %}
                         <p>کارشناس بررسی کننده: {{ ticket.assignee.username }}</p>
+
+                        {% if user_role in ("System Admin", "IT Manager") %}
+                        <form action="/tickets/{{ ticket.id }}/remove_assignee" method="post" style="margin-top: 0.5rem;" onsubmit="return confirm('آیا از حذف کارشناس ارجاع داده شده مطمئن هستید؟');">
+                            <input type="hidden" name="checkbox" value="true">
+                            <button type="submit" class="submit-btn btn-small" style="background: #b91c1c; border-color: #b91c1c;">
+                                حذف کارشناس ارجاع داده شده
+                            </button>
+                        </form>
+                    {% endif %}
+
                     {% else %}
                         <p>به این تیکت هنوز کارشناسی ارجاع داده نشده.</p>
                     {% endif %}
