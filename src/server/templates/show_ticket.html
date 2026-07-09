@@ -219,9 +219,9 @@
                                 {% endif %}
                             </div>
 
-                            <button type="button" class="rating-open-btn" data-modal-target="ratingModal">
-                                {% if ticket.satisfaction_rating is none %}ثبت امتیاز{% else %}ویرایش امتیاز{% endif %}
-                            </button>
+                            {% if not ticket.satisfaction_rating %}
+                                <button type="button" class="rating-open-btn" data-modal-target="ratingModal">ثبت امتیاز</button>
+                            {% endif %}
                         </div>
                         {% endif %}
 

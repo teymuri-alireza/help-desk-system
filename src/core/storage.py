@@ -215,6 +215,7 @@ class StorageEngine:
                 if (
                     found_ticket is not None
                     and found_ticket.status in (TicketStatus.RESOLVED, TicketStatus.CLOSED)
+                    and found_ticket.satisfaction_rating is None
                 ):
                     found_ticket.satisfaction_rating = satisfaction_rating
                     session.commit()
