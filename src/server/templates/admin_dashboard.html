@@ -194,16 +194,25 @@
     <script>
         const userDepartmentField = document.getElementById("new-user-department");
         const userRoleSelect = document.querySelector('select[name="role"]');
+        const userDepartmentSelect = document.querySelector('select[name="department_id"]');
 
         function toggleDepartmentField() {
-            if (userRoleSelect.value === "IT_EXPERT") {
-                userDepartmentField.style.display = "block";
-            } else {
-                userDepartmentField.style.display = "none";
+            if (!userRoleSelect) return;
+            const isExpert = userRoleSelect.value === "IT_EXPERT";
+            if (userDepartmentField) userDepartmentField.style.display = isExpert ? "block" : "none";
+            if (userDepartmentSelect) {
+                if (isExpert) {
+                    userDepartmentSelect.setAttribute('required', 'required');
+                } else {
+                    userDepartmentSelect.removeAttribute('required');
+                    userDepartmentSelect.value = "";
+                }
             }
         }
 
-        userRoleSelect.addEventListener("change", toggleDepartmentField);
-        toggleDepartmentField();
+        if (userRoleSelect) {
+            userRoleSelect.addEventListener("change", toggleDepartmentField);
+            toggleDepartmentField();
+        }
     </script>
 {% endblock%}
