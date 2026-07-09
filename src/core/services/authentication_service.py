@@ -33,6 +33,6 @@ class AuthenticationService:
             username: The username to validate.
 
         Returns:
-            True if user validation is successful, False otherwise.
+            bool: True if user validation is successful, False otherwise.
         """
         return self.storage.validate_user(username)
