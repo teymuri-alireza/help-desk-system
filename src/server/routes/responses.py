@@ -83,6 +83,13 @@ def new_response(
                     notification = Notification(receiver_id=ticket.creator_id, title="پاسخ جدید", text=f"برای تیکت شماره {ticket.id} پاسخ جدید ثبت شده است.", url=f"/tickets/{ticket_id}")
                     helpdesk.notification_api.new_notification(notification=notification)
 
+                elif current_user.role in (Role.SYSTEM_ADMIN, Role.IT_MANAGER):
+                    notification = Notification(receiver_id=ticket.assigned_to, title="پاسخ جدید", text=f"برای تیکت شماره {ticket.id} پاسخ جدید ثبت شده است.", url=f"/tickets/{ticket_id}")
+                    helpdesk.notification_api.new_notification(notification=notification)
+
+                    notification = Notification(receiver_id=ticket.creator_id, title="پاسخ جدید", text=f"برای تیکت شماره {ticket.id} پاسخ جدید ثبت شده است.", url=f"/tickets/{ticket_id}")
+                    helpdesk.notification_api.new_notification(notification=notification)
+
             return redirect
         else:
             # Error handler for when db is removed but session exists
