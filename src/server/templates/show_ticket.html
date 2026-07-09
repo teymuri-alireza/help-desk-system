@@ -263,6 +263,7 @@
     </section>
 
     {% if ticket and user_role not in ("Student", "Employee", "IT Expert") %}
+    {% if not ticket.assigned_to %}
     {% if ticket.status.name != "RESOLVED" and ticket.status.name != "CLOSED" %}
 
     <section class="card">
@@ -294,6 +295,7 @@
         {% endif %}
     </section>
 
+    {% endif %}
     {% endif %}
     {% endif %}
 
