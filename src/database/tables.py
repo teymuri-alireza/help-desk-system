@@ -104,6 +104,7 @@ class Ticket(Base):
     category_id: Mapped[int] = mapped_column(ForeignKey("categories.id"), nullable=True)
     department_id: Mapped[int] = mapped_column(ForeignKey("departments.id"), nullable=True)
     assigned_to: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=True)
+    satisfaction_rating: Mapped[int] = mapped_column(Integer, default=None, nullable=True)
 
     creator = relationship("User", foreign_keys=[creator_id], back_populates="created_tickets")
     assignee = relationship("User", foreign_keys=[assigned_to], back_populates="assigned_tickets")
