@@ -182,6 +182,28 @@ class StorageEngine:
             core_logger.error(f"Assign ticket failed - {e}")
             raise
 
+    def rate_ticket(self, ticket_id: int, satisfaction_rating: int) -> None:
+        """
+        Rate a ticket after it has been resolved or closed.
+
+        Args:
+            ticket_id: The ID of the ticket to rate.
+            satisfaction_rating: The satisfaction rating to assign.
+        """
+        try:
+            with self.session_factory() as session:
+                found_ticket = session.query(Ticket).filter(Ticket.id==ticket_id).one_or_none()
+                if (
+                    found_ticket is not None
+                    and found_ticket.status in (TicketStatus.RESOLVED, TicketStatus.CLOSED)
+                ):
+                    found_ticket.satisfaction_rating = satisfaction_rating
+                    session.commit()
+                    session.refresh(found_ticket)
+        except Exception as e:
+            core_logger.error(f"Rate ticket failed - {e}")
+            raise
+
     def list_responses(self, ticket_id: int) -> list[Response]:
         """
         Retrieve all responses for a ticket.

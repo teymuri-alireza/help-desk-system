@@ -122,3 +122,13 @@ class TicketService:
                 core_logger.error(err)
 
             raise AttributeError(err)
+
+    def rate_ticket(self, ticket_id: int, satisfaction_rating: int) -> None:
+        """
+        Rate a ticket after it has been resolved or closed.
+
+        Args:
+            ticket_id: The ID of the ticket to rate.
+            satisfaction_rating: The satisfaction rating to assign
+        """
+        self.storage.rate_ticket(ticket_id=ticket_id, satisfaction_rating=satisfaction_rating)
