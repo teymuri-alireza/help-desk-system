@@ -141,6 +141,10 @@
             ویرایش پاسخ ممکن نیست. علت: تیکت بسته شده است
         </div>
 
+        <div id="response-flash-alert" class="alert alert-danger" style="display: none;">
+            تیکت با موفقیت دوباره در وضعیت در حال بررسی قرار گرفت
+        </div>
+
         <div class="section-header">
             <h2>اطلاعات تیکت</h2>
         </div>
@@ -408,6 +412,26 @@
         {% endif %}
         <button class="submit-btn" type="submit">آپدیت تیکت</button>
     </form>
+    </section>
+    {% endif %}
+
+    <!-- Allow re-opening tickets, for system admins, and IT managers -->
+    {% if ticket.status.name in ("RESOLVED", "CLOSED") and user_role in ("System Admin", "IT Manager") %}
+    <section class="card">
+        <div class="section-header">
+            <h2>باز کردن دوباره تیکت</h2>
+        </div>
+        <form class="ticket-form" id="editForm" action="/tickets/{{ ticket.id }}/reopen" method="post" style="font-size: 1.5em;">
+
+            <div class="form-group">
+                <label class="custom-checkbox" for="ticket_status">
+                    <input type="checkbox" id="ticket_status" name="ticket_status" value="IN_PROGRESS">
+                    <span>این تیکت بسته شده است. آیا میخواهید آن را دوباره باز کنید؟</span>
+                </label>
+            </div>
+
+            <button class="submit-btn" type="submit">آپدیت تیکت</button>
+        </form>
     </section>
     {% endif %}
 

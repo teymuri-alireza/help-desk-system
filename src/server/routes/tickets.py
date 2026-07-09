@@ -81,6 +81,7 @@ def show_ticket(request: Request, ticket_id: int = Path(...)):
                 preview_assign_ticket_flash_message = request.session.pop("preview_assign_ticket_flash_message", None)
                 rate_ticket_flash_message = request.session.pop("rate_ticket_flash_message", None)
                 edit_response_unavailable = request.session.pop("edit_response_unavailable", None)
+                reopen_ticket_unprocessable = request.session.pop("reopen_ticket_unprocessable", None)
 
                 if found_ticket.department_id is None:
                     it_experts = []
@@ -112,6 +113,7 @@ def show_ticket(request: Request, ticket_id: int = Path(...)):
                         "preview_assign_ticket_flash_message": preview_assign_ticket_flash_message,
                         "rate_ticket_flash_message": rate_ticket_flash_message,
                         "edit_response_unavailable": edit_response_unavailable,
+                        "reopen_ticket_unprocessable": reopen_ticket_unprocessable,
                     }
                 )
                 response.delete_cookie("ticket_update_flash_message")
@@ -344,6 +346,52 @@ def patch_ticket(
 
                 redirect = RedirectResponse(url=f"/tickets/{ticket_id}", status_code=status.HTTP_303_SEE_OTHER)
                 redirect.set_cookie(key="ticket_update_flash_message", value="successful")
+                return redirect
+            else:
+                raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Access denied")
+        else:
+            # Error handler for when db is removed but session exists
+            return RedirectResponse(url="/auth/logout", status_code=status.HTTP_303_SEE_OTHER)
+    except HTTPException:
+        raise
+    except Exception:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Internal server error")
+
+
+@router.patch("/{ticket_id}/reopen")
+def reopen_ticket(
+        request: Request, 
+        ticket_id: int = Path(...),
+        ticket_status: str | None = Form(None),
+    ):
+    try:
+        user_username = get_current_user(request=request)
+    except HTTPException as e:
+        core_logger.error(f"{e} - The access token is missing.")
+        return RedirectResponse(url="/auth", status_code=status.HTTP_303_SEE_OTHER)
+    try:
+        helpdesk = get_helpdesk()
+        current_user = helpdesk.admin_api.find_user_by_username(username=user_username)
+        if current_user is not None:
+            found_ticket = helpdesk.ticket_api.find_ticket(ticket_id=ticket_id)
+
+            if current_user.role in (Role.SYSTEM_ADMIN, Role.IT_MANAGER):
+                redirect = RedirectResponse(url=f"/tickets/{ticket_id}", status_code=status.HTTP_303_SEE_OTHER)
+
+                if found_ticket.status in (TicketStatus.RESOLVED, TicketStatus.CLOSED):
+                    if ticket_status is not None:
+                        helpdesk.ticket_api.reopen_ticket(ticket_id=ticket_id)
+                        redirect.set_cookie(key="ticket_update_flash_message", value="successful")
+                else:
+                    request.session["reopen_ticket_unprocessable"] = "unprocessable"
+
+                notification = Notification(receiver_id=found_ticket.creator_id, title="تیکت دوباره باز شد", text=f"تیکت به شماره {ticket_id} دوباره به وضعیت درحال بررسی برگشت.", url=f"/tickets/{ticket_id}")
+                helpdesk.notification_api.new_notification(notification=notification)
+
+                if found_ticket.assigned_to:
+                    notification = Notification(receiver_id=found_ticket.assigned_to, title="تیکت دوباره باز شد", text=f"تیکت به شماره {ticket_id} دوباره به وضعیت درحال بررسی برگشت.", url=f"/tickets/{ticket_id}")
+                    helpdesk.notification_api.new_notification(notification=notification)
+
                 return redirect
             else:
                 raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Access denied")
