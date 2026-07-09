@@ -337,7 +337,7 @@ def patch_ticket(
                             notification = Notification(receiver_id=old_ticket.assignee.id, title="تیکت بسته شد", text=f"تیکت به شماره {ticket_id} توسط کاربر بسته شد.", url=f"/tickets/{ticket_id}")
                             helpdesk.notification_api.new_notification(notification=notification)
                     else:
-                        notification = Notification(receiver_id=old_ticket.creator_id, title="تیکت بسته شد", text=f"تیکت به شماره {ticket_id} بسته شد.", url=f"/tickets/{ticket_id}")
+                        notification = Notification(receiver_id=old_ticket.creator_id, title="تیکت بسته شد", text=f"تیکت به شماره {ticket_id} بسته شد. برای ثبت امتیاز به صفحه تیکت مراجعه فرمایید", url=f"/tickets/{ticket_id}")
                         helpdesk.notification_api.new_notification(notification=notification)
 
                 redirect = RedirectResponse(url=f"/tickets/{ticket_id}", status_code=status.HTTP_303_SEE_OTHER)
