@@ -222,6 +222,24 @@ class StorageEngine:
             core_logger.error(f"Assign ticket failed - {e}")
             raise
 
+    def remove_assignee(self, ticket_id: int) -> None:
+        """
+        Remove the assigned_to field from a ticket.
+
+        Args:
+            ticket_id: The ID of the ticket to update.
+        """
+        try:
+            with self.session_factory() as session:
+                found_ticket = session.query(Ticket).filter(Ticket.id==ticket_id).one_or_none()
+                if found_ticket is not None and found_ticket.assigned_to:
+                    found_ticket.assigned_to = None
+                    session.commit()
+                    session.refresh(found_ticket)
+        except Exception as e:
+            core_logger.error(f"Remove assignee failed - {e}")
+            raise
+
     def rate_ticket(self, ticket_id: int, satisfaction_rating: int) -> None:
         """
         Rate a ticket after it has been resolved or closed.

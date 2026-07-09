@@ -132,6 +132,15 @@ class TicketService:
 
             raise AttributeError(err)
 
+    def remove_assignee(self, ticket_id: int) -> None:
+        """
+        Remove the assigned_to field from a ticket.
+
+        Args:
+            ticket_id: The ID of the ticket to update.
+        """
+        self.storage.remove_assignee(ticket_id=ticket_id)
+
     def rate_ticket(self, ticket_id: int, satisfaction_rating: int) -> None:
         """
         Rate a ticket after it has been resolved or closed.
