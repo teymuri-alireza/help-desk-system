@@ -23,6 +23,58 @@
             }
             localStorage.removeItem('ticket_update_flash_message');
         }
+
+        const modal = document.getElementById('ratingModal');
+        const backdrop = document.getElementById('ratingModalBackdrop');
+        const openBtn = document.querySelector('[data-modal-target="ratingModal"]');
+        const closeBtn = document.getElementById('closeRatingModal');
+        const ratingInput = document.getElementById('ratingInput');
+        const stars = document.querySelectorAll('.rating-star');
+
+        function openModal() {
+            if (!modal || !backdrop) return;
+            modal.classList.add('is-open');
+            backdrop.classList.add('is-open');
+            document.body.classList.add('modal-open');
+            modal.setAttribute('aria-hidden', 'false');
+        }
+
+        function closeModal() {
+            if (!modal || !backdrop) return;
+            modal.classList.remove('is-open');
+            backdrop.classList.remove('is-open');
+            document.body.classList.remove('modal-open');
+            modal.setAttribute('aria-hidden', 'true');
+        }
+
+        if (openBtn) {
+            openBtn.addEventListener('click', openModal);
+        }
+
+        if (closeBtn) {
+            closeBtn.addEventListener('click', closeModal);
+        }
+
+        if (backdrop) {
+            backdrop.addEventListener('click', closeModal);
+        }
+
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape') {
+                closeModal();
+            }
+        });
+
+        stars.forEach((star) => {
+            star.addEventListener('click', () => {
+                const value = star.getAttribute('data-value');
+                ratingInput.value = value;
+
+                stars.forEach((item) => {
+                    item.classList.toggle('active', item.getAttribute('data-value') <= value);
+                });
+            });
+        });
     });
 </script>
 {% endblock %}
@@ -62,6 +114,12 @@
         {% if assign_ticket_flash_message %}
         <div class="alert alert-{% if assign_ticket_flash_message == "اختصاص اتوماتیک کارشناس به تیکت با موفقیت انجام شد" %}success{% else %}danger{% endif %}">
             {{ assign_ticket_flash_message }}
+        </div>
+        {% endif %}
+
+        {% if rate_ticket_flash_message %}
+        <div id="ticket-closed-flash-alert" class="alert alert-success">
+            {{ rate_ticket_flash_message }}
         </div>
         {% endif %}
 
@@ -126,6 +184,49 @@
 
                         <button type="submit" class="submit-btn btn-small">ارسال پاسخ</button>
                     </form>
+                    {% endif %}
+
+                    {% if ticket.creator.id == user_id %}
+                        {% if ticket.status.name in ("RESOLVED", "CLOSED") %}
+                        <div class="rating-action">
+                            <div class="rating-summary">
+                                {% if ticket.satisfaction_rating %}
+                                    <span>امتیاز ثبت شده: {{ ticket.satisfaction_rating }}/5</span>
+                                {% else %}
+                                    <span>هنوز امتیازی ثبت نشده است.</span>
+                                {% endif %}
+                            </div>
+
+                            <button type="button" class="rating-open-btn" data-modal-target="ratingModal">
+                                {% if ticket.satisfaction_rating is none %}ثبت امتیاز{% else %}ویرایش امتیاز{% endif %}
+                            </button>
+                        </div>
+                        {% endif %}
+
+                        <div class="rating-modal-backdrop" id="ratingModalBackdrop"></div>
+
+                        <div class="rating-modal" id="ratingModal" role="dialog" aria-modal="true" aria-labelledby="ratingModalTitle" aria-hidden="true">
+                            <div class="rating-modal-content">
+                                <button type="button" class="rating-modal-close" id="closeRatingModal" aria-label="بستن">×</button>
+
+                                <h3 id="ratingModalTitle">امتیازدهی به تیکت</h3>
+                                <p>از تجربه‌ی خود درباره‌ی این تیکت امتیاز دهید.</p>
+
+                                <form action="/tickets/{{ ticket.id }}/rate" method="post" class="rating-form">
+                                    <div class="rating-stars" role="radiogroup" aria-label="انتخاب امتیاز">
+                                        <button type="button" class="rating-star" data-value="1" aria-label="۱ ستاره">★</button>
+                                        <button type="button" class="rating-star" data-value="2" aria-label="۲ ستاره">★</button>
+                                        <button type="button" class="rating-star" data-value="3" aria-label="۳ ستاره">★</button>
+                                        <button type="button" class="rating-star" data-value="4" aria-label="۴ ستاره">★</button>
+                                        <button type="button" class="rating-star" data-value="5" aria-label="۵ ستاره">★</button>
+                                    </div>
+
+                                    <input type="hidden" name="rating" id="ratingInput" value="5">
+
+                                    <button type="submit" class="submit-btn btn-small">ثبت امتیاز</button>
+                                </form>
+                            </div>
+                        </div>
                     {% endif %}
 
                 </div>

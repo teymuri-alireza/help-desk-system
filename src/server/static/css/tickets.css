@@ -558,6 +558,109 @@ td{
     color:#166534;
 }
 
+/* POP UP WINDOW FOR TICKET RATING */
+.rating-action {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    margin: 1rem 0 1.2rem;
+    flex-wrap: wrap;
+}
+
+.rating-summary {
+    color: #4b5563;
+    font-size: 0.95rem;
+}
+
+.rating-open-btn {
+    border: none;
+    background: #0f2747;
+    color: white;
+    padding: 0.7rem 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 0.95rem;
+}
+
+.rating-open-btn:hover {
+    background: #183b69;
+}
+
+.rating-modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    z-index: 1100;
+    display: none;
+}
+
+.rating-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 1200;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+}
+
+.rating-modal.is-open,
+.rating-modal-backdrop.is-open {
+    display: flex;
+}
+
+.rating-modal-content {
+    background: white;
+    width: min(100%, 420px);
+    border-radius: 14px;
+    padding: 1.25rem;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.2);
+    position: relative;
+}
+
+.rating-modal-close {
+    position: absolute;
+    top: 0.7rem;
+    left: 0.7rem;
+    border: none;
+    background: transparent;
+    font-size: 1.4rem;
+    cursor: pointer;
+    color: #6b7280;
+}
+
+.rating-stars {
+    display: flex;
+    gap: 0.4rem;
+    margin: 1rem 0 1.2rem;
+}
+
+.rating-star {
+    border: none;
+    background: transparent;
+    font-size: 2rem;
+    color: #d1d5db;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.rating-star.active,
+.rating-star:hover {
+    color: #f59e0b;
+}
+
+.rating-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+
+body.modal-open {
+    overflow: hidden;
+}
+
 /* RESPONSIVE */
 
 @media(max-width:900px){
