@@ -179,7 +179,7 @@ class StorageEngine:
                     session.commit()
                     session.refresh(found_ticket)
         except Exception as e:
-            core_logger.error(f"Update ticket failed - {e}")
+            core_logger.error(f"Assign ticket failed - {e}")
             raise
 
     def list_responses(self, ticket_id: int) -> list[Response]:
