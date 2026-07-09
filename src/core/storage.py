@@ -160,6 +160,25 @@ class StorageEngine:
             core_logger.error(f"Update ticket failed - {e}")
             raise
 
+    def reopen_ticket(self, ticket_id: int) -> None:
+        """
+        Re-open a ticket after it has been resolved or closed.
+
+        Args:
+            ticket_id: The ID of the ticket to re-open.
+        """
+        try:
+            with self.session_factory() as session:
+                found_ticket = session.query(Ticket).filter(Ticket.id==ticket_id).one_or_none()
+                if found_ticket is not None:
+                    if found_ticket.status in (TicketStatus.RESOLVED, TicketStatus.CLOSED):
+                        found_ticket.status = TicketStatus.IN_PROGRESS
+                        session.commit()
+                        session.refresh(found_ticket)
+        except Exception as e:
+            core_logger.error(f"Reopen ticket failed - {e}")
+            raise
+
     def assign_ticket(self, ticket_id: int, assigned_to: int) -> None:
         """
         Assign a ticket to an IT expert.

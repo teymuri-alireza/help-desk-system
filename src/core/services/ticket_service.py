@@ -64,6 +64,15 @@ class TicketService:
         """
         self.storage.update_ticket(new_ticket=new_ticket, old_ticket_id=old_ticket_id)
 
+    def reopen_ticket(self, ticket_id: int) -> None:
+        """
+        Re-open a ticket after it has been resolved or closed.
+
+        Args:
+            ticket_id: The ID of the ticket to re-open.
+        """
+        self.storage.reopen_ticket(ticket_id=ticket_id)
+
     def preview_auto_assign_ticket(self, department_id: int) -> User:
         """
         Preview which IT expert would be auto-assigned for a ticket in the specified department.
