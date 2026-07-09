@@ -122,6 +122,10 @@ def new_user(
                 redirect.set_cookie(key="user_exists_flash_message", value="successful")
                 return redirect
 
+            if role == Role.IT_EXPERT.name and department_id is None:
+                request.session["missing_department_id"] = "عملیت ثبت کاربر ممکن نیست. برای کارشناس باید دپارتمان مشخص کنید."
+                return RedirectResponse(url="/dashboard", status_code=status.HTTP_303_SEE_OTHER)
+
             new_user = User(name=name, email=email, username=username, role=role, department_id=department_id)
             helpdesk.admin_api.new_user(user=new_user)
 

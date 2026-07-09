@@ -59,6 +59,13 @@
                 این نام کاربری قبلا استفاده شده است.
             </div>
         {% endif %}
+
+        {% if missing_department_id %}
+            <div id="user-flash-alert" class="alert alert-danger">
+                {{ missing_department_id }}
+            </div>
+        {% endif %}
+
         <div class="section-header">
             <h2>ثبت کاربر جدید</h2>
             <button class="toggle-form-btn submit-btn btn-small" id="toggleUserFormBtn" type="button">نمایش فرم</button>

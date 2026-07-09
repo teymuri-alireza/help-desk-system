@@ -28,6 +28,7 @@ def dashboard(request: Request, response: Response):
             new_ticket_flash_message = request.cookies.get("new_ticket_flash_message")
             new_user_flash_message = request.cookies.get("new_user_flash_message")
             user_exists_flash_message = request.cookies.get("user_exists_flash_message")
+            missing_department_id = request.session.pop("missing_department_id", None)
             if current_user.role == Role.STUDENT or current_user.role == Role.EMPLOYEE:
                 tickets_list = helpdesk.ticket_api.list_tickets(creator_id=current_user.id, limit=10)
                 context = {
@@ -92,6 +93,7 @@ def dashboard(request: Request, response: Response):
                     "active_users_count": active_users_count,
                     "new_user_flash_message": new_user_flash_message,
                     "user_exists_flash_message": user_exists_flash_message,
+                    "missing_department_id": missing_department_id,
                     "Role": Role,
                     }
                 html_file = "admin_dashboard.html"
