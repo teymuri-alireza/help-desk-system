@@ -213,7 +213,9 @@
                         <div class="rating-action">
                             <div class="rating-summary">
                                 {% if ticket.satisfaction_rating %}
-                                    <span>امتیاز ثبت شده: {{ ticket.satisfaction_rating }}/5</span>
+                                    <span>امتیاز ثبت شده: 
+                                        5 / {{ ticket.satisfaction_rating * "★" }}
+                                    </span>
                                 {% else %}
                                     <span>هنوز امتیازی ثبت نشده است.</span>
                                 {% endif %}
