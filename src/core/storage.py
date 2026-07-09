@@ -173,6 +173,7 @@ class StorageEngine:
                 if found_ticket is not None:
                     if found_ticket.status in (TicketStatus.RESOLVED, TicketStatus.CLOSED):
                         found_ticket.status = TicketStatus.IN_PROGRESS
+                        found_ticket.satisfaction_rating = None
                         session.commit()
                         session.refresh(found_ticket)
         except Exception as e:
