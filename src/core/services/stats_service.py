@@ -8,7 +8,7 @@ from sqlalchemy.orm import Session, sessionmaker
 from src.database.tables import User, Ticket, Role, UserStatus, TicketStatus, Category, Department
 
 core_logger = logging.getLogger("core")
-CHARTS_DIR = Path(__file__).parent.parent.parent / "server" / "static" / "charts"
+CHARTS_DIR = Path(__file__).parent.parent.parent / "server" / "charts"
 
 
 class StatsService:
