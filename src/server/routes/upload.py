@@ -9,10 +9,10 @@ core_logger = logging.getLogger("core")
 
 UPLOAD_DIR = FilePath(__file__).parent.parent / "upload"
 
-router = APIRouter(prefix="/upload", tags=["upload"])
+router = APIRouter(prefix="/contents", tags=["contents"])
 
 
-@router.get("/{filename}")
+@router.get("/upload/{filename}")
 async def get_upload_file(
         request: Request,
         filename: str = Path(...),

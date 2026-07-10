@@ -172,7 +172,7 @@
                     </div>
                     <p class="ticket-description">توضیحات: {{ ticket.description }}</p>
                     {% if attachment %}
-                        <a href="/upload/{{ attachment.file_name }}" target="_blank">مشاهده فایل پیوست</a>
+                        <a href="/contents/upload/{{ attachment.file_name }}" target="_blank">مشاهده فایل پیوست</a>
                     {% else %}
                         <p class="ticket-created">فایل پیوستی یافت نشد</p>
                     {% endif %}
