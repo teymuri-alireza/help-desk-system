@@ -354,19 +354,32 @@ class StorageEngine:
             core_logger.error(f"Insert attachment failed - {e}")
             raise
 
-    def find_attachment(self, ticket_id: int) -> Attachment | None:
+    def find_attachment(self, ticket_id: int | None = None, filename: str | None = None) -> Attachment | None:
         """
-        Find an attachment by its ticket ID.
+        Retrieve an attachment record from the database.
+
+        The method supports lookup by ticket ID or by attachment filename. If both
+        values are provided, the ticket ID lookup takes precedence.
 
         Args:
-            ticket_id: The ticket ID to search for.
+            ticket_id: Optional ticket ID to search attachments by.
+            filename: Optional attachment filename to search by.
 
         Returns:
-            attachment|None: attachment object if found, None otherwise.
+            Attachment|None: The matched Attachment object, or None if no record
+                matches the provided parameters.
         """
         try:
             with self.session_factory() as session:
-                found_attachment = session.query(Attachment).filter(Attachment.ticket_id==ticket_id).one_or_none()
+                found_attachment = None
+                if ticket_id is not None:
+                    found_attachment = session.query(Attachment).filter(Attachment.ticket_id==ticket_id).options(
+                        joinedload(Attachment.ticket)
+                    ).one_or_none()
+                elif filename is not None:
+                    found_attachment = session.query(Attachment).filter(Attachment.file_name==filename).options(
+                        joinedload(Attachment.ticket)
+                    ).one_or_none()
                 return found_attachment
         except Exception as e:
             core_logger.error(f"Find attachment failed - {e}")

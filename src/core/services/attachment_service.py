@@ -25,14 +25,19 @@ class AttachmentService:
         """
         self.storage.insert_attachment(attachment)
 
-    def find_attachment(self, ticket_id: int) -> Attachment | None:
+    def find_attachment(self, ticket_id: int | None = None, filename: str | None = None) -> Attachment | None:
         """
-        Find an attachment by its ticket ID.
+        Retrieve an attachment record.
+
+        The method supports lookup by ticket ID or by attachment filename. If both
+        values are provided, the ticket ID lookup takes precedence.
 
         Args:
-            ticket_id: The ticket ID to search for.
+            ticket_id: Optional ticket ID to search attachments by.
+            filename: Optional attachment filename to search by.
 
         Returns:
-            attachment|None: attachment object if found, None otherwise.
+            Attachment|None: The matched Attachment object, or None if no record
+                matches the provided arguments.
         """
-        return self.storage.find_attachment(ticket_id)
+        return self.storage.find_attachment(ticket_id=ticket_id, filename=filename)
