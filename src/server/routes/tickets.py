@@ -9,8 +9,10 @@ from src.server.dependencies import get_static_path, get_helpdesk, get_current_u
 from src.database.tables import Ticket, Attachment, Notification, Role, TicketStatus, TicketPriority
 
 core_logger = logging.getLogger("core")
-TEMPLATES_DIR, STATIC_DIR = get_static_path()
+TEMPLATES_DIR = get_static_path()[0]
 templates = Jinja2Templates(directory=TEMPLATES_DIR)
+
+UPLOAD_DIR = FilePath(__file__).parent.parent / "upload"
 
 router = APIRouter(prefix="/tickets", tags=["tickets"])
 
@@ -154,7 +156,7 @@ def new_ticket(
         if current_user.role in (Role.SYSTEM_ADMIN, Role.IT_MANAGER):
             raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Access denied")
 
-        os.makedirs(f"{STATIC_DIR}/upload/", exist_ok=True)
+        os.makedirs(f"{UPLOAD_DIR}/", exist_ok=True)
 
         ticket = Ticket(title=title, description=description, creator_id=current_user.id)
         helpdesk.ticket_api.new_ticket(ticket=ticket)
@@ -168,7 +170,7 @@ def new_ticket(
                 file_type=attachment.content_type, 
                 ticket_id=ticket.id, 
                 creator_id=ticket.creator_id, 
-                path=f"{STATIC_DIR}/upload"
+                path=f"{UPLOAD_DIR}"
                 )
             helpdesk.attachment_api.new_attachment(attachment=upload)
             content = attachment.file.read()
