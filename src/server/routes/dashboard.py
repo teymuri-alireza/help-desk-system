@@ -1,4 +1,6 @@
+import os
 import logging
+from pathlib import Path as FilePath
 from fastapi import APIRouter, Request, status, Response, HTTPException
 from fastapi.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
@@ -7,6 +9,7 @@ from src.database.tables import Role
 
 core_logger = logging.getLogger("core")
 TEMPLATES_DIR = get_static_path()[0]
+CHARTS_DIR = FilePath(__file__).parent.parent /"charts"
 templates = Jinja2Templates(directory=TEMPLATES_DIR)
 
 router = APIRouter(prefix="/dashboard", tags=["dashboard"])
@@ -127,6 +130,10 @@ def stats(request: Request):
         current_user = helpdesk.admin_api.find_user_by_username(username=user_username)
         if current_user.role not in (Role.SYSTEM_ADMIN, Role.IT_MANAGER):
             raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Access denied")
+
+        # Ensure the CHARTS_DIR path exists
+        os.makedirs(f"{CHARTS_DIR}/", exist_ok=True)
+
         all_tickets_count, active_tickets_count, not_assigned_tickets, last_created = helpdesk.statistics_api.ticket_stats()
         all_users_count, active_users_count = helpdesk.statistics_api.users_stats()
         # Only generate user role pie chart for system admins
