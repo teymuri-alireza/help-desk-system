@@ -13,6 +13,7 @@ from src.server.routes.responses import router as responses_router
 from src.server.routes.dashboard import router as dashboard_router
 from src.server.routes.users import router as users_router
 from src.server.routes.notifications import router as notifications_router
+from src.server.routes.upload import router as upload_router
 from src.server.dependencies import get_static_path, set_helpdesk, get_helpdesk, get_current_user
 from src.core.engine import HelpDeskCore
 from src.utilities.logger import get_logger
@@ -97,6 +98,7 @@ app.include_router(responses_router)
 app.include_router(dashboard_router)
 app.include_router(users_router)
 app.include_router(notifications_router)
+app.include_router(upload_router)
 
 @app.exception_handler(403)
 def http_exception_handler(request: Request, exc: HTTPException):
