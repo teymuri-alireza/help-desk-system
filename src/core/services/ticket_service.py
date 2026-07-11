@@ -67,6 +67,7 @@ class TicketService:
     def reopen_ticket(self, ticket_id: int) -> None:
         """
         Re-open a ticket after it has been resolved or closed.
+        Also removes the ticket's satisfaction_rating field.
 
         Args:
             ticket_id: The ID of the ticket to re-open.
