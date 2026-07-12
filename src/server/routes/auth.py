@@ -11,7 +11,7 @@ router = APIRouter(prefix="/auth", tags=["auth"])
 
 
 # Serve the authentication page
-@router.get("")
+@router.get("", description="Serves the frontend page for authentication")
 def authentication(request: Request):
     try:
         user_username = get_current_user(request=request)
@@ -29,11 +29,11 @@ def authentication(request: Request):
 
 # API endpoints
 # Authentication
-@router.post("/signup")
+@router.post("/signup", description="Creates access token using JWT for user registration.")
 def sign_up(request: Request,
-    name: str = Form(...),
-    username: str = Form(...),
-    email: str = Form(...),
+    name: str = Form(..., description="User's full name."),
+    username: str = Form(..., description="User's username used for authentication."),
+    email: str = Form(..., description="User's unique e-mail address."),
     ):
     try:
         helpdesk = get_helpdesk()
@@ -61,8 +61,8 @@ def sign_up(request: Request,
     except:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Internal server error")
 
-@router.post("/login")
-def log_in(request: Request, username: str = Form(...)):
+@router.post("/login", description="Creates access token using JWT for user login.")
+def log_in(request: Request, username: str = Form(..., description="User's username used for authentication")):
     try:
         helpdesk = get_helpdesk()
         user_exist = helpdesk.authentication_api.login(username=username)
@@ -89,7 +89,7 @@ def log_in(request: Request, username: str = Form(...)):
     except:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Internal server error")
 
-@router.get("/logout")
+@router.get("/logout", description="Removes the user access token to logout.")
 def log_out(response: Response):
     response = RedirectResponse(
         url="/",

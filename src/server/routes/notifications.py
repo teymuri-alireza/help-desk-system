@@ -11,7 +11,7 @@ templates = Jinja2Templates(directory=TEMPLATES_DIR)
 router = APIRouter(prefix="/notifications", tags=["notifications"])
 
 
-@router.get("")
+@router.get("", description="Returns a list of unread notifications")
 def list_unread_notifications(request: Request):
     try:
         user_username = get_current_user(request=request)
@@ -31,7 +31,7 @@ def list_unread_notifications(request: Request):
     except HTTPException:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Internal server error")
 
-@router.get("/all")
+@router.get("/all", description="Returns a list of all notifications.")
 def list_all_notifications(request: Request):
     try:
         user_username = get_current_user(request=request)
@@ -58,8 +58,8 @@ def list_all_notifications(request: Request):
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Internal server error")
 
 
-@router.patch("", status_code=status.HTTP_200_OK)
-def update_notification(notification_id: int = Body(...), is_read: bool = Body(...)):
+@router.patch("", status_code=status.HTTP_200_OK, description="Updates the is_read field of a notification.")
+def update_notification(notification_id: int = Body(..., description="The notification ID to update."), is_read: bool = Body(..., description="Boolean indicating if a notification is read.")):
     try:
         helpdesk = get_helpdesk()
         helpdesk.notification_api.update_notification(notification_id=notification_id, is_read=is_read)

@@ -44,7 +44,7 @@ templates = Jinja2Templates(directory=TEMPLATES_DIR)
 app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 
 # Home Page
-@app.get("/", response_class=HTMLResponse)
+@app.get("/", response_class=HTMLResponse, description="Serves the frontend for home page")
 def root(request: Request):
     context = None
     try:
@@ -59,7 +59,7 @@ def root(request: Request):
     return templates.TemplateResponse(request=request, name="home.html", context=context)
 
 # Courses Page
-@app.get("/courses", response_class=HTMLResponse)
+@app.get("/courses", response_class=HTMLResponse, description="Serves the frontend for courses page")
 def courses(request: Request):
     context = {}
     try:
@@ -88,7 +88,7 @@ def courses(request: Request):
     return templates.TemplateResponse(request=request, name="courses.html", context=context)
 
 # Forbidden page
-@app.get("/forbidden")
+@app.get("/forbidden", description="Redirect user to the custom 403 page. This endpoint is used in JavaScript code, if necessary")
 def forbidden(request: Request):
     raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Access denied")
 

@@ -12,7 +12,7 @@ templates = Jinja2Templates(directory=TEMPLATES_DIR)
 router = APIRouter(prefix="/users", tags=["users"])
 
 
-@router.get("")
+@router.get("", description="Serves the frontend page for users")
 def list_users(request: Request):
     try:
         user_username = get_current_user(request=request)
@@ -47,8 +47,8 @@ def list_users(request: Request):
     except Exception:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Internal server error")
 
-@router.get("/{user_id}")
-def show_user(request: Request, user_id: int = Path(...)):
+@router.get("/{user_id}", description="Serves the frontend page for one user")
+def show_user(request: Request, user_id: int = Path(..., description="User ID to search for")):
     try:
         user_username = get_current_user(request=request)
     except HTTPException as e:
@@ -97,14 +97,14 @@ def show_user(request: Request, user_id: int = Path(...)):
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Internal server error")
 
 
-@router.post("")
+@router.post("", description="Create a new ticket, used by system admins.")
 def new_user(
         request: Request,
-        name: str = Form(...),
-        username: str = Form(...),
-        email: str = Form(...),
-        role: str = Form(...),
-        department_id: str | None = Form(None),
+        name: str = Form(..., description="User's full name"),
+        username: str = Form(..., description="User's username used for authentication"),
+        email: str = Form(..., description="User's unique e-mail address"),
+        role: str = Form(..., description="User's role"),
+        department_id: str | None = Form(None, description="The department ID, for IT expert roles."),
     ):
     try:
         user_username = get_current_user(request=request)
@@ -143,16 +143,16 @@ def new_user(
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Internal server error")
 
 
-@router.patch("/{user_id}")
+@router.patch("/{user_id}", description="Update a user's information")
 def patch_user(
-        request: Request, 
-        user_id: int = Path(...), 
-        name: str | None = Form(None), 
-        email: str | None = Form(None), 
-        username: str | None = Form(None), 
-        role: str | None = Form(None), 
-        user_status: str | None = Form(None),
-        department_id: int | None = Form(None),
+        request: Request,
+        user_id: int = Path(..., description="User ID to update"),
+        name: str | None = Form(None, description="User's full name"),
+        email: str | None = Form(None, description="User's unique e-mail address"),
+        username: str | None = Form(None, description="User's username used for authentication"),
+        role: str | None = Form(None, description="User's role"),
+        user_status: str | None = Form(None, description="User's status"),
+        department_id: int | None = Form(None, description="The department ID, for IT expert roles"),
     ):
     try:
         user_username = get_current_user(request=request)
@@ -178,8 +178,8 @@ def patch_user(
     except Exception:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Internal server error")
 
-@router.delete("/{user_id}", status_code=status.HTTP_204_NO_CONTENT)
-def delete_user(request: Request, user_id: int = Path(...)):
+@router.delete("/{user_id}", status_code=status.HTTP_204_NO_CONTENT, description="Remove a user")
+def delete_user(request: Request, user_id: int = Path(..., description="User ID to remove")):
     try:
         user_username = get_current_user(request=request)
     except HTTPException as e:

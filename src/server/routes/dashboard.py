@@ -15,7 +15,7 @@ templates = Jinja2Templates(directory=TEMPLATES_DIR)
 router = APIRouter(prefix="/dashboard", tags=["dashboard"])
 
 
-@router.get("")
+@router.get("", description="Serves the frontend page for dashboard")
 def dashboard(request: Request, response: Response):
     try:
         user_username = get_current_user(request=request)
@@ -117,7 +117,7 @@ def dashboard(request: Request, response: Response):
     except HTTPException:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Internal server error")
 
-@router.get("/stats")
+@router.get("/stats", description="Serves the frontend page for statistics")
 def stats(request: Request):
     try:
         user_username = get_current_user(request=request)

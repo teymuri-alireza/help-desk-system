@@ -18,7 +18,7 @@ UPLOAD_DIR = CONTENTS_DIR / "upload"
 router = APIRouter(prefix="/tickets", tags=["tickets"])
 
 
-@router.get("")
+@router.get("", description="Serves the frontend page for tickets")
 def list_tickets(request: Request):
     try:
         user_username = get_current_user(request=request)
@@ -57,8 +57,8 @@ def list_tickets(request: Request):
     except HTTPException:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Internal server error")
 
-@router.get("/{ticket_id}")
-def show_ticket(request: Request, ticket_id: int = Path(...)):
+@router.get("/{ticket_id}", description="Serves the frontend page for one ticket")
+def show_ticket(request: Request, ticket_id: int = Path(..., description="Ticket ID to search for")):
     try:
         user_username = get_current_user(request=request)
     except HTTPException as e:
@@ -136,12 +136,12 @@ def show_ticket(request: Request, ticket_id: int = Path(...)):
     except Exception:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Internal server error")
 
-@router.post("")
+@router.post("", description="Create a new ticket")
 def new_ticket(
     request: Request,
     attachment: UploadFile,
-    title: str = Form(...),
-    description: str = Form(...),
+    title: str = Form(..., description="Title of the new ticket"),
+    description: str = Form(..., description="Text describing the ticket"),
     ):
     try:
         user_username = get_current_user(request=request)
@@ -191,8 +191,8 @@ def new_ticket(
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Internal server error")
 
 
-@router.get("/{ticket_id}/assign/preview")
-def preview_assign_ticket(request: Request, ticket_id: int = Path(...)):
+@router.get("/{ticket_id}/assign/preview", description="Preview the free IT expert to assign a ticket to")
+def preview_assign_ticket(request: Request, ticket_id: int = Path(..., description="The ticket ID to search, and to use for its department_id field")):
     try:
         user_username = get_current_user(request=request)
     except HTTPException as e:
@@ -230,8 +230,8 @@ def preview_assign_ticket(request: Request, ticket_id: int = Path(...)):
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Internal server error")
 
 
-@router.post("/{ticket_id}/assign")
-def assign_ticket(request: Request, ticket_id: int = Path(...)):
+@router.post("/{ticket_id}/assign", description="Assign a ticket to an IT expert")
+def assign_ticket(request: Request, ticket_id: int = Path(..., description="Ticket ID to update")):
     try:
         user_username = get_current_user(request=request)
     except HTTPException as e:
@@ -273,11 +273,11 @@ def assign_ticket(request: Request, ticket_id: int = Path(...)):
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Internal server error")
 
 
-@router.post("/{ticket_id}/remove_assignee")
+@router.post("/{ticket_id}/remove_assignee", description="Remove an assigned IT expert from a ticket")
 def remove_assignee(
         request: Request,
-        ticket_id: int = Path(...),
-        checkbox: bool = Form(...)
+        ticket_id: int = Path(..., description="Ticket ID to update"),
+        checkbox: bool = Form(..., description="boolean indicating if assignee removal should be proceeded.")
     ):
     try:
         user_username = get_current_user(request=request)
@@ -306,11 +306,11 @@ def remove_assignee(
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Internal server error")
 
 
-@router.post("/{ticket_id}/rate")
+@router.post("/{ticket_id}/rate", description="Rate a ticket based on IT expert's performance")
 def rate_ticket(
         request: Request,
-        ticket_id: int = Path(...),
-        rating: int = Form(...),
+        ticket_id: int = Path(..., description="Ticket ID to update"),
+        rating: int = Form(..., description="Satisfaction rating value", ge=1, le=5),
     ):
     try:
         user_username = get_current_user(request=request)
@@ -338,17 +338,17 @@ def rate_ticket(
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Internal server error")
 
 
-@router.patch("/{ticket_id}")
+@router.patch("/{ticket_id}", description="Update a ticket's information")
 def patch_ticket(
         request: Request, 
-        ticket_id: int = Path(...),
-        title: str | None = Form(None),
-        description: str | None = Form(None),
-        ticket_status: str | None = Form(None),
-        priority: str | None = Form(None),
-        assigned_to: str | None = Form(None),
-        category_id: int | None = Form(None),
-        department_id: int | None = Form(None),
+        ticket_id: int = Path(..., description="Ticket ID to update"),
+        title: str | None = Form(None, description="Title of the ticket"),
+        description: str | None = Form(None, description="Text describing the ticket"),
+        ticket_status: str | None = Form(None, description="Status of the ticket"),
+        priority: str | None = Form(None, description="Priority of the ticket"),
+        assigned_to: str | None = Form(None, description="The IT expert ID to assign the ticket to"),
+        category_id: int | None = Form(None, description="The category ID describing the ticket's category"),
+        department_id: int | None = Form(None, description="The department ID describing the ticket's department"),
     ):
     try:
         user_username = get_current_user(request=request)
@@ -397,11 +397,11 @@ def patch_ticket(
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Internal server error")
 
 
-@router.patch("/{ticket_id}/reopen")
+@router.patch("/{ticket_id}/reopen", description="Re-open a closed or resolved ticket")
 def reopen_ticket(
         request: Request, 
-        ticket_id: int = Path(...),
-        ticket_status: str | None = Form(None),
+        ticket_id: int = Path(..., description="Ticket ID to open"),
+        ticket_status: str | None = Form(None, description="The new status of ticket after re-opening"),
     ):
     try:
         user_username = get_current_user(request=request)

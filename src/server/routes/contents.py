@@ -13,10 +13,10 @@ CHARTS_DIR = FilePath(__file__).parent.parent / "contents" / "charts"
 router = APIRouter(prefix="/contents", tags=["contents"])
 
 
-@router.get("/upload/{filename}")
+@router.get("/upload/{filename}", description="Creates a secure endpoint for serving user uploaded files.")
 async def get_upload_file(
         request: Request,
-        filename: str = Path(...),
+        filename: str = Path(..., description="Filename to show in frontend"),
     ):
     try:
         user_username = get_current_user(request=request)
@@ -52,10 +52,10 @@ async def get_upload_file(
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Internal server error")
 
 
-@router.get("/charts/{filename}")
+@router.get("/charts/{filename}", description="Creates a secure endpoint for serving charts, used for system statistics.")
 async def get_cherts_file(
         request: Request,
-        filename: str = Path(...),
+        filename: str = Path(..., description="Filename to show in frontend"),
     ):
     try:
         user_username = get_current_user(request=request)

@@ -9,8 +9,8 @@ core_logger = logging.getLogger("core")
 router = APIRouter(prefix="/tickets/{ticket_id}/responses", tags=["responses"])
 
 
-@router.get("")
-def list_responses(request: Request, ticket_id: int):
+@router.get("", description="Returns a list of responses.")
+def list_responses(request: Request, ticket_id: int = Path(..., description="Ticket ID to filter responses on.")):
     try:
         user_username = get_current_user(request=request)
     except HTTPException as e:
@@ -43,12 +43,12 @@ def list_responses(request: Request, ticket_id: int):
     except HTTPException:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Internal server error")
 
-@router.post("")
+@router.post("", description="Creates a new resposne")
 def new_response(
         request: Request, 
-        ticket_id: int = Path(...), 
-        text: str = Form(...), 
-        parent_response_id: int | None = Form(None),
+        ticket_id: int = Path(..., description="The related ticket ID for the new response."), 
+        text: str = Form(..., description="Text describing the response."), 
+        parent_response_id: int | None = Form(None, description="Parent response ID used for threaded responses with parents and children."),
     ):
     try:
         user_username = get_current_user(request=request)
@@ -101,12 +101,12 @@ def new_response(
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Internal server error")
 
 
-@router.patch("/{response_id}")
+@router.patch("/{response_id}", description="Update a response")
 def edit_response(
         request: Request,
-        ticket_id: int = Path(...),
-        response_id: int = Path(...),
-        text: str = Form(...),
+        ticket_id: int = Path(..., description="Ticket ID to create notification, and check for ticket status before response update."),
+        response_id: int = Path(..., description="Response ID to update"),
+        text: str = Form(..., description="Text describing the response"),
     ):
     try:
         user_username = get_current_user(request=request)
