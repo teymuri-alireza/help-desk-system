@@ -12,7 +12,8 @@ core_logger = logging.getLogger("core")
 TEMPLATES_DIR = get_static_path()[0]
 templates = Jinja2Templates(directory=TEMPLATES_DIR)
 
-UPLOAD_DIR = FilePath(__file__).parent.parent / "upload"
+CONTENTS_DIR = FilePath(__file__).parent.parent / "contents"
+UPLOAD_DIR = CONTENTS_DIR / "upload"
 
 router = APIRouter(prefix="/tickets", tags=["tickets"])
 
@@ -156,6 +157,7 @@ def new_ticket(
         if current_user.role in (Role.SYSTEM_ADMIN, Role.IT_MANAGER):
             raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Access denied")
 
+        os.makedirs(f"{CONTENTS_DIR}/", exist_ok=True)
         os.makedirs(f"{UPLOAD_DIR}/", exist_ok=True)
 
         ticket = Ticket(title=title, description=description, creator_id=current_user.id)

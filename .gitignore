@@ -10,11 +10,9 @@ __pycache__/
 *.db-shm
 *.db-wal
 
-# User upload
-upload/
+# Server Contents
+contents/
 
 # Logs
 *.log
 
-# Statistics charts
-charts/

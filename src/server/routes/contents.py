@@ -7,8 +7,8 @@ from src.database.tables import Role
 
 core_logger = logging.getLogger("core")
 
-UPLOAD_DIR = FilePath(__file__).parent.parent / "upload"
-CHARTS_DIR = FilePath(__file__).parent.parent /"charts"
+UPLOAD_DIR = FilePath(__file__).parent.parent / "contents" / "upload"
+CHARTS_DIR = FilePath(__file__).parent.parent / "contents" / "charts"
 
 router = APIRouter(prefix="/contents", tags=["contents"])
 

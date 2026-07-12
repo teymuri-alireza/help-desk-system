@@ -1,3 +1,4 @@
+import os
 import logging
 import numpy as np
 import matplotlib
@@ -12,7 +13,8 @@ from sqlalchemy.orm import Session, sessionmaker
 from src.database.tables import User, Ticket, Role, UserStatus, TicketStatus, Category, Department
 
 core_logger = logging.getLogger("core")
-CHARTS_DIR = Path(__file__).parent.parent.parent / "server" / "charts"
+CONTENTS_DIR = Path(__file__).parent.parent.parent / "server" / "contents"
+CHARTS_DIR = CONTENTS_DIR / "charts"
 
 
 class StatsService:
@@ -22,12 +24,13 @@ class StatsService:
 
     def __init__(self, session_factory: sessionmaker[Session]) -> None:
         """
-        Initialize StatsService with a session factory.
+        Initialize StatsService with a session factory, and ensure that the contents directory exists.
 
         Args:
             session_factory: A SQLAlchemy sessionmaker instance used to create database sessions.
         """
         self.session_factory = session_factory
+        os.makedirs(f"{CONTENTS_DIR}/", exist_ok=True)
 
     def ticket_stats(self) -> tuple[int, int, int, int]:
         """

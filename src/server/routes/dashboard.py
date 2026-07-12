@@ -9,7 +9,7 @@ from src.database.tables import Role
 
 core_logger = logging.getLogger("core")
 TEMPLATES_DIR = get_static_path()[0]
-CHARTS_DIR = FilePath(__file__).parent.parent /"charts"
+CHARTS_DIR = FilePath(__file__).parent.parent / "contents" / "charts"
 templates = Jinja2Templates(directory=TEMPLATES_DIR)
 
 router = APIRouter(prefix="/dashboard", tags=["dashboard"])
