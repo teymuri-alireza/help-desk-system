@@ -18,6 +18,7 @@ email
 role
 status
 created_at
+updated_at
 ```
 
 ### توضیحات
@@ -29,6 +30,7 @@ created_at
 * `role` : نقش کاربر در سامانه
 * `status` : وضعیت حساب کاربری
 * `created_at` : زمان ایجاد حساب
+* `updated_at` : آخرین زمان ویرایش حساب
 
 ## جدول Ticket
 
@@ -48,6 +50,7 @@ creator_id
 category_id
 department_id
 assigned_to
+satisfaction_rating
 ```
 
 ### توضیحات
@@ -58,6 +61,7 @@ assigned_to
 * `status` : وضعیت فعلی تیکت
 * `priority` : سطح اولویت تیکت
 * `assigned_to`: شناسه کارشناس مربوطه
+* `satisfaction_rating`: امتیاز کاربر پس از پاسخ تیکت
 
 ## جدول Response
 
@@ -72,6 +76,7 @@ creator_id
 parent_response_id
 text
 created_at
+updated_at
 ```
 
 ### توضیحات
@@ -141,6 +146,7 @@ receiver_id
 creator_id
 title
 text
+url
 is_read
 created_at
 ```
@@ -151,4 +157,5 @@ created_at
 * `creator_id` : ایجادکننده اعلان
 * `title` : عنوان اعلان
 * `text` : متن اعلان
+* `url` : لینک ارجاع
 * `is_read` : وضعیت مشاهده اعلان
