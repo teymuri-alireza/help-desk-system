@@ -70,7 +70,7 @@ def courses(request: Request):
         context = {"user": current_user}
     except:
         pass
-    with open(DATA_DIR / "courses.csv", "r", newline="") as file:
+    with open(DATA_DIR / "courses.csv", "r", newline="", encoding="utf-8") as file:
         reader = csv.reader(file)
         context["courses_data"] = [
             {
