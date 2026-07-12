@@ -133,12 +133,13 @@ function createResponseElement(response, currentUserId, ticketId) {
 
             if (responsePatch.ok) {
                 modalOverlay.style.display = "none";
-                localStorage.setItem('edit_response_unavailable', 'error');
+                localStorage.setItem('edit_response_ok', 'successful');
                 window.location.reload();
             } else if (responsePatch.status === 403) {
                 modalOverlay.style.display = "none";
                 window.location.href = "/forbidden";
             } else {
+                localStorage.setItem('edit_response_unavailable', 'error');
                 const errorText = await responsePatch.text();
                 alert("خطا در ویرایش پاسخ: " + errorText);
             }
