@@ -48,6 +48,7 @@ def new_response(
         request: Request, 
         ticket_id: int = Path(...), 
         text: str = Form(...), 
+        parent_response_id: int | None = Form(None),
     ):
     try:
         user_username = get_current_user(request=request)
@@ -66,7 +67,7 @@ def new_response(
             if ticket.status in (TicketStatus.RESOLVED, TicketStatus.CLOSED):
                 redirect.set_cookie(key="ticket_closed_flash_message", value="successful")
             else:
-                response = Response(text=text, ticket_id=ticket_id, creator_id=creator_id)
+                response = Response(text=text, ticket_id=ticket_id, creator_id=creator_id, parent_response_id=parent_response_id)
                 helpdesk.response_api.new_response(response=response)
 
                 if current_user.role in (Role.STUDENT, Role.EMPLOYEE):

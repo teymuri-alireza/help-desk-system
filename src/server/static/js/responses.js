@@ -40,6 +40,121 @@ function createResponseElement(response, currentUserId, ticketId) {
         const actionWrapper = document.createElement("div");
         actionWrapper.style.marginLeft = "auto";
         actionWrapper.style.flexShrink = "0";
+        actionWrapper.style.display = "flex";
+        actionWrapper.style.flexDirection = "column";
+        actionWrapper.style.gap = "8px";
+
+        const replyBtn = document.createElement("button");
+        replyBtn.type = "button";
+        replyBtn.className = "submit-btn btn-small";
+        replyBtn.textContent = "پاسخ به این پاسخ";
+        actionWrapper.appendChild(replyBtn);
+
+        responseContainer.appendChild(actionWrapper);
+
+        // --- reply popup modal ---
+        const replyOverlay = document.createElement("div");
+        replyOverlay.style.cssText = "position:fixed; inset:0; background:rgba(0,0,0,0.45); display:none; align-items:center; justify-content:center; z-index:1000;";
+
+        const replyBox = document.createElement("div");
+        replyBox.style.cssText = "background:#fff; width:min(90vw, 560px); padding:20px; border-radius:8px; box-shadow:0 12px 36px rgba(0,0,0,0.2);";
+
+        const replyHeader = document.createElement("div");
+        replyHeader.style.cssText = "display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;";
+
+        const replyTitle = document.createElement("h3");
+        replyTitle.textContent = "پاسخ به این پاسخ";
+        replyHeader.appendChild(replyTitle);
+
+        const replyCloseBtn = document.createElement("button");
+        replyCloseBtn.type = "button";
+        replyCloseBtn.textContent = "×";
+        replyCloseBtn.style.cssText = "border:none; background:transparent; font-size:24px; cursor:pointer;";
+        replyHeader.appendChild(replyCloseBtn);
+        replyBox.appendChild(replyHeader);
+
+        const replyForm = document.createElement("form");
+        replyForm.className = "response-reply-form";
+
+        const replyTextareaGroup = document.createElement("div");
+        replyTextareaGroup.className = "form-group";
+
+        const replyTextarea = document.createElement("textarea");
+        replyTextarea.name = "text";
+        replyTextarea.required = true;
+        replyTextarea.placeholder = "متن پاسخ خود را وارد کنید...";
+        replyTextarea.style.cssText = "width:100%; min-height:120px; resize:vertical;";
+        replyTextareaGroup.appendChild(replyTextarea);
+        replyForm.appendChild(replyTextareaGroup);
+
+        const replyParentInput = document.createElement("input");
+        replyParentInput.type = "hidden";
+        replyParentInput.name = "parent_response_id";
+        replyParentInput.value = response.id;
+        replyForm.appendChild(replyParentInput);
+
+        const replyActionButtons = document.createElement("div");
+        replyActionButtons.style.cssText = "display:flex; justify-content:flex-end; gap:8px; margin-top:10px;";
+
+        const replySubmitBtn = document.createElement("button");
+        replySubmitBtn.type = "submit";
+        replySubmitBtn.className = "submit-btn btn-small";
+        replySubmitBtn.textContent = "ثبت پاسخ";
+        replyActionButtons.appendChild(replySubmitBtn);
+
+        const replyCancelBtn = document.createElement("button");
+        replyCancelBtn.type = "button";
+        replyCancelBtn.className = "submit-btn btn-small";
+        replyCancelBtn.textContent = "انصراف";
+        replyCancelBtn.addEventListener("click", () => {
+            replyOverlay.style.display = "none";
+        });
+        replyActionButtons.appendChild(replyCancelBtn);
+
+        replyForm.appendChild(replyActionButtons);
+        replyBox.appendChild(replyForm);
+        replyOverlay.appendChild(replyBox);
+        document.body.appendChild(replyOverlay);
+
+        replyBtn.addEventListener("click", () => {
+            replyTextarea.value = "";
+            replyOverlay.style.display = "flex";
+        });
+
+        replyCloseBtn.addEventListener("click", () => {
+            replyOverlay.style.display = "none";
+        });
+
+        replyOverlay.addEventListener("click", (event) => {
+            if (event.target === replyOverlay) {
+                replyOverlay.style.display = "none";
+            }
+        });
+
+        replyForm.addEventListener("submit", async (event) => {
+            event.preventDefault();
+
+            const formData = new FormData(replyForm);
+            formData.set("text", replyTextarea.value);
+            formData.set("parent_response_id", response.id);
+
+            const replyResponse = await fetch(`/tickets/${ticketId}/responses`, {
+                method: "POST",
+                body: formData,
+                credentials: "include"
+            });
+
+            if (replyResponse.ok) {
+                replyOverlay.style.display = "none";
+                window.location.reload();
+            } else if (replyResponse.status === 403) {
+                replyOverlay.style.display = "none";
+                window.location.href = "/forbidden";
+            } else {
+                const errorText = await replyResponse.text();
+                alert("خطا در ثبت پاسخ: " + errorText);
+            }
+        });
 
         const editToggleBtn = document.createElement("button");
         editToggleBtn.type = "button";
