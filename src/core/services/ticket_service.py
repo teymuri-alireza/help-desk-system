@@ -1,6 +1,7 @@
 import logging
 from src.core.storage import StorageEngine
 from src.database.tables import Ticket, User
+from src.ai.classifier import AIClassifier
 
 core_logger = logging.getLogger("core")
 
@@ -10,14 +11,16 @@ class TicketService:
     Service for managing ticket operations.
     """
 
-    def __init__(self, storage: StorageEngine) -> None:
+    def __init__(self, storage: StorageEngine, ai_classifier: AIClassifier) -> None:
         """
         Initialize TicketService with a storage engine.
 
         Args:
             storage: The StorageEngine instance for database operations.
+            ai_classifier: The AIClassifier instance for auto-classifing tickets, using AI.
         """
         self.storage = storage
+        self.ai_classifier = ai_classifier
 
     def new_ticket(self, ticket: Ticket) -> None:
         """
@@ -26,7 +29,13 @@ class TicketService:
         Args:
             ticket: The Ticket object to be created.
         """
-        self.storage.insert_ticket(ticket)
+        try:
+            department_id, category_id = self.ai_classifier.classify(ticket=ticket.description)
+            ticket.department_id = department_id
+            ticket.category_id = category_id
+            self.storage.insert_ticket(ticket)
+        except ValueError:
+            raise
 
     def list_tickets(self, creator_id: int | None = None, assigned_to: int | None = None, limit: int | None= None) -> list[Ticket]:
         """

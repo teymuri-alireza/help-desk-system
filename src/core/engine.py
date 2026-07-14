@@ -33,7 +33,7 @@ class HelpDeskCore:
 
         self.admin_api = AdminService(storage=self.storage)
         self.authentication_api = AuthenticationService(storage=self.storage)
-        self.ticket_api = TicketService(storage=self.storage)
+        self.ticket_api = TicketService(storage=self.storage, ai_classifier=self.ai_engine.ai_classifier)
         self.response_api = ResponseService(storage=self.storage)
         self.attachment_api = AttachmentService(storage=self.storage)
         self.notification_api = NotificationService(storage=self.storage)
