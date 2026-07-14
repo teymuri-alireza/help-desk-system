@@ -69,6 +69,48 @@ class TicketPriority(Enum):
         }[self]
 
 
+class CategorySchema(Enum):
+    USER_ACCOUNT = "User Account"
+    NETWORK = "Network"
+    HARDWARE = "Hardware"
+    SOFTWARE = "Software"
+    UNIVERSITY_SYSTEMS = "University Systems"
+    E_MAIL_ADDRESS = "E Mail Address"
+    ACCESS_CONTROL = "Access Control"
+    INFORMATION_SECURITY = "Information Security"
+
+    @property
+    def fa(self):
+        return {
+            self.USER_ACCOUNT: "حساب کاربری",
+            self.NETWORK: "شبکه و اینترنت",
+            self.HARDWARE: "سخت‌افزار",
+            self.SOFTWARE: "نرم‌افزار",
+            self.UNIVERSITY_SYSTEMS: "سامانه‌های دانشگاهی",
+            self.E_MAIL_ADDRESS: "پست الکترونیکی",
+            self.ACCESS_CONTROL: "دسترسی‌ها",
+            self.INFORMATION_SECURITY: "امنیت اطلاعات",
+        }[self]
+
+
+class DepartmentSchema(Enum):
+    USERS_SUPPORT = "Users Support"
+    NETWORK = "Network"
+    UNIVERSITY_SYSTEMS = "University Systems"
+    INFORMATION_SECURITY = "Information Security"
+    INFORMATION_TECHNOLOGY = "Information technology"
+
+    @property
+    def fa(self):
+        return {
+            self.USERS_SUPPORT: "پشتیبانی کاربران",
+            self.NETWORK: "شبکه و اینترنت",
+            self.UNIVERSITY_SYSTEMS: "سامانه‌های دانشگاهی",
+            self.INFORMATION_SECURITY: "امنیت اطلاعات",
+            self.INFORMATION_TECHNOLOGY: "فناوری اطلاعات",
+        }[self]
+
+
 class User(Base):
     __tablename__ = "users"
 
