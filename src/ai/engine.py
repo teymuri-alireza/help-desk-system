@@ -1,0 +1,13 @@
+from src.ai.classifier import AIClassifier
+
+
+class AIEngine:
+    """
+    Engine for the AI operations.
+    """
+
+    def __init__(self) -> None:
+        """
+        Initialize the AIEngine.
+        """
+        self.ai_classifier = AIClassifier()
