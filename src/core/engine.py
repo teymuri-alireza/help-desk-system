@@ -26,6 +26,7 @@ class HelpDeskCore:
         self.session_factory = self.database_engine.get_session_factory()
 
         self.storage = StorageEngine(self.session_factory)
+        self.storage.initialize_default_departments_and_categories()
 
         self.admin_api = AdminService(storage=self.storage)
         self.authentication_api = AuthenticationService(storage=self.storage)
