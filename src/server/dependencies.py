@@ -1,5 +1,6 @@
 from jose import jwt
 from fastapi import Request
+from fastapi.responses import Response
 from fastapi.exceptions import HTTPException
 from pathlib import Path
 from datetime import datetime, timedelta, timezone
@@ -78,6 +79,33 @@ def create_access_token(data: dict):
         SECRET_KEY,
         algorithm=ALGORITHM
     )
+
+
+def set_access_cookie(response: Response, token: str) -> None:
+    """
+    Set the access token cookie for the response.
+
+    Args:
+        response: The Response object to attach the cookie to.
+        token: The JWT access token value to store in the cookie.
+    """
+
+    response.set_cookie(
+        key="access_token",
+        value=token,
+        httponly=True,
+        samesite="lax",
+    )
+
+
+def clear_access_cookie(response: Response) -> None:
+    """
+    Remove the access token cookie from the response.
+
+    Args:
+        response: The Response object to clear the cookie from.
+    """
+    response.delete_cookie("access_token")
 
 
 def get_current_user(request: Request):
