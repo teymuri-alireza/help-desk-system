@@ -1,7 +1,7 @@
 import logging
 from sqlalchemy import func
 from sqlalchemy.orm import Session, sessionmaker
-from src.database.tables import User, Ticket, Response, Attachment, Notification, TicketStatus, Category, Department, Role, UserStatus
+from src.database.tables import User, Ticket, Response, Attachment, Notification, TicketStatus, Category, Department, Role, UserStatus, DepartmentSchema, CategorySchema
 from sqlalchemy.orm import joinedload
 
 core_logger = logging.getLogger("core")
@@ -23,6 +23,32 @@ class StorageEngine:
             session_factory: A SQLAlchemy sessionmaker instance used to create database sessions.
         """
         self.session_factory = session_factory
+
+    def initialize_default_departments_and_categories(self) -> None:
+        """
+        Initialize default departments and categories in the database if they don't exist.
+
+        This method populates the database with predefined departments and categories
+        from DepartmentSchema and CategorySchema. It only adds them if the database
+        is empty (no existing departments or categories).
+
+        The method performs the following operations:
+        - Checks if departments exist; if not, adds all departments from DepartmentSchema
+        - Checks if categories exist; if not, adds all categories from CategorySchema
+        """
+        if not self.list_ticket_departments():
+            with self.session_factory() as session:
+                departmets = [d.fa for d in DepartmentSchema]
+                for name in departmets:
+                    session.add(Department(name=name))
+                session.commit()
+
+        if not self.list_ticket_categories():
+            with self.session_factory() as session:
+                categories = [c.fa for c in CategorySchema]
+                for name in categories:
+                    session.add(Category(name=name))
+                session.commit()
 
     def insert_user(self, user: User) -> None:
         """
