@@ -5,7 +5,8 @@ os.environ["HF_HUB_OFFLINE"] = "1" # Force the model to load offline
 from logging import getLogger
 from sentence_transformers import SentenceTransformer
 from sentence_transformers.util import cos_sim
-from src.database.tables import DepartmentSchema, CategorySchema
+from src.database.tables import CategorySchema
+from src.ai.models import DEPARTMENT_INFO
 
 core_logger = getLogger("core")
 
@@ -21,11 +22,11 @@ class AIClassifier:
     def __init__(self):
         """
         Initialize the classifier by loading the multilingual model and encoding
-        all departments and categories into embeddings.
+        all departments and categories with examples, into embeddings.
         """
         self.model = SentenceTransformer("sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2")
 
-        self.departments = [d.value for d in DepartmentSchema]
+        self.departments = [info.description for info in DEPARTMENT_INFO.values()]
         self.department_embeddings = self.model.encode(self.departments, convert_to_tensor=True)
 
         self.categories = [c.value for c in CategorySchema]
