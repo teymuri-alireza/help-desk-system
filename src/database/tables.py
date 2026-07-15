@@ -97,8 +97,8 @@ class DepartmentSchema(Enum):
     USERS_SUPPORT = "Users Support"
     NETWORK = "Network"
     UNIVERSITY_SYSTEMS = "University Systems"
+    TECHNICAL_SERVICES = "Technical Services"
     INFORMATION_SECURITY = "Information Security"
-    INFORMATION_TECHNOLOGY = "Information technology"
 
     @property
     def fa(self):
@@ -106,8 +106,8 @@ class DepartmentSchema(Enum):
             self.USERS_SUPPORT: "پشتیبانی کاربران",
             self.NETWORK: "شبکه و اینترنت",
             self.UNIVERSITY_SYSTEMS: "سامانه‌های دانشگاهی",
+            self.TECHNICAL_SERVICES: "خدمات فنی",
             self.INFORMATION_SECURITY: "امنیت اطلاعات",
-            self.INFORMATION_TECHNOLOGY: "فناوری اطلاعات",
         }[self]
 
 
