@@ -75,7 +75,7 @@ class CategorySchema(Enum):
     HARDWARE = "Hardware"
     SOFTWARE = "Software"
     UNIVERSITY_SYSTEMS = "University Systems"
-    E_MAIL_ADDRESS = "E Mail Address"
+    EMAIL_SERVICE = "E Mail Address"
     ACCESS_CONTROL = "Access Control"
     INFORMATION_SECURITY = "Information Security"
 
@@ -87,7 +87,7 @@ class CategorySchema(Enum):
             self.HARDWARE: "سخت‌افزار",
             self.SOFTWARE: "نرم‌افزار",
             self.UNIVERSITY_SYSTEMS: "سامانه‌های دانشگاهی",
-            self.E_MAIL_ADDRESS: "پست الکترونیکی",
+            self.EMAIL_SERVICE: "پست الکترونیکی",
             self.ACCESS_CONTROL: "دسترسی‌ها",
             self.INFORMATION_SECURITY: "امنیت اطلاعات",
         }[self]

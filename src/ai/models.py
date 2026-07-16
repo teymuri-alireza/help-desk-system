@@ -153,7 +153,7 @@ CATEGORY_INFO = {
         )
     ),
 
-    CategorySchema.E_MAIL_ADDRESS: SchemaInfo(
+    CategorySchema.EMAIL_SERVICE: SchemaInfo(
         description=(
             "ایمیل. مشکلات مربوط به ایمیل دانشگاهی و ارسال یا دریافت پیام‌ها. "
             "نمونه درخواست‌ها:"
