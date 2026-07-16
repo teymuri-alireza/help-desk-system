@@ -39,7 +39,7 @@
             <section class="auth-card" id="login-section">
                 <h2>ورود به سامانه</h2>
 
-                <form action="/auth/login" method="POST">
+                <form id="login-form">
 
                     <p style="justify-self: center;" class="alert alert-warning">
                         به علت آزمایشی بودن این سامانه فرم ورود ساده سازی شده است.
@@ -49,11 +49,11 @@
                         <label for="login-username">نام کاربری (شماره دانشجویی یا شماره کارمندی)</label>
                         <input type="text" id="login-username" name="username" required placeholder="نام کاربری خود را وارد کنید">
 
-                        {% if login_error %}
-                            <p style="justify-self: center;" class="alert alert-danger">
-                                {{ login_error }}
-                            </p>
-                        {% endif %}
+                        <p
+                             id="login-error"
+                             class="alert alert-danger"
+                             style="display:none;"
+                        ></p>
 
                     </div>
 
@@ -68,13 +68,13 @@
             <section class="auth-card" id="signup-section">
                 <h2>ثبت نام دانشجو</h2>
 
-                {% if signup_error %}
-                    <p style="justify-self: center;" class="alert alert-danger">
-                        {{ signup_error }}
-                    </p>
-                {% endif %}
+                <p
+                    id="signup-error"
+                    class="alert alert-danger"
+                    style="display:none;"
+                ></p>
 
-                <form action="/auth/signup" method="POST">
+                <form id="signup-form">
 
                     <div class="form-group">
                         <label for="fullname">نام و نام خانوادگی</label>
@@ -101,6 +101,6 @@
         </div>
 
     </main>
-
+<script src="{{ url_for('static', path='js/auth.js') }}"></script>
 </body>
 </html>
