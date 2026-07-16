@@ -5,8 +5,7 @@ os.environ["HF_HUB_OFFLINE"] = "1" # Force the model to load offline
 from logging import getLogger
 from sentence_transformers import SentenceTransformer
 from sentence_transformers.util import cos_sim
-from src.database.tables import CategorySchema
-from src.ai.models import DEPARTMENT_INFO
+from src.ai.models import DEPARTMENT_INFO, CATEGORY_INFO
 
 core_logger = getLogger("core")
 
@@ -29,7 +28,7 @@ class AIClassifier:
         self.departments = [info.description for info in DEPARTMENT_INFO.values()]
         self.department_embeddings = self.model.encode(self.departments, convert_to_tensor=True)
 
-        self.categories = [c.value for c in CategorySchema]
+        self.categories = [info.description for info in CATEGORY_INFO.values()]
         self.category_embeddings = self.model.encode(self.categories, convert_to_tensor=True)
 
     def classify(self, ticket: str) -> tuple[int, int]:
