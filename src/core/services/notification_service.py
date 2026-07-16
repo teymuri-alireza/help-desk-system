@@ -59,3 +59,15 @@ class NotificationService:
             List of notifications.
         """
         return self.storage.list_notifications(receiver_id=receiver_id, unread=unread)
+
+    def find_notification(self, notification_id: int) -> Notification | None:
+        """
+        Find a notification by ID.
+
+        Args:
+            notification_id: The notification ID to search for.
+
+        Returns:
+            Notification|None: Notification object if found, otherwise None.
+        """
+        return self.storage.find_notification(notification_id=notification_id)
