@@ -13,7 +13,8 @@ from src.server.routes.tickets import router as tickets_router
 from src.server.routes.responses import router as responses_router
 from src.server.routes.dashboard import router as dashboard_router
 from src.server.routes.users import router as users_router
-from src.server.routes.notifications import router as notifications_router
+from src.server.routes.page.notifications import router as page_notifications_router
+from src.server.routes.api.notifications import router as api_notifications_router
 from src.server.routes.contents import router as contents_router
 from src.server.dependencies import get_static_path, set_helpdesk, get_helpdesk, get_current_user
 from src.core.engine import HelpDeskCore
@@ -99,7 +100,8 @@ app.include_router(tickets_router)
 app.include_router(responses_router)
 app.include_router(dashboard_router)
 app.include_router(users_router)
-app.include_router(notifications_router)
+app.include_router(page_notifications_router)
+app.include_router(api_notifications_router)
 app.include_router(contents_router)
 
 @app.exception_handler(403)
