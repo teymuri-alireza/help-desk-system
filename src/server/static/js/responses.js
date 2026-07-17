@@ -138,7 +138,7 @@ function createResponseElement(response, currentUserId, ticketId) {
             formData.set("text", replyTextarea.value);
             formData.set("parent_response_id", response.id);
 
-            const replyResponse = await fetch(`/tickets/${ticketId}/responses`, {
+            const replyResponse = await fetch(`/api/tickets/${ticketId}/responses`, {
                 method: "POST",
                 body: formData,
                 credentials: "include"
@@ -146,15 +146,31 @@ function createResponseElement(response, currentUserId, ticketId) {
 
             if (replyResponse.ok) {
                 replyOverlay.style.display = "none";
-                window.location.reload();
-            } else if (replyResponse.status === 403) {
-                replyOverlay.style.display = "none";
-                window.location.href = "/forbidden";
-            } else {
-                const errorText = await replyResponse.text();
-                alert("خطا در ثبت پاسخ: " + errorText);
+                window.location.href = `/tickets/${ticketId}`;
+                return;
             }
-        });
+
+replyOverlay.style.display = "none";
+
+switch (replyResponse.status) {
+
+    case 401:
+        alert("ابتدا وارد حساب کاربری شوید.");
+        break;
+
+    case 403:
+        window.location.href = "/forbidden";
+        break;
+
+    case 409:
+        alert("امکان ثبت پاسخ برای تیکت بسته یا حل‌شده وجود ندارد.");
+        break;
+
+    default:
+        alert("خطایی در ثبت پاسخ رخ داد.");
+            }
+        
+    });
 
         const editToggleBtn = document.createElement("button");
         editToggleBtn.type = "button";
@@ -240,24 +256,43 @@ function createResponseElement(response, currentUserId, ticketId) {
             const formData = new FormData();
             formData.append("text", textarea.value);
 
-            const responsePatch = await fetch(`/tickets/${ticketId}/responses/${response.id}`, {
+            const responsePatch = await fetch(`/api/tickets/${ticketId}/responses/${response.id}`, {
                 method: "PATCH",
                 body: formData,
                 credentials: "include"
             });
 
             if (responsePatch.ok) {
-                modalOverlay.style.display = "none";
-                localStorage.setItem('edit_response_ok', 'successful');
-                window.location.reload();
-            } else if (responsePatch.status === 403) {
-                modalOverlay.style.display = "none";
-                window.location.href = "/forbidden";
-            } else {
-                localStorage.setItem('edit_response_unavailable', 'error');
-                const errorText = await responsePatch.text();
-                alert("خطا در ویرایش پاسخ: " + errorText);
-            }
+    modalOverlay.style.display = "none";
+    localStorage.setItem("edit_response_ok", "successful");
+    window.location.href = `/tickets/${ticketId}`;
+    return;
+}
+
+modalOverlay.style.display = "none";
+
+switch (responsePatch.status) {
+
+    case 401:
+        alert("ابتدا وارد حساب کاربری شوید.");
+        break;
+
+    case 403:
+        window.location.href = "/forbidden";
+        break;
+
+    case 404:
+        alert("پاسخ موردنظر یافت نشد.");
+        break;
+
+    case 409:
+        localStorage.setItem("edit_response_unavailable", "error");
+        alert("امکان ویرایش پاسخ وجود ندارد، زیرا تیکت بسته یا حل شده است.");
+        break;
+
+    default:
+        alert("خطایی در ویرایش پاسخ رخ داد.");
+}
         });
     }
 
@@ -300,7 +335,7 @@ async function loadResponses() {
         return;
     }
 
-    const response = await fetch(`/tickets/${ticketID.dataset.ticket_id}/responses`);
+    const response = await fetch(`/api/tickets/${ticketID.dataset.ticket_id}/responses`);
     if (response.ok) {
         const data = await response.json();
         const responses = data.responses;
@@ -310,3 +345,75 @@ async function loadResponses() {
 }
 
 loadResponses();
+const responseForm = document.getElementById("new-response-form");
+
+if (responseForm) {
+
+    responseForm.addEventListener("submit", async (e) => {
+
+        e.preventDefault();
+
+        const ticketId =
+            document.getElementById("ticket-id").dataset.ticket_id;
+
+        const formData = new FormData(responseForm);
+
+        const errorBox =
+            document.getElementById("response-error");
+
+        errorBox.style.display = "none";
+
+        try {
+
+            const response = await fetch(
+                `/api/tickets/${ticketId}/responses`,
+                {
+                    method: "POST",
+                    body: formData,
+                    credentials: "include"
+                }
+            );
+
+            if (response.ok) {
+
+                window.location.href =
+                    `/tickets/${ticketId}`;
+
+                return;
+            }
+
+            switch (response.status) {
+
+                case 401:
+                    errorBox.textContent =
+                        "ابتدا وارد حساب کاربری شوید.";
+                    break;
+
+                case 403:
+                    window.location.href =
+                        "/forbidden";
+                    return;
+
+                case 409:
+                    errorBox.textContent =
+                        "امکان ثبت پاسخ برای تیکت بسته یا حل‌شده وجود ندارد.";
+                    break;
+
+                default:
+                    errorBox.textContent =
+                        "خطایی رخ داده است.";
+            }
+
+            errorBox.style.display = "block";
+
+        } catch {
+
+            errorBox.textContent =
+                "ارتباط با سرور برقرار نشد.";
+
+            errorBox.style.display = "block";
+        }
+
+    });
+
+}

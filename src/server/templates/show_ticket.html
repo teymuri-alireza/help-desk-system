@@ -165,7 +165,7 @@
             ویرایش پاسخ ممکن نیست. علت: تیکت بسته شده است
         </div>
 
-        <div id="response-flash-alert" class="alert alert-danger" style="display: none;">
+        <div id="reopen-ticket-flash-alert" class="alert alert-danger" style="display: none;">
             تیکت با موفقیت دوباره در وضعیت در حال بررسی قرار گرفت
         </div>
 
@@ -232,12 +232,18 @@
                     {% endif %}
 
                     {% if ticket.status == TicketStatus.IN_PROGRESS and user_role != "Student" or ticket.status == TicketStatus.WAITING_FOR_USER and user_role == "Student" %}
-                    <form action="/tickets/{{ ticket.id }}/responses" method="post" class="ticket-form">
+                    <form id="new-response-form" class="ticket-form">
 
                         <div class="form-group">
                             <label for="response">متن پاسخ:</label>
                             <textarea id="response" name="text" placeholder="متن پاسخ خود را وارد کنید..." required></textarea>
-                        </div>
+                        
+                        <p
+                            id="response-error"
+                            class="alert alert-danger"
+                            style="display:none;"
+                        ></p>
+                            </div>
 
                         <button type="submit" class="submit-btn btn-small">ارسال پاسخ</button>
                     </form>
