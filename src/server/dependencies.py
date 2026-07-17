@@ -130,3 +130,24 @@ def get_current_user(request: Request):
     user_username = payload["sub"]
 
     return user_username
+
+
+def get_current_user_optional(request: Request):
+    """
+    Extract and validate the current user from the request cookies.
+
+    Args:
+        request: The FastAPI Request object containing cookies.
+
+    Returns:
+        str|None: The username of the authenticated user, otherwise None.
+    """
+    token = request.cookies.get("access_token")
+
+    if not token:
+        return None
+
+    payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+    user_username = payload["sub"]
+
+    return user_username
