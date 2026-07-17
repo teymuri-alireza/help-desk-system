@@ -24,7 +24,7 @@
         </ul>
 
         <div class="auth-buttons">
-            <a href="/auth/logout" class="btn register-btn">خروج</a>
+            <a id="logout-btn" class="btn register-btn" style="cursor: pointer;">خروج</a>
         </div>
     </nav>
 </header>
@@ -47,5 +47,6 @@
 
 {% block js %}{% endblock %}
 
+<script src="{{ url_for('static', path='js/logout.js') }}"></script>
 </body>
 </html>
