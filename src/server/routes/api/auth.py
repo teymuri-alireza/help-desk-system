@@ -1,7 +1,7 @@
-from fastapi import APIRouter, Form, HTTPException, status
+from fastapi import APIRouter, Form, HTTPException, status, Request
 from fastapi.responses import JSONResponse
 from src.database.tables import Notification, Role, User
-from src.server.dependencies import create_access_token, set_access_cookie, clear_access_cookie, get_helpdesk
+from src.server.dependencies import create_access_token, set_access_cookie, clear_access_cookie, get_current_user, get_helpdesk
 
 router = APIRouter(prefix="/api/auth", tags=["auth"])
 
@@ -83,3 +83,24 @@ def logout():
     clear_access_cookie(response)
 
     return response
+
+
+@router.get("/me", description="Retrieve user's information.")
+def logout(request: Request):
+    user = get_current_user(request)
+
+    helpdesk = get_helpdesk()
+
+    current_user = helpdesk.admin_api.find_user_by_username(user)
+
+    if current_user is None:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
+    
+    return JSONResponse(
+        content={
+            "user_id": current_user.id,
+            "user_username": current_user.username,
+            "user_role": current_user.role.value,
+        },
+        status_code=status.HTTP_200_OK,
+    )
