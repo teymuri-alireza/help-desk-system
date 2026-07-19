@@ -36,7 +36,16 @@ def list_tickets(request: Request):
 
         return JSONResponse(
             content={
-                "tickets_list": tickets_list,
+                "tickets_list": [{
+                    "id": t.id,
+                    "title": t.title,
+                    "status_name": t.status.name,
+                    "status_fa": t.status.fa,
+                    "description": t.description,
+                    "created_at": t.created_at.isoformat(),
+                    "creator_username": t.creator.username,
+                    "creator_id": t.creator_id,
+                } for t in tickets_list]
             },
             status_code=status.HTTP_200_OK
         )
