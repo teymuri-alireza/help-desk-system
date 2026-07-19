@@ -4,13 +4,10 @@ import logging
 from pathlib import Path as FilePath
 from fastapi import APIRouter, Request, Form, status, UploadFile, Path, HTTPException
 from fastapi.responses import JSONResponse
-from fastapi.templating import Jinja2Templates
-from src.server.dependencies import get_static_path, get_helpdesk, get_current_user
+from src.server.dependencies import get_helpdesk, get_current_user
 from src.database.tables import Ticket, Attachment, Notification, Role, TicketStatus, TicketPriority
 
 core_logger = logging.getLogger("core")
-TEMPLATES_DIR = get_static_path()[0]
-templates = Jinja2Templates(directory=TEMPLATES_DIR)
 
 CONTENTS_DIR = FilePath(__file__).parent.parent / "contents"
 UPLOAD_DIR = CONTENTS_DIR / "upload"
