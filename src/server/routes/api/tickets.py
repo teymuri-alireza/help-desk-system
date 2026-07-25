@@ -93,13 +93,56 @@ def show_ticket(request: Request, ticket_id: int = Path(...)):
 
         return JSONResponse(
             content={
-                "ticket": found_ticket,
-                "attachment": found_attachment,
-                "TicketStatus":TicketStatus,
-                "TicketPriority":TicketPriority,
-                "it_experts": it_experts,
-                "categories": categories,
-                "departments": departments,
+                "ticket": {
+                    "id": found_ticket.id,
+                    "title": found_ticket.title,
+                    "description": found_ticket.description,
+                    "status_name": found_ticket.status.name,
+                    "status_fa": found_ticket.status.fa,
+                    "status_en": found_ticket.status.value,
+                    "priority_name": found_ticket.priority.name,
+                    "priority_fa": found_ticket.priority.fa,
+                    "priority_en": found_ticket.priority.value,
+                    "created_at": found_ticket.created_at.isoformat(),
+                    "category_name": found_ticket.category.name,
+                    "department_name": found_ticket.department.name,
+                    "creator_id": found_ticket.creator_id,
+                    "assigned_to": found_ticket.assigned_to,
+                    "satisfaction_rating": found_ticket.satisfaction_rating,
+                },
+                "attachment": found_attachment.file_name if found_attachment is not None else None,
+                "TicketStatus": [
+                    {
+                        "name": s.name,
+                        "fa": s.fa,
+                        "en": s.value
+                    } for s in TicketStatus
+                ],
+                "TicketPriority": [
+                    {
+                        "name": p.name,
+                        "fa": p.fa,
+                        "en": p.value
+                    } for p in TicketPriority
+                ],
+                "it_experts": [
+                    {
+                        "id": it.id,
+                        "name": it.name,
+                    } for it in it_experts
+                ],
+                "categories": [
+                    {
+                        "id": c.id,
+                        "name": c.name,
+                    } for c in categories
+                ],
+                "departments": [
+                    {
+                        "id": d.id,
+                        "name": d.name,
+                    } for d in departments
+                ],
             },
             status_code=status.HTTP_200_OK
         )
