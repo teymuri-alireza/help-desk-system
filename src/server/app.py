@@ -12,7 +12,8 @@ from src.server.routes.api.auth import router as api_auth_router
 from src.server.routes.page.tickets import router as page_tickets_router
 from src.server.routes.api.tickets import router as api_tickets_router
 from src.server.routes.api.responses import router as api_responses_router
-from src.server.routes.dashboard import router as dashboard_router
+from src.server.routes.page.dashboard import router as page_dashboard_router
+from src.server.routes.api.dashboard import router as api_dashboard_router
 from src.server.routes.page.users import router as page_users_router
 from src.server.routes.api.users import router as api_users_router
 from src.server.routes.page.notifications import router as page_notifications_router
@@ -101,7 +102,8 @@ app.include_router(api_auth_router)
 app.include_router(page_tickets_router)
 app.include_router(api_tickets_router)
 app.include_router(api_responses_router)
-app.include_router(dashboard_router)
+app.include_router(page_dashboard_router)
+app.include_router(api_dashboard_router)
 app.include_router(page_users_router)
 app.include_router(api_users_router)
 app.include_router(page_notifications_router)
