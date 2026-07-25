@@ -9,31 +9,26 @@
 {% block aside %}
     <nav class="sidebar-nav">
         <a class="nav-tab" style="text-decoration: none;" href="/dashboard" data-tab="overview">داشبورد</a>
-        {% if user_role == "System Admin" %}
-            <a class="nav-tab active" style="text-decoration: none;" href="/users" data-tab="users">تمامی کاربران</a>
-        {% elif user_role == "IT Manager" %}
-            <a class="nav-tab" style="text-decoration: none;" href="/users" data-tab="users">تمامی کارشناسان</a>
-        {% endif %}
-        <a class="nav-tab" style="text-decoration: none;" href="/tickets" data-tab="tickets">تمامی تیکت‌ها</a>
+        <a class="nav-tab active" style="text-decoration: none; display: none;" href="/users" data-tab="users" data-role="System Admin" id="nav-users-admin">تمامی کاربران</a>
+        <a class="nav-tab active" style="text-decoration: none; display: none;" href="/users" data-tab="users" data-role="IT Manager" id="nav-users-manager">تمامی کارشناسان</a>
+        <a class="nav-tab" style="text-decoration: none;" href="/tickets" data-tab="tickets" id="nav-tickets">تمامی تیکت‌ها</a>
         <a class="nav-tab" style="text-decoration: none;" href="/notifications/all" data-tab="tickets">تمامی اعلان‌ها</a>
-        {% if user_role == "System Admin" %}
-            <a class="nav-tab" style="text-decoration: none;" href="/dashboard/stats" data-tab="stats">آمار‌های سامانه</a>
-        {% endif %}
+        <a class="nav-tab" style="text-decoration: none; display: none;" href="/dashboard/stats" data-tab="stats" data-role="System Admin,IT Manager" id="nav-stats">آمار‌های سامانه</a>
     </nav>
 {% endblock %}
 
 {% block content %}
     <section class="page-title">
-        <h2>تمامی کاربران سامانه</h2>
-        <p>مشاهده و مدیریت تمامی کاربران سامانه</p>
+        <h1 id="users-page-title">تمامی کاربران سامانه</h1>
+        <p id="users-page-subtitle">مشاهده و مدیریت تمامی کاربران سامانه</p>
     </section>
 
     <section class="card">
         <div class="table-wrapper">
             <h2>جستجو کاربران</h2>
             <div class="search-bar-wrapper">
-                <input 
-                    type="text" id="user-search" class="search-bar" 
+                <input
+                    type="text" id="user-search" class="search-bar"
                     placeholder="جستجو بر اساس شناسه، نام کاربری، نقش، وضعیت...">
             </div>
             <br />
@@ -47,38 +42,15 @@
                         <th>نقش</th>
                         <th>وضعیت حساب</th>
                         <th>دپارتمان کارشناس</th>
-                        {% if user_role == "System Admin" %}
-                            <th>مدیریت کاربر</th>
-                        {% endif %}
+                        <th id="manage-col-header" style="display: none;">مدیریت کاربر</th>
                     </tr>
                 </thead>
-                <tbody class="user-container">
-                {% for user in users_list %}
-                    <tr class="user-items">
-                        <td class="user-id">{{ user.id }}</td>
-                        <td class="user-username">{{ user.username }}</td>
-                        <td>{{ user.name }}</td>
-                        <td>{{ user.email }}</td>
-                        <td class="user-role">{{ user.role.fa }}</td>
-                        <td class="user-status">{{ user.status.fa }}</td>
-
-                        {% if user.role.value == "IT Expert" %}
-                        <td class="user-department">{{ user.department.name }}</td>
-                        {% else %}
-                        <td class="user-department">-</td>
-                        {% endif %}
-
-                        {% if user_role == "System Admin" %}
-                        <td>
-                            <div class="auth-buttons">
-                                <a href="/users/{{ user.id }}" class="btn submit-btn show-ticket" style="max-width: 100%;">مدیریت کاربر</a>
-                            </div>
-                        </td>
-                        {% endif %}
-                    </tr>
-                {% endfor %}
-                </tbody>
+                <tbody class="user-container" id="user-container"></tbody>
             </table>
+
+            <div class="empty-state" id="users-loading">
+                <p>در حال بارگذاری...</p>
+            </div>
         </div>
         <div class="search-empty-state"></div>
     </section>
@@ -86,5 +58,6 @@
 
 {% block js %}
     <script src="{{ url_for('static', path='js/notification.js') }}"></script>
+    <script src="{{ url_for('static', path='js/users_list.js') }}"></script>
     <script src="{{ url_for('static', path='js/user_search.js') }}"></script>
 {% endblock%}
