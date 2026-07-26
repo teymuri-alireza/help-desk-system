@@ -46,7 +46,7 @@ class TicketService:
             ticket: The Ticket object to be created.
         """
         try:
-            ticket.priority = self.ai_priority_predictor.predict(title=ticket.title, description=ticket.description)
+            ticket.priority = self.ai_priority_predictor.predict(title=ticket.title, description=ticket.description).priority
             department_id, category_id = self.ai_classifier.classify(ticket=ticket.description)
             ticket.department_id = department_id
             ticket.category_id = category_id
@@ -103,7 +103,7 @@ class TicketService:
                 new_ticket.priority = self.ai_priority_predictor.predict(
                     title=new_ticket.title,
                     description=new_ticket.description,
-                )
+                ).priority
 
         self.storage.update_ticket(new_ticket=new_ticket, old_ticket_id=old_ticket_id)
 
