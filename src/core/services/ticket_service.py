@@ -1,7 +1,9 @@
 import logging
+from src.core.services.response_sesrvice import ResponseService
 from src.core.storage import StorageEngine
 from src.database.tables import Ticket, User
 from src.ai.classifier import AIClassifier
+from src.ai.suggester import AISuggester
 
 core_logger = logging.getLogger("core")
 
@@ -11,16 +13,26 @@ class TicketService:
     Service for managing ticket operations.
     """
 
-    def __init__(self, storage: StorageEngine, ai_classifier: AIClassifier) -> None:
+    def __init__(
+            self,
+            storage: StorageEngine,
+            response_api: ResponseService,
+            ai_classifier: AIClassifier,
+            ai_suggester: AISuggester
+        ) -> None:
         """
         Initialize TicketService with a storage engine.
 
         Args:
             storage: The StorageEngine instance for database operations.
-            ai_classifier: The AIClassifier instance for auto-classifing tickets, using AI.
+            response_api: The ResponseService instance for managing ticket responses.
+            ai_classifier: The AIClassifier instance for auto-classifying tickets, using AI.
+            ai_suggester: The AISuggester instance for suggesting responses to tickets, using AI.
         """
         self.storage = storage
+        self.response_api = response_api
         self.ai_classifier = ai_classifier
+        self.ai_suggester = ai_suggester
 
     def new_ticket(self, ticket: Ticket) -> None:
         """
@@ -33,7 +45,14 @@ class TicketService:
             department_id, category_id = self.ai_classifier.classify(ticket=ticket.description)
             ticket.department_id = department_id
             ticket.category_id = category_id
-            self.storage.insert_ticket(ticket)
+            new_ticket = self.storage.insert_ticket(ticket)
+
+            found_ticket = self.find_ticket(new_ticket.id)
+            suggested_response = self.ai_suggester.suggest(ticket=found_ticket)
+
+            if suggested_response is not None:
+                self.response_api.new_response(suggested_response)
+
         except ValueError:
             raise
 
