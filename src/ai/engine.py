@@ -1,4 +1,5 @@
 from src.ai.classifier import AIClassifier
+from src.ai.suggester import AISuggester
 
 
 class AIEngine:
@@ -11,3 +12,4 @@ class AIEngine:
         Initialize the AIEngine.
         """
         self.ai_classifier = AIClassifier()
+        self.ai_suggester = AISuggester()
