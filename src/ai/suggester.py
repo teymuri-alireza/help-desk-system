@@ -39,4 +39,5 @@ class AISuggester:
         ticket_embedding = self.model.encode(ticket.description, convert_to_tensor=True)
 
         response_score = cos_sim(ticket_embedding, response_embeddings)
+        # Creator ID is hardcoded to 1 for now, but it should be replaced with the actual creator ID in the future.
         return Response(ticket_id=ticket.id, text=responses[response_score.argmax().item()], creator_id=1)
