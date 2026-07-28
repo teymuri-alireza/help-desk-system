@@ -16,7 +16,7 @@
 
         <ul class="nav-links">
             <li><a href="/">صفحه اصلی</a></li>
-            <li><a href="/users/{{ user_id }}">پروفایل کاربر</a></li>
+            <li><a href="#" id="profile-link">پروفایل کاربر</a></li>
             <li class="notifications-dropdown">
                 <a href="/notifications/all" class="notifications-trigger">اعلان‌ها</a>
                 <div class="notifications-menu" id="notifications-menu"></div>
@@ -35,7 +35,7 @@
 
     <aside class="sidebar">
         <div class="sidebar-header">
-            <h3>داشبورد - کاربر {{ user_username }}</h3>
+            <h3>داشبورد - کاربر <span id="dashboard-username">...</span></h3>
         </div>
         {% block aside %}{% endblock %}
     </aside>
@@ -48,5 +48,45 @@
 {% block js %}{% endblock %}
 
 <script src="{{ url_for('static', path='js/logout.js') }}"></script>
+
+<script>
+    (function () {
+        const profileLink = document.getElementById("profile-link");
+        const dashboardUsername = document.getElementById("dashboard-username");
+
+        fetch("/api/auth/me", {
+            method: "GET",
+            credentials: "same-origin",
+        })
+            .then((response) => {
+                if (response.status === 401) {
+                    window.location.href = "/login";
+                    return null;
+                }
+
+                if (!response.ok) {
+                    throw new Error(`Unexpected response status: ${response.status}`);
+                }
+
+                return response.json();
+            })
+            .then((data) => {
+                if (!data) {
+                    return;
+                }
+
+                if (profileLink) {
+                    profileLink.href = `/users/${data.user_id}`;
+                }
+
+                if (dashboardUsername) {
+                    dashboardUsername.textContent = data.user_username;
+                }
+            })
+            .catch((error) => {
+                console.error("Failed to fetch user information:", error);
+            });
+    })();
+</script>
 </body>
 </html>
