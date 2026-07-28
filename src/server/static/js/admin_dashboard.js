@@ -2,11 +2,47 @@ document.addEventListener("DOMContentLoaded", () => {
     loadDashboard();
 });
 
+function applyNavForRole(role) {
+    if (role === "System Admin") {
+        const el = document.getElementById("nav-users-admin");
+        if (el) el.style.display = "";
+    } else if (role === "IT Manager") {
+        const el = document.getElementById("nav-users-manager");
+        if (el) el.style.display = "";
+    }
+
+    if (role === "System Admin" || role === "IT Manager") {
+        const stats = document.getElementById("nav-stats");
+        if (stats) stats.style.display = "";
+    }
+
+    const ticketsNav = document.getElementById("nav-tickets");
+    if (ticketsNav && role === "IT Expert") {
+        ticketsNav.textContent = "تمامی تیکت‌های کارشناس";
+    }
+}
+
 async function loadDashboard() {
     const loadingEl = document.getElementById("dashboard-loading");
     const contentEl = document.getElementById("dashboard-content");
 
     try {
+        let role = null;
+
+        try {
+            const meRes = await fetch("/api/auth/me");
+            if (!meRes.ok) {
+                window.location.href = "/auth";
+                return;
+            }
+            const me = await meRes.json();
+            role = me.user_role;
+            applyNavForRole(role);
+        } catch (err) {
+            window.location.href = "/auth";
+            return;
+        }
+
         const response = await fetch("/api/dashboard");
 
         if (response.status === 401) {
