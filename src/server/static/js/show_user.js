@@ -1,7 +1,21 @@
 document.addEventListener("DOMContentLoaded", () => {
     loadUserProfile();
     initEditFormHandler();
+    initToggleEditFormButton();
 });
+
+function initToggleEditFormButton() {
+    const toggleBtn = document.getElementById("toggleEditFormBtn");
+    const form = document.getElementById("editForm");
+
+    if (!toggleBtn || !form) return;
+
+    toggleBtn.addEventListener("click", () => {
+        const isHidden = form.style.display === "none";
+        form.style.display = isHidden ? "block" : "none";
+        toggleBtn.textContent = isHidden ? "بستن فرم" : "نمایش فرم";
+    });
+}
 
 function getUserIdFromPath() {
     const parts = window.location.pathname.split("/").filter(Boolean);
@@ -67,9 +81,11 @@ function applyCurrentUserRole(currentUserRole) {
     if (ticketsNavLink && currentUserRole === "IT Expert") {
         ticketsNavLink.textContent = "تمامی تیکت‌های کارشناس";
     }
-    if (ticketsNavLink && currentUserRole === "System Admin") {
-        document.getElementById("nav-users-admin").
-            style.display = "";
+    if (currentUserRole === "System Admin") {
+        const adminNavLink = document.getElementById("nav-users-admin");
+        if (adminNavLink) {
+            adminNavLink.style.display = "";
+        }
     }
 }
 
@@ -131,18 +147,35 @@ function setupEditForm(editSection, data, isSystemAdmin, userId) {
     document.getElementById("edit-name").value = user.name;
 
     const adminFields = document.getElementById("admin-only-fields");
+    const usernameInput = document.getElementById("edit-username");
+    const emailInput = document.getElementById("edit-email");
+    const roleSelect = document.getElementById("edit-role");
+    const statusSelect = document.getElementById("edit-status");
+    const departmentField = document.getElementById("department-field");
+    const departmentSelect = document.getElementById("edit-department");
 
     if (!isSystemAdmin) {
         adminFields.style.display = "none";
+        // A hidden field can't show its validation bubble, so the browser
+        // silently blocks submission if it's still marked required. Strip
+        // "required" from everything inside the hidden admin-only block.
+        usernameInput.removeAttribute("required");
+        emailInput.removeAttribute("required");
+        roleSelect.removeAttribute("required");
+        statusSelect.removeAttribute("required");
+        departmentSelect.removeAttribute("required");
         return;
     }
 
     adminFields.style.display = "";
+    usernameInput.setAttribute("required", "required");
+    emailInput.setAttribute("required", "required");
+    roleSelect.setAttribute("required", "required");
+    statusSelect.setAttribute("required", "required");
 
-    document.getElementById("edit-username").value = user.username;
-    document.getElementById("edit-email").value = user.email;
+    usernameInput.value = user.username;
+    emailInput.value = user.email;
 
-    const roleSelect = document.getElementById("edit-role");
     roleSelect.innerHTML = "";
     roles.forEach((r) => {
         const option = document.createElement("option");
@@ -154,7 +187,6 @@ function setupEditForm(editSection, data, isSystemAdmin, userId) {
         roleSelect.appendChild(option);
     });
 
-    const statusSelect = document.getElementById("edit-status");
     statusSelect.innerHTML = "";
     status.forEach((s) => {
         const option = document.createElement("option");
@@ -166,23 +198,31 @@ function setupEditForm(editSection, data, isSystemAdmin, userId) {
         statusSelect.appendChild(option);
     });
 
-    if (user.role_en === "IT Expert") {
-        const departmentField = document.getElementById("department-field");
-        departmentField.style.display = "";
+    departmentSelect.innerHTML = '<option value="">-- دپارتمان را انتخاب کنید --</option>';
+    departments.forEach((d) => {
+        const option = document.createElement("option");
+        option.value = d.id;
+        option.textContent = d.name;
+        if (user.department_id !== null && String(d.id) === String(user.department_id)) {
+            option.selected = true;
+        }
+        departmentSelect.appendChild(option);
+    });
 
-        const departmentSelect = document.getElementById("edit-department");
-        departmentSelect.innerHTML = '<option value="">-- دپارتمان را انتخاب کنید --</option>';
-
-        departments.forEach((d) => {
-            const option = document.createElement("option");
-            option.value = d.id;
-            option.textContent = d.name;
-            if (user.department_id !== null && String(d.id) === String(user.department_id)) {
-                option.selected = true;
-            }
-            departmentSelect.appendChild(option);
-        });
+    // Keep the department field (and its required-ness) in sync if the
+    // admin changes the role mid-edit, not just on initial load.
+    function toggleDepartmentField() {
+        const isExpert = roleSelect.value === "IT_EXPERT";
+        departmentField.style.display = isExpert ? "" : "none";
+        if (isExpert) {
+            departmentSelect.setAttribute("required", "required");
+        } else {
+            departmentSelect.removeAttribute("required");
+        }
     }
+
+    roleSelect.addEventListener("change", toggleDepartmentField);
+    toggleDepartmentField();
 }
 
 function initEditFormHandler() {
@@ -222,7 +262,7 @@ async function handleDelete(userId) {
     }
 
     try {
-        const response = await fetch(`/users/${userId}`, {
+        const response = await fetch(`/api/users/${userId}`, {
             method: "DELETE"
         });
 

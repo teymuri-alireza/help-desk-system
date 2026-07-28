@@ -56,7 +56,7 @@
     <section class="card" id="edit-user-section" style="display: none;">
         <div class="section-header">
             <h2>ویرایش اطلاعات کاربر</h2>
-            <button class="toggle-form-btn submit-btn btn-small" id="toggleFormBtn" type="button">نمایش فرم</button>
+            <button class="toggle-form-btn submit-btn btn-small" id="toggleEditFormBtn" type="button">نمایش فرم</button>
         </div>
         <form class="ticket-form" id="editForm" method="post" style="display: none; font-size: 1.5em;">
 
@@ -101,7 +101,6 @@
 {% endblock %}
 
 {% block js %}
-    <script src="{{ url_for('static', path='js/toggle_btn.js') }}"></script>
     <script src="{{ url_for('static', path='js/notification.js') }}"></script>
     <script src="{{ url_for('static', path='js/show_user.js') }}"></script>
 {% endblock%}
