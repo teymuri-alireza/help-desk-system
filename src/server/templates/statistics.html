@@ -9,101 +9,101 @@
 {% block aside %}
     <nav class="sidebar-nav">
         <a class="nav-tab" style="text-decoration: none;" href="/dashboard" data-tab="overview">داشبورد</a>
-        {% if user_role == "System Admin" %}
-            <a class="nav-tab" style="text-decoration: none;" href="/users" data-tab="users">تمامی کاربران</a>
-        {% elif user_role == "IT Manager" %}
-            <a class="nav-tab" style="text-decoration: none;" href="/users" data-tab="users">تمامی کارشناسان</a>
-        {% endif %}
+        <a class="nav-tab" style="text-decoration: none; display: none;" href="/users" data-tab="users" data-role="System Admin" id="nav-users-admin">تمامی کاربران</a>
+        <a class="nav-tab" style="text-decoration: none; display: none;" href="/users" data-tab="users" data-role="IT Manager" id="nav-users-manager">تمامی کارشناسان</a>
         <a class="nav-tab" style="text-decoration: none;" href="/tickets" data-tab="tickets">تمامی تیکت‌ها</a>
         <a class="nav-tab" style="text-decoration: none;" href="/notifications/all" data-tab="notifications">تمامی اعلان‌ها</a>
         <a class="nav-tab active" style="text-decoration: none;" data-tab="stats">آمار‌های سامانه</a>
 
         <!-- Divider -->
         <div style="padding-bottom:25px; border-bottom:1px solid rgba(255,255,255,.1); margin-bottom:20px;"></div>
-        <a class="nav-tab stats-active" style="text-decoration: none;" data-tab="stats" id="users-charts-btn">آمار کاربران</a>
+        <a class="nav-tab stats-active" style="text-decoration: none; display: none;" data-tab="stats" id="users-charts-btn">آمار کاربران</a>
         <a class="nav-tab" style="text-decoration: none;" data-tab="stats" id="tickets-charts-btn">آمار تیکت‌ها</a>
         <a class="nav-tab" style="text-decoration: none;" data-tab="stats" id="it-experts-charts-btn">آمار کارشناسان</a>
     </nav>
 {% endblock %}
 
 {% block content %}
-    <p data-user_role="{{ user_role }}" id="user-role-data"></p>
-    <!-- KPI CARDS -->
-    <div class="metrics-grid">
-        {% if user_role == "System Admin" %}
-        <div class="metric-card">
-            <span>کاربران کل / کاربران فعال</span>
-            <h2>{{ all_users_count }} / {{ active_users_count }}</h2>
-        </div>
-        {% endif %}
-
-        <div class="metric-card">
-            <span>کل تیکت‌ها / تیکت‌های باز</span>
-            <h2>{{ all_tickets_count }} / {{ active_tickets_count }}</h2>
-        </div>
-
-        <div class="metric-card">
-            <span>تیکت‌های بدون کارشناس</span>
-            <h2>{{ not_assigned_tickets }}</h2>
-        </div>
-
-        <div class="metric-card">
-            <span>تیکت‌های ۲۴ ساعت گذشته</span>
-            <h2>{{ last_created }}</h2>
-        </div>
+    <div class="empty-state" id="stats-loading">
+        <p>در حال بارگذاری...</p>
     </div>
 
-    {% if user_role == "System Admin" %}
-    <div id="users-charts">
-        <!-- User Pie Chart based on Role -->
-        <section class="card">
-            <div class="section-header">
-                <h2>آمار کاربران بر اساس نقش‌ها</h2>
-            </div>
-            <img class="chart-image"  src="/contents/charts/user_role.png" />
-        </section>
-    </div>
-    {% endif %}
+    <div id="stats-content" style="display: none;">
+        <p data-user_role="" id="user-role-data"></p>
 
-    <div id="tickets-charts">
-        <!-- Ticket Bar Chart based on Status -->
-        <section class="card">
-            <div class="section-header">
-                <h2>آمار تیکت‌ها بر اساس وضعیت</h2>
+        <!-- KPI CARDS -->
+        <div class="metrics-grid">
+            <div class="metric-card" id="users-metric-card" style="display: none;">
+                <span>کاربران کل / کاربران فعال</span>
+                <h2 id="users-metric-value">- / -</h2>
             </div>
-            <img class="chart-image"  src="/contents/charts/ticket_status.png" />
-        </section>
 
-        <!-- Ticket Bar Chart based on Category -->
-        <section class="card">
-            <div class="section-header">
-                <h2>آمار تیکت‌ها بر اساس دسته بندی</h2>
+            <div class="metric-card">
+                <span>کل تیکت‌ها / تیکت‌های باز</span>
+                <h2 id="tickets-metric-value">- / -</h2>
             </div>
-            <img class="chart-image"  src="/contents/charts/ticket_category.png" />
-        </section>
 
-        <!-- Ticket Bar Chart based on Department -->
-        <section class="card">
-            <div class="section-header">
-                <h2>آمار تیکت‌ها بر اساس دپارتمان</h2>
+            <div class="metric-card">
+                <span>تیکت‌های بدون کارشناس</span>
+                <h2 id="unassigned-metric-value">-</h2>
             </div>
-            <img class="chart-image"  src="/contents/charts/ticket_department.png" />
-        </section>
-    </div>
 
-    <div id="it-experts-charts">
-        <!-- IT Experts Bar Chart based on Resolved Tickets -->
-        <section class="card">
-            <div class="section-header">
-                <h2>آمار پاسخ‌دهی به تیکت‌ها توسط کارشناسان</h2>
+            <div class="metric-card">
+                <span>تیکت‌های ۲۴ ساعت گذشته</span>
+                <h2 id="recent-metric-value">-</h2>
             </div>
-            <img class="chart-image"  src="/contents/charts/it_experts_performance.png" />
-        </section>
+        </div>
+
+        <div id="users-charts" style="display: none;">
+            <!-- User Pie Chart based on Role -->
+            <section class="card">
+                <div class="section-header">
+                    <h2>آمار کاربران بر اساس نقش‌ها</h2>
+                </div>
+                <img class="chart-image" id="user-role-chart" src="" alt="آمار کاربران بر اساس نقش‌ها" />
+            </section>
+        </div>
+
+        <div id="tickets-charts">
+            <!-- Ticket Bar Chart based on Status -->
+            <section class="card">
+                <div class="section-header">
+                    <h2>آمار تیکت‌ها بر اساس وضعیت</h2>
+                </div>
+                <img class="chart-image" id="ticket-status-chart" src="" alt="آمار تیکت‌ها بر اساس وضعیت" />
+            </section>
+
+            <!-- Ticket Bar Chart based on Category -->
+            <section class="card">
+                <div class="section-header">
+                    <h2>آمار تیکت‌ها بر اساس دسته بندی</h2>
+                </div>
+                <img class="chart-image" id="ticket-category-chart" src="" alt="آمار تیکت‌ها بر اساس دسته بندی" />
+            </section>
+
+            <!-- Ticket Bar Chart based on Department -->
+            <section class="card">
+                <div class="section-header">
+                    <h2>آمار تیکت‌ها بر اساس دپارتمان</h2>
+                </div>
+                <img class="chart-image" id="ticket-department-chart" src="" alt="آمار تیکت‌ها بر اساس دپارتمان" />
+            </section>
+        </div>
+
+        <div id="it-experts-charts">
+            <!-- IT Experts Bar Chart based on Resolved Tickets -->
+            <section class="card">
+                <div class="section-header">
+                    <h2>آمار پاسخ‌دهی به تیکت‌ها توسط کارشناسان</h2>
+                </div>
+                <img class="chart-image" id="it-experts-performance-chart" src="" alt="آمار پاسخ‌دهی به تیکت‌ها توسط کارشناسان" />
+            </section>
+        </div>
     </div>
 {% endblock %}
 
 {% block js %}
     <script src="{{ url_for('static', path='js/notification.js') }}"></script>
-    <script src="{{ url_for('static', path='js/alerts.js') }}"></script>
     <script src="{{ url_for('static', path='js/toggle_charts.js') }}"></script>
+    <script src="{{ url_for('static', path='js/statistics.js') }}"></script>
 {% endblock%}
