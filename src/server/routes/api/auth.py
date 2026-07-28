@@ -86,7 +86,7 @@ def logout():
 
 
 @router.get("/me", description="Retrieve user's information.")
-def logout(request: Request):
+def get_current_user_info(request: Request):
     user = get_current_user(request)
 
     helpdesk = get_helpdesk()
