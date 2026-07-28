@@ -30,7 +30,9 @@
 
             <div class="auth-buttons">
             {% if user %}
-                <a href="/auth/logout" class="btn register-btn">خروج</a>
+                <div class="auth-buttons">
+                    <a id="logout-btn" class="btn register-btn" style="cursor: pointer;">خروج</a>
+                </div>
             {% else %}
                 <a href="/auth" class="btn register-btn">ورود به سامانه</a>
             {% endif %}
@@ -91,6 +93,7 @@
     </section>
 
 <script src="{{ url_for('static', path='js/notification.js') }}"></script>
+<script src="{{ url_for('static', path='js/logout.js') }}"></script>
 
 </body>
 </html>
