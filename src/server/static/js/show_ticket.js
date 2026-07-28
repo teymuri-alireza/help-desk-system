@@ -96,7 +96,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const reopenSection = document.getElementById("reopen-section");
 
     let currentUser = null;
-    let ticket = null;
+    let responseData = null;
 
     try {
         const [meRes, ticketRes] = await Promise.all([
@@ -120,7 +120,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             container.innerHTML = `<div class="empty-state"><p>خطا در دریافت اطلاعات تیکت</p></div>`;
             return;
         }
-        ticket = await ticketRes.json();
+        responseData = await ticketRes.json();
+        // Shape: { ticket, attachment, TicketStatus, TicketPriority, it_experts, categories, departments }
     } catch (err) {
         console.error(err);
         container.innerHTML = `<div class="empty-state"><p>خطا در برقراری ارتباط با سرور</p></div>`;
@@ -128,12 +129,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     renderNav(currentUser);
-    renderTicketDetail(ticket, currentUser, container);
-    renderAssignSection(ticket, currentUser, assignSection);
-    renderEditSection(ticket, currentUser, editSection);
-    renderReopenSection(ticket, currentUser, reopenSection);
-    wireEditForm(ticket);
-    wireNewResponseForm(ticket, currentUser);
+    renderTicketDetail(responseData.ticket, responseData.attachment, currentUser, container);
+    renderAssignSection(responseData.ticket, currentUser, assignSection);
+    renderEditSection(responseData.ticket, responseData, currentUser, editSection);
+    renderReopenSection(responseData.ticket, currentUser, reopenSection);
+    wireEditForm(responseData.ticket);
+    wireNewResponseForm(responseData.ticket, currentUser);
 });
 
 function renderNav(currentUser) {
@@ -164,19 +165,24 @@ function renderNav(currentUser) {
     }
 }
 
-function renderTicketDetail(ticket, currentUser, container) {
-    const statusClass = STATUS_ALERT_CLASS[ticket.status.name] || "alert-info";
-    const priorityClass = PRIORITY_ALERT_CLASS[ticket.priority.name] || "alert-info";
+function renderTicketDetail(ticket, attachment, currentUser, container) {
+    const statusClass = STATUS_ALERT_CLASS[ticket.status_name] || "alert-info";
+    const priorityClass = PRIORITY_ALERT_CLASS[ticket.priority_name] || "alert-info";
     const isStudentOrEmployee = ["Student", "Employee"].includes(currentUser.user_role);
 
-    const attachmentHtml = ticket.attachment
-        ? `<a href="/contents/upload/${escapeHtml(ticket.attachment.file_name)}" target="_blank">مشاهده فایل پیوست</a>`
+    const attachmentHtml = attachment
+        ? `<a href="/contents/upload/${escapeHtml(attachment)}" target="_blank">مشاهده فایل پیوست</a>`
         : `<p class="ticket-created">فایل پیوستی یافت نشد</p>`;
 
-    const assigneeHtml = ticket.assignee
-        ? `<p>کارشناس بررسی کننده: ${escapeHtml(ticket.assignee.username)}</p>` +
+    // Note: the API currently exposes only the assignee's id (assigned_to),
+    // not a username. Displaying the username requires the backend to
+    // include it in the /api/tickets/{id} response; until then this falls
+    // back to showing the id.
+    const assigneeHtml = ticket.assigned_to
+        ? `<p>شناسه کارشناس بررسی کننده: ${escapeHtml(ticket.assigned_to)}</p>` +
           (["System Admin", "IT Manager"].includes(currentUser.user_role)
               ? `<form id="removeAssigneeForm" style="margin-top: 0.5rem;">
+                    <input type="hidden" name="checkbox" value="true">
                     <button type="submit" class="submit-btn btn-small" style="background: #b91c1c; border-color: #b91c1c;">
                         حذف کارشناس ارجاع داده شده
                     </button>
@@ -184,12 +190,12 @@ function renderTicketDetail(ticket, currentUser, container) {
               : "")
         : `<p>به این تیکت هنوز کارشناسی ارجاع داده نشده.</p>`;
 
-    const categoryHtml = ticket.category
-        ? `<p>دسته بندی تیکت: ${escapeHtml(ticket.category.name)}</p>`
+    const categoryHtml = ticket.category_name
+        ? `<p>دسته بندی تیکت: ${escapeHtml(ticket.category_name)}</p>`
         : `<p>برای این تیکت دسته بندی انتخاب نشده.</p>`;
 
-    const departmentHtml = ticket.department
-        ? `<p>دپارتمان تیکت: ${escapeHtml(ticket.department.name)}</p>`
+    const departmentHtml = ticket.department_name
+        ? `<p>دپارتمان تیکت: ${escapeHtml(ticket.department_name)}</p>`
         : `<p>برای این تیکت دپارتمان انتخاب نشده.</p>`;
 
     const creatorHtml = !isStudentOrEmployee
@@ -197,8 +203,8 @@ function renderTicketDetail(ticket, currentUser, container) {
         : "";
 
     const canRespond =
-        (ticket.status.name === "IN_PROGRESS" && currentUser.user_role !== "Student") ||
-        (ticket.status.name === "WAITING_FOR_USER" && currentUser.user_role === "Student");
+        (ticket.status_name === "IN_PROGRESS" && currentUser.user_role !== "Student") ||
+        (ticket.status_name === "WAITING_FOR_USER" && currentUser.user_role === "Student");
 
     const responseFormHtml = canRespond
         ? `<form id="new-response-form" class="ticket-form">
@@ -211,8 +217,8 @@ function renderTicketDetail(ticket, currentUser, container) {
            </form>`
         : "";
 
-    const isCreator = ticket.creator.id === currentUser.user_id;
-    const isClosedOrResolved = ["RESOLVED", "CLOSED"].includes(ticket.status.name);
+    const isCreator = ticket.creator_id === currentUser.user_id;
+    const isClosedOrResolved = ["RESOLVED", "CLOSED"].includes(ticket.status_name);
 
     let ratingHtml = "";
     if (isCreator) {
@@ -260,8 +266,8 @@ function renderTicketDetail(ticket, currentUser, container) {
                     <p class="ticket-id" id="ticket-id" data-ticket_id="${ticket.id}">#${ticket.id}</p>
                     <h3>عنوان: ${escapeHtml(ticket.title)}</h3>
                 </div>
-                <span class="status alert ${statusClass}">وضعیت: ${escapeHtml(ticket.status.fa)}</span>
-                <span class="status alert ${priorityClass}">اولویت: ${escapeHtml(ticket.priority.fa)}</span>
+                <span class="status alert ${statusClass}">وضعیت: ${escapeHtml(ticket.status_fa)}</span>
+                <span class="status alert ${priorityClass}">اولویت: ${escapeHtml(ticket.priority_fa)}</span>
             </div>
             <p class="ticket-description">توضیحات: ${escapeHtml(ticket.description)}</p>
             ${attachmentHtml}
@@ -368,7 +374,7 @@ function wireRatingModal(ticket) {
 
 function renderAssignSection(ticket, currentUser, section) {
     const eligibleRole = !["Student", "Employee", "IT Expert"].includes(currentUser.user_role);
-    const canShow = eligibleRole && !ticket.assigned_to && !["RESOLVED", "CLOSED"].includes(ticket.status.name);
+    const canShow = eligibleRole && !ticket.assigned_to && !["RESOLVED", "CLOSED"].includes(ticket.status_name);
 
     if (!canShow) {
         section.style.display = "none";
@@ -399,7 +405,7 @@ function renderAssignSection(ticket, currentUser, section) {
             const data = await res.json();
             const area = document.getElementById("assign-preview-area");
             area.innerHTML = `
-                <div class="alert alert-info">کارشناس پیشنهادی: ${escapeHtml(data.suggested_expert_name)}</div>
+                <div class="alert alert-info">کارشناس پیشنهادی: ${escapeHtml(data.it_name)}</div>
                 <p>آیا می‌خواهید این کارشناس به این تیکت اختصاص داده شود؟</p>
                 <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center;">
                     <button class="submit-btn btn-small" id="assign-confirm-btn" type="button">بله، انجام شود</button>
@@ -429,8 +435,8 @@ function renderAssignSection(ticket, currentUser, section) {
     });
 }
 
-function renderEditSection(ticket, currentUser, section) {
-    const isClosedOrResolved = ["RESOLVED", "CLOSED"].includes(ticket.status.name);
+function renderEditSection(ticket, responseData, currentUser, section) {
+    const isClosedOrResolved = ["RESOLVED", "CLOSED"].includes(ticket.status_name);
     if (isClosedOrResolved) {
         section.style.display = "none";
         return;
@@ -441,7 +447,15 @@ function renderEditSection(ticket, currentUser, section) {
     const role = currentUser.user_role;
     const isStudentOrEmployee = ["Student", "Employee"].includes(role);
     const isItExpert = role === "IT Expert";
-    const opts = ticket.edit_options || { statuses: [], priorities: [], it_experts: [], categories: [], departments: [] };
+    // The option lists are top-level fields on the /api/tickets/{id} response,
+    // not a nested ticket.edit_options object.
+    const opts = {
+        statuses: responseData.TicketStatus || [],
+        priorities: responseData.TicketPriority || [],
+        it_experts: responseData.it_experts || [],
+        categories: responseData.categories || [],
+        departments: responseData.departments || [],
+    };
 
     let html = "";
 
@@ -464,7 +478,7 @@ function renderEditSection(ticket, currentUser, section) {
                     <label>وضعیت</label>
                     <select name="ticket_status" required>
                         ${opts.statuses
-                            .map((s) => `<option value="${s.name}" ${ticket.status.name === s.name ? "selected" : ""}>${escapeHtml(s.fa)}</option>`)
+                            .map((s) => `<option value="${s.name}" ${ticket.status_name === s.name ? "selected" : ""}>${escapeHtml(s.fa)}</option>`)
                             .join("")}
                     </select>
                 </div>`;
@@ -484,7 +498,7 @@ function renderEditSection(ticket, currentUser, section) {
                     <label>اولویت</label>
                     <select name="priority" required>
                         ${opts.priorities
-                            .map((p) => `<option value="${p.name}" ${ticket.priority.name === p.name ? "selected" : ""}>${escapeHtml(p.fa)}</option>`)
+                            .map((p) => `<option value="${p.name}" ${ticket.priority_name === p.name ? "selected" : ""}>${escapeHtml(p.fa)}</option>`)
                             .join("")}
                     </select>
                 </div>
@@ -508,18 +522,26 @@ function renderEditSection(ticket, currentUser, section) {
                     <label>دسته بندی تیکت</label>
                     <select name="category_id">
                         <option value="">-- دسته بندی را انتخاب کنید --</option>
-                        ${opts.categories
-                            .map((c) => `<option value="${c.id}" ${ticket.category_id === c.id ? "selected" : ""}>${escapeHtml(c.name)}</option>`)
-                            .join("")}
+                        ${
+                            /* NOTE: the API returns only category_name (string), not category_id,
+                               so the current category cannot be pre-selected here. Add
+                               category_id to the GET /api/tickets/{id} response to enable this. */
+                            opts.categories
+                                .map((c) => `<option value="${c.id}" ${ticket.category_name === c.name ? "selected" : ""}>${escapeHtml(c.name)}</option>`)
+                                .join("")
+                        }
                     </select>
                 </div>
                 <div class="form-group">
                     <label>دپارتمان تیکت</label>
                     <select name="department_id">
                         <option value="">-- دپارتمان را انتخاب کنید --</option>
-                        ${opts.departments
-                            .map((d) => `<option value="${d.id}" ${ticket.department_id === d.id ? "selected" : ""}>${escapeHtml(d.name)}</option>`)
-                            .join("")}
+                        ${
+                            /* Same limitation as above: API returns department_name, not department_id. */
+                            opts.departments
+                                .map((d) => `<option value="${d.id}" ${ticket.department_name === d.name ? "selected" : ""}>${escapeHtml(d.name)}</option>`)
+                                .join("")
+                        }
                     </select>
                 </div>`;
         }
@@ -539,7 +561,7 @@ function renderEditSection(ticket, currentUser, section) {
 
 function renderReopenSection(ticket, currentUser, section) {
     const canShow =
-        ["RESOLVED", "CLOSED"].includes(ticket.status.name) &&
+        ["RESOLVED", "CLOSED"].includes(ticket.status_name) &&
         ["System Admin", "IT Manager"].includes(currentUser.user_role);
 
     if (!canShow) {
