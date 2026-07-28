@@ -126,7 +126,7 @@ function setupEditForm(editSection, data, isSystemAdmin, userId) {
     editSection.style.display = "";
 
     const form = document.getElementById("editForm");
-    form.action = `/users/${userId}`;
+    form.action = `/api/users/${userId}`;
 
     document.getElementById("edit-name").value = user.name;
 
