@@ -15,93 +15,78 @@
 {% endblock %}
 
 {% block content %}
-    <!-- KPI CARDS -->
-    <div class="metrics-grid">
-        <div class="metric-card">
-            <span>تمام تیکت‌ها</span>
-            <h2>{{ assigned_tickets }}</h2>
-        </div>
-        <div class="metric-card">
-            <span>تیکت‌های باز</span>
-            <h2>{{ open_tickets }}</h2>
-        </div>
-        <div class="metric-card">
-            <span>تیکت‌های بسته</span>
-            <h2>{{ resolved_tickets }}</h2>
-        </div>
+    <div class="empty-state" id="dashboard-loading">
+        <p>در حال بارگذاری...</p>
     </div>
 
-    <!-- Ticket Form -->
-    <section class="card">
-        {% if new_ticket_flash_message %}
-            <div id="ticket-flash-alert" class="alert alert-success">
-                تیکت با موفقیت ثبت شد
+    <div id="dashboard-content" style="display: none;">
+        <!-- KPI CARDS -->
+        <div class="metrics-grid">
+            <div class="metric-card">
+                <span>تمام تیکت‌ها</span>
+                <h2 id="assigned-metric-value">-</h2>
             </div>
-        {% endif %}
-        <div class="section-header">
-            <h2>ثبت تیکت جدید</h2>
-            <button class="toggle-form-btn submit-btn btn-small" id="toggleFormBtn" type="button">نمایش فرم</button>
+            <div class="metric-card">
+                <span>تیکت‌های باز</span>
+                <h2 id="open-metric-value">-</h2>
+            </div>
+            <div class="metric-card">
+                <span>تیکت‌های بسته</span>
+                <h2 id="resolved-metric-value">-</h2>
+            </div>
         </div>
-        <form id="newTicketForm" class="ticket-form" action="/tickets" method="POST" enctype="multipart/form-data" style="display: none;">
-            <div class="form-group">
-                <label>عنوان تیکت</label>
-                <input type="text" name="title" required placeholder="عنوان درخواست">
-            </div>
-            <div class="form-group">
-                <label>توضیحات</label>
-                <textarea name="description" rows="6" required placeholder="جزئیات درخواست خود را وارد کنید"></textarea>
-            </div>
-            <div class="form-group">
-                <label>آپلود فایل</label>
-                <input type="file" name="attachment">
-            </div>
-            <button class="submit-btn" type="submit">ثبت تیکت</button>
-        </form>
-    </section>
 
-    <!-- Tickets TAB -->
-    <section class="card">
-        <div class="section-header">
-            <h2>تیکت‌های اخیر سامانه</h2>
-        </div>
-        <div class="table-wrapper">
-            <table class="tickets-table">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>عنوان</th>
-                        <th>وضعیت</th>
-                        <th>ایجاد کننده</th>
-                        <th>تاریخ ثبت</th>
-                        <th>عملیات</th>
-                    </tr>
-                </thead>
+        <!-- Ticket Form -->
+        <section class="card">
+            <div id="ticket-flash-alert" class="alert" style="display: none;"></div>
 
-                <tbody>
-                    {% for ticket in tickets_list %}
-                    <tr>
-                        <td>#{{ ticket.id }}</td>
-                        <td>
-                            <strong>{{ ticket.title }}</strong>
-                        </td>
-                        <td>
-                            <span class="status-badge status-{{ ticket.status.name }}">{{ ticket.status.fa }}</span>
-                        </td>
-                        <td>{{ ticket.creator.username }}</td>
-                        <td>{{ ticket.created_at }}</td>
-                        <td>
-                            <a href="/tickets/{{ ticket.id }}" class="btn-small btn submit-btn">مشاهده</a>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    </section>
+            <div class="section-header">
+                <h2>ثبت تیکت جدید</h2>
+                <button class="toggle-form-btn submit-btn btn-small" id="toggleFormBtn" type="button">نمایش فرم</button>
+            </div>
+            <form id="newTicketForm" class="ticket-form" style="display: none;">
+                <div class="form-group">
+                    <label>عنوان تیکت</label>
+                    <input type="text" name="title" required placeholder="عنوان درخواست">
+                </div>
+                <div class="form-group">
+                    <label>توضیحات</label>
+                    <textarea name="description" rows="6" required placeholder="جزئیات درخواست خود را وارد کنید"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>آپلود فایل</label>
+                    <input type="file" name="attachment">
+                </div>
+                <button class="submit-btn" type="submit">ثبت تیکت</button>
+            </form>
+        </section>
+
+        <!-- Tickets TAB -->
+        <section class="card">
+            <div class="section-header">
+                <h2>تیکت‌های اخیر سامانه</h2>
+            </div>
+            <div class="table-wrapper">
+                <table class="tickets-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>عنوان</th>
+                            <th>وضعیت</th>
+                            <th>ایجاد کننده</th>
+                            <th>تاریخ ثبت</th>
+                            <th>عملیات</th>
+                        </tr>
+                    </thead>
+                    <tbody id="recent-tickets-body"></tbody>
+                </table>
+            </div>
+        </section>
+    </div>
 {% endblock %}
 
 {% block js %}
     <script src="{{ url_for('static', path='js/notification.js') }}"></script>
-    <script src="{{ url_for('static', path='js/alerts.js') }}"></script>
     <script src="{{ url_for('static', path='js/toggle_btn.js') }}"></script>
+    <script src="{{ url_for('static', path='js/it_expert_dashboard.js') }}"></script>
 {% endblock%}
