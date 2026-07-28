@@ -10,20 +10,11 @@
 {% block aside %}
     <nav class="sidebar-nav">
         <a class="nav-tab" style="text-decoration: none;" href="/dashboard" data-tab="overview">داشبورد</a>
-        {% if user_role == "System Admin" %}
-            <a class="nav-tab" style="text-decoration: none;" href="/users" data-tab="users">تمامی کاربران</a>
-        {% elif user_role == "IT Manager" %}
-            <a class="nav-tab" style="text-decoration: none;" href="/users" data-tab="users">تمامی کارشناسان</a>
-        {% endif %}
-        {% if user_role == "IT Expert" %}
-            <a class="nav-tab" style="text-decoration: none;" href="/tickets" data-tab="tickets">تمامی تیکت‌های کارشناس</a>
-        {% else %}
-            <a class="nav-tab" style="text-decoration: none;" href="/tickets" data-tab="tickets">تمامی تیکت‌ها</a>
-        {% endif %}
-        <a class="nav-tab active" style="text-decoration: none;" data-tab="tickets">تمامی اعلان‌ها</a>
-        {% if user_role in ("System Admin", "IT Manager") %}
-            <a class="nav-tab" style="text-decoration: none;" href="/dashboard/stats" data-tab="stats">آمار‌های سامانه</a>
-        {% endif %}
+        <a class="nav-tab" style="text-decoration: none; display: none;" href="/users" data-tab="users" data-role="System Admin" id="nav-users-admin">تمامی کاربران</a>
+        <a class="nav-tab" style="text-decoration: none; display: none;" href="/users" data-tab="users" data-role="IT Manager" id="nav-users-manager">تمامی کارشناسان</a>
+        <a class="nav-tab" style="text-decoration: none;" href="/tickets" data-tab="tickets" id="nav-tickets">تمامی تیکت‌ها</a>
+        <a class="nav-tab active" style="text-decoration: none;" href="/notifications/all" data-tab="tickets">تمامی اعلان‌ها</a>
+        <a class="nav-tab" style="text-decoration: none; display: none;" href="/dashboard/stats" data-tab="stats" data-role="System Admin,IT Manager" id="nav-stats">آمار‌های سامانه</a>
     </nav>
 {% endblock %}
 

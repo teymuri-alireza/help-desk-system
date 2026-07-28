@@ -2,6 +2,26 @@ document.addEventListener("DOMContentLoaded", () => {
     loadStatistics();
 });
 
+function applyNavForRole(role) {
+    if (role === "System Admin") {
+        const el = document.getElementById("nav-users-admin");
+        if (el) el.style.display = "";
+    } else if (role === "IT Manager") {
+        const el = document.getElementById("nav-users-manager");
+        if (el) el.style.display = "";
+    }
+
+    if (role === "System Admin" || role === "IT Manager") {
+        const stats = document.getElementById("nav-stats");
+        if (stats) stats.style.display = "";
+    }
+
+    const ticketsNav = document.getElementById("nav-tickets");
+    if (ticketsNav && role === "IT Expert") {
+        ticketsNav.textContent = "تمامی تیکت‌های کارشناس";
+    }
+}
+
 async function loadStatistics() {
     const loadingEl = document.getElementById("stats-loading");
     const contentEl = document.getElementById("stats-content");
@@ -21,6 +41,8 @@ async function loadStatistics() {
 
         const meData = await meResponse.json();
         const userRole = meData.user_role;
+        applyNavForRole(userRole);
+
         const isSystemAdmin = userRole === "System Admin";
 
         const roleDataEl = document.getElementById("user-role-data");
