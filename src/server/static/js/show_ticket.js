@@ -635,18 +635,30 @@ function wireNewResponseForm(ticket, currentUser) {
         if (errorEl) errorEl.style.display = "none";
         const formData = new FormData(form);
         try {
-            const res = await apiFetch(`/api/tickets/${ticket.id}/responses`, { method: "POST", body: formData });
-            if (!res) return;
+            const res = await apiFetch(`/api/tickets/${ticket.id}/responses`, { method: "POST", body: formData, credentials: "include" });
+            if (!res) return; // apiFetch already redirected on 403
             if (res.ok) {
                 window.location.reload();
+                return;
+            }
+
+            let message;
+            switch (res.status) {
+                case 401:
+                    message = "ابتدا وارد حساب کاربری شوید.";
+                    break;
+                case 409:
+                    message = "امکان ثبت پاسخ برای تیکت بسته یا حل‌شده وجود ندارد.";
+                    break;
+                default:
+                    message = "خطایی در ثبت پاسخ رخ داد.";
+            }
+
+            if (errorEl) {
+                errorEl.textContent = message;
+                errorEl.style.display = "block";
             } else {
-                const error = await res.text();
-                if (errorEl) {
-                    errorEl.textContent = error;
-                    errorEl.style.display = "block";
-                } else {
-                    alert("Error: " + error);
-                }
+                alert(message);
             }
         } catch (err) {
             console.error(err);

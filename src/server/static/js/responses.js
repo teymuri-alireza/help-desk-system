@@ -25,8 +25,9 @@ function createResponseElement(response, currentUserId, ticketId) {
     const br = document.createElement("br");
     idP.appendChild(br);
 
-    const roleFa = roleMap[response.creator.role] || response.creator.role;
-    const creatorText = document.createTextNode(`نویسنده: ${response.creator.name} - نقش: ${roleFa}`);
+    const roleFa = roleMap[response.creator.role] || response.creator.role || "نامشخص";
+    const creatorName = response.creator.name || "کاربر حذف شده";
+    const creatorText = document.createTextNode(`نویسنده: ${creatorName} - نقش: ${roleFa}`);
     idP.appendChild(creatorText);
     contentWrapper.appendChild(idP);
 
@@ -329,91 +330,69 @@ function renderResponses(responses) {
     }
 }
 
+function showResponsesError(message) {
+    const responseDiv = document.getElementById("ticket-reply");
+    if (!responseDiv) return;
+    responseDiv.innerHTML = "";
+    const errorP = document.createElement("p");
+    errorP.className = "alert alert-danger";
+    errorP.textContent = message;
+    responseDiv.appendChild(errorP);
+}
+
 async function loadResponses() {
     const ticketID = document.getElementById("ticket-id");
     if (!ticketID) {
         return;
     }
 
-    const response = await fetch(`/api/tickets/${ticketID.dataset.ticket_id}/responses`);
-    if (response.ok) {
-        const data = await response.json();
-        const responses = data.responses;
+    try {
+        const response = await fetch(`/api/tickets/${ticketID.dataset.ticket_id}/responses`, {
+            credentials: "include",
+        });
 
-        renderResponses(responses);
+        if (response.ok) {
+            const data = await response.json();
+            renderResponses(data.responses);
+            return;
+        }
+
+        switch (response.status) {
+            case 401:
+                showResponsesError("ابتدا وارد حساب کاربری شوید.");
+                break;
+
+            case 403:
+                window.location.href = "/forbidden";
+                break;
+
+            default:
+                showResponsesError("خطایی در دریافت پاسخ‌ها رخ داد.");
+        }
+    } catch (err) {
+        console.error(err);
+        showResponsesError("ارتباط با سرور برقرار نشد.");
     }
 }
 
-loadResponses();
-const responseForm = document.getElementById("new-response-form");
-
-if (responseForm) {
-
-    responseForm.addEventListener("submit", async (e) => {
-
-        e.preventDefault();
-
-        const ticketId =
-            document.getElementById("ticket-id").dataset.ticket_id;
-
-        const formData = new FormData(responseForm);
-
-        const errorBox =
-            document.getElementById("response-error");
-
-        errorBox.style.display = "none";
-
-        try {
-
-            const response = await fetch(
-                `/api/tickets/${ticketId}/responses`,
-                {
-                    method: "POST",
-                    body: formData,
-                    credentials: "include"
-                }
-            );
-
-            if (response.ok) {
-
-                window.location.href =
-                    `/tickets/${ticketId}`;
-
-                return;
-            }
-
-            switch (response.status) {
-
-                case 401:
-                    errorBox.textContent =
-                        "ابتدا وارد حساب کاربری شوید.";
-                    break;
-
-                case 403:
-                    window.location.href =
-                        "/forbidden";
-                    return;
-
-                case 409:
-                    errorBox.textContent =
-                        "امکان ثبت پاسخ برای تیکت بسته یا حل‌شده وجود ندارد.";
-                    break;
-
-                default:
-                    errorBox.textContent =
-                        "خطایی رخ داده است.";
-            }
-
-            errorBox.style.display = "block";
-
-        } catch {
-
-            errorBox.textContent =
-                "ارتباط با سرور برقرار نشد.";
-
-            errorBox.style.display = "block";
+// #ticket-id and #ticket-reply are injected asynchronously by show_ticket.js
+// (after it fetches the ticket over the API), so this script - which loads
+// and executes before that fetch resolves - cannot rely on those elements
+// being present yet. Try immediately as a fast path, and otherwise watch the
+// DOM until show_ticket.js renders the ticket detail markup.
+//
+// Note: submission of #new-response-form (the top-level "write a new
+// response" form) is wired up in show_ticket.js's wireNewResponseForm, not
+// here - wiring it a second time from this file would fire two POST
+// requests per submission once the timing issue above is fixed.
+if (!document.getElementById("ticket-id")) {
+    const responsesInitObserver = new MutationObserver(() => {
+        if (document.getElementById("ticket-id")) {
+            responsesInitObserver.disconnect();
+            loadResponses();
         }
-
     });
-
+    responsesInitObserver.observe(document.body, { childList: true, subtree: true });
+} else {
+    loadResponses();
 }
