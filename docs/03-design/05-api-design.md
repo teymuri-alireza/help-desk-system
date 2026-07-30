@@ -7,7 +7,7 @@
 ### ثبت‌نام کاربر
 
 ```
-POST /auth/signup‍‍
+POST /api/auth/signup‍‍
 ```
 
 ایجاد حساب کاربری جدید در سامانه.
@@ -15,7 +15,7 @@ POST /auth/signup‍‍
 ### ورود به سامانه
 
 ```
-POST /auth/login
+POST /api/auth/login
 ```
 
 احراز هویت کاربر و ایجاد نشست یا توکن دسترسی.
@@ -23,17 +23,25 @@ POST /auth/login
 ### خروج از سامانه
 
 ```
-GET /auth/logout
+GET /api/auth/logout
 ```
 
 حذف نشست یا توکن دسترسی.
+
+### گرفتن اطلاعات کاربر
+
+```
+GET /api/auth/me
+```
+
+گرفتن اطلاعات کاربر احراز هویت شده.
 
 ## داشبورد
 
 ### دریافت اطلاعات داشبورد
 
 ```
-GET /dashboard
+GET /api/dashboard
 ```
 
 دریافت اطلاعات مورد نیاز داشبورد متناسب با نقش کاربر.
@@ -41,7 +49,7 @@ GET /dashboard
 ### دریافت اطلاعات آماری سامانه
 
 ```
-GET /dashboard/stats
+GET /api/dashboard/stats
 ```
 
 دریافت اطلاعات مورد نیاز آمار‌های مربوط به کاربران، تیکت‌ها و کارشناس‌ها.
@@ -51,7 +59,7 @@ GET /dashboard/stats
 ### مشاهده فهرست تیکت‌ها
 
 ```
-GET /tickets
+GET /api/tickets
 ```
 
 نمایش فهرست تیکت‌های قابل مشاهده برای کاربر.
@@ -59,7 +67,7 @@ GET /tickets
 ### مشاهده جزئیات تیکت
 
 ```
-GET /tickets/{ticket_id}
+GET /api/tickets/{ticket_id}
 ```
 
 نمایش اطلاعات کامل یک تیکت مشخص.
@@ -67,7 +75,7 @@ GET /tickets/{ticket_id}
 ### ثبت تیکت جدید
 
 ```
-POST /tickets
+POST /api/tickets
 ```
 
 ایجاد درخواست پشتیبانی جدید.
@@ -75,7 +83,7 @@ POST /tickets
 ### پیش‌نمایش کارشناس
 
 ```
-GET /tickets/{ticket_id}/assign/preview
+GET /api/tickets/{ticket_id}/assign/preview
 ```
 
 پیش‌نمایش کارشناس آزاد برای اختصاص به یک تیکت، و تایید یا رد این درخواست توسط کاربر با دسترسی مورد نیاز.
@@ -83,7 +91,7 @@ GET /tickets/{ticket_id}/assign/preview
 ### تخصیص کارشناس
 
 ```
-POST /tickets/{ticket_id}/assign
+POST /api/tickets/{ticket_id}/assign
 ```
 
 تخصیص کارشناس به تیکت مربوطه. این Endpoint برای تخصیص اتوماتیک کارشناس استفاده میشود.
@@ -91,7 +99,7 @@ POST /tickets/{ticket_id}/assign
 ### حذف کارشناس
 
 ```
-POST /{ticket_id}/remove_assignee
+POST /api/{ticket_id}/remove_assignee
 ```
 
 حذف کارشناس اختصاص یافته یه یک تیکت مشخص.
@@ -99,7 +107,7 @@ POST /{ticket_id}/remove_assignee
 ### نظرسنجی تیکت
 
 ```
-POST /{ticket_id}/rate
+POST /api/{ticket_id}/rate
 ```
 
 نظرسنجی تیکت برای عملکرد کارشناس پس از پاسخ دادن به یک تیکت.
@@ -107,7 +115,7 @@ POST /{ticket_id}/rate
 ### ویرایش اطلاعات تیکت
 
 ```
-PATCH /tickets/{ticket_id}
+PATCH /api/tickets/{ticket_id}
 ```
 
 به‌روزرسانی بخشی از اطلاعات تیکت نظیر وضعیت، اولویت یا واحد مسئول.
@@ -115,7 +123,7 @@ PATCH /tickets/{ticket_id}
 ### باز کردن دوباره تیکتی
 
 ```
-PATCH /{ticket_id}/reopen
+PATCH /api/{ticket_id}/reopen
 ```
 
 باز کردن دوباره تیکت در مواقع اضطراری توسط کاربران با دسترسی بالا.
@@ -125,7 +133,7 @@ PATCH /{ticket_id}/reopen
 ### مشاهده پاسخ‌های تیکت
 
 ```
-GET /tickets/{ticket_id}/responses
+GET /api/tickets/{ticket_id}/responses
 ```
 
 دریافت فهرست پاسخ‌های مرتبط با یک تیکت.
@@ -133,7 +141,7 @@ GET /tickets/{ticket_id}/responses
 ### ثبت پاسخ جدید
 
 ```
-POST /tickets/{ticket_id}/responses
+POST /api/tickets/{ticket_id}/responses
 ```
 
 ثبت پاسخ جدید برای تیکت مورد نظر.
@@ -143,7 +151,7 @@ POST /tickets/{ticket_id}/responses
 ### ویراش پاسخ
 
 ```
-PATCH /tickets/{ticket_id}/responses/{response_id}
+PATCH /api/tickets/{ticket_id}/responses/{response_id}
 ```
 
 ویرایش پاسخ‌های باز توسط نویسنده پاسخ.
@@ -153,7 +161,7 @@ PATCH /tickets/{ticket_id}/responses/{response_id}
 ### مشاهده اعلان‌های خوانده نشده
 
 ```
-GET /notifications
+GET /api/notifications
 ```
 
 دریافت فهرست اعلان‌های خوانده نشده مربوط به کاربر جاری.
@@ -161,7 +169,7 @@ GET /notifications
 ### مشاهده تمامی اعلان‌ها
 
 ```
-GET /notifications/all
+GET /api/notifications/all
 ```
 
 دریافت فهرست تمامی اعلان‌های مربوط به کاربر جاری.
@@ -170,7 +178,7 @@ GET /notifications/all
 ### تغییر وضعیت اعلان
 
 ```
-PATCH /notifications
+PATCH /api/notifications
 ```
 
 تغییر وضعیت اعلان به خوانده شده توسط کاربر دریافت کننده اعلان.
@@ -180,7 +188,7 @@ PATCH /notifications
 ### مشاهده فهرست کاربران
 
 ```
-GET /users
+GET /api/users
 ```
 
 نمایش فهرست کاربران سامانه.
@@ -190,7 +198,7 @@ GET /users
 ### مشاهده اطلاعات کاربر
 
 ```
-GET /users/{user_id}
+GET /api/users/{user_id}
 ```
 
 نمایش اطلاعات یک کاربر مشخص.
@@ -198,7 +206,7 @@ GET /users/{user_id}
 ### ایجاد کاربر جدید
 
 ```
-POST /users
+POST /api/users
 ```
 
 ایجاد حساب کاربری جدید توسط مدیر سامانه.
@@ -206,7 +214,7 @@ POST /users
 ### ویرایش اطلاعات کاربر
 
 ```
-PATCH /users/{user_id}
+PATCH /api/users/{user_id}
 ```
 
 به‌روزرسانی اطلاعات یا نقش یک کاربر.
@@ -214,7 +222,7 @@ PATCH /users/{user_id}
 ### حذف کاربر
 
 ```
-DELETE /users/{user_id}
+DELETE /api/users/{user_id}
 ```
 
 حذف یک کاربر از پایگاه داده.

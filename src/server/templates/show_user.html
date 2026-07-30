@@ -30,20 +30,10 @@
 {% block aside %}
     <nav class="sidebar-nav">
         <a class="nav-tab" style="text-decoration: none;" href="/dashboard" data-tab="overview">داشبورد</a>
-        {% if user_role == "System Admin" %}
-            <a class="nav-tab" style="text-decoration: none;" href="/users" data-tab="users">تمامی کاربران</a>
-        {% elif user_role == "IT Manager" %}
-            <a class="nav-tab" style="text-decoration: none;" href="/users" data-tab="users">تمامی کارشناسان</a>
-        {% endif %}
-        {% if user_role == "IT Expert" %}
-            <a class="nav-tab" style="text-decoration: none;" href="/tickets" data-tab="tickets">تمامی تیکت‌های کارشناس</a>
-        {% else %}
-            <a class="nav-tab" style="text-decoration: none;" href="/tickets" data-tab="tickets">تمامی تیکت‌ها</a>
-        {% endif %}
+        <a class="nav-tab" style="text-decoration: none; display: none;" href="/users" data-tab="users" data-role="System Admin" id="nav-users-admin">تمامی کاربران</a>
+        <a class="nav-tab" style="text-decoration: none;" href="/tickets" data-tab="tickets" id="nav-tickets">تمامی تیکت‌ها</a>
         <a class="nav-tab" style="text-decoration: none;" href="/notifications/all" data-tab="tickets">تمامی اعلان‌ها</a>
-        {% if user_role in ("System Admin", "IT Manager") %}
-            <a class="nav-tab" style="text-decoration: none;" href="/dashboard/stats" data-tab="stats">آمار‌های سامانه</a>
-        {% endif %}
+        <a class="nav-tab" style="text-decoration: none; display: none;" href="/dashboard/stats" data-tab="stats" data-role="System Admin,IT Manager" id="nav-stats">آمار‌های سامانه</a>
     </nav>
 {% endblock %}
 
@@ -56,166 +46,61 @@
             <h2>پروفایل کاربر</h2>
         </div>
 
-        <div class="tickets-container">
-            {% if user %}
-                <div class="ticket-item">
-                    <div class="ticket-meta">
-                        <div class="ticket-info">
-                            <p class="ticket-id">#{{ user.id }}</p>
-                            <h3>{{ user.name }}</h3>
-                            <p><strong>نام کاربری:</strong> {{ user.username }}</p>
-                            <p><strong>ایمیل:</strong> {{ user.email }}</p>
-                            <p><strong>نقش:</strong> <span class="role">{{ user.role.fa }}</span></p>
-                            <p><strong>وضعیت:</strong> {{ user.status.fa }}</p>
-                            {% if user.role.value == "IT Expert" %}
-                                <p><strong>دپارتمان مربوطه کارشناس:</strong> {{ user.department.name }}</p>
-                            {% endif %}
-                            <p class="ticket-created"><strong>تاریخ عضویت:</strong> {{ user.created_at }}</p>
-                        </div>
-                    </div>
-                </div>
-                {% if user_role == "System Admin" %}
-                <div class="auth-buttons">
-                    <button class="btn submit-btn show-ticket delete-user-btn" style="background-color: tomato;" data-user-id="{{ user.id }}">
-                        Delete
-                    </button>
-                </div>
-                {% endif %}
-            {% else %}
-                <div>
-                    <p class="ticket-description">کاربر مورد نظر یافت نشد</p>
-                </div>
-            {% endif %}
+        <div class="tickets-container" id="user-profile-container">
+            <div class="empty-state" id="user-profile-loading">
+                <p>در حال بارگذاری...</p>
+            </div>
         </div>
     </section>
 
-    {% if user %}
-    <section class="card">
+    <section class="card" id="edit-user-section" style="display: none;">
         <div class="section-header">
             <h2>ویرایش اطلاعات کاربر</h2>
-            <button class="toggle-form-btn submit-btn btn-small" id="toggleFormBtn" type="button">نمایش فرم</button>
+            <button class="toggle-form-btn submit-btn btn-small" id="toggleEditFormBtn" type="button">نمایش فرم</button>
         </div>
-        <form class="ticket-form" id="editForm" action="/users/{{ user.id }}" method="post" style="display: none; font-size: 1.5em;">
+        <form class="ticket-form" id="editForm" method="post" style="display: none; font-size: 1.5em;">
 
             <div class="form-group">
                 <label>نام و نام خوانوادگی کاربر</label>
-                <input type="text" name="name" value="{{ user.name }}" required placeholder="نام و نام خوانوادگی">
-            </div>
-            {% if user_role == "System Admin" %}
-            <div class="form-group">
-                <label>نام کاربری</label>
-                <input type="text" name="username" value="{{ user.username }}" required placeholder="نام کاربری">
+                <input type="text" name="name" id="edit-name" required placeholder="نام و نام خوانوادگی">
             </div>
 
-            <div class="form-group">
-                <label>ایمیل</label>
-                <input type="email" name="email" value="{{ user.email }}" required placeholder="ایمیل">
-            </div>
-
-            <div class="form-group">
-                <label>نقش</label>
-                <select name="role" required>
-                    {% for role in Role %}
-                    <option value="{{ role.name }}"
-                            {% if user.role == role %}selected{% endif %}>
-                        {{ role.fa }}
-                    </option>
-                    {% endfor %}
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label>وضعیت</label>
-                <select name="user_status" required>
-                    {% for status in UserStatus %}
-                    <option value="{{ status.name }}"
-                            {% if user.status == status %}selected{% endif %}>
-                        {{ status.fa }}
-                    </option>
-                    {% endfor %}
-                </select>
-            </div>
-
-                {% if user.role.value == "IT Expert" %}
+            <div id="admin-only-fields" style="display: none;">
                 <div class="form-group">
+                    <label>نام کاربری</label>
+                    <input type="text" name="username" id="edit-username" required placeholder="نام کاربری">
+                </div>
+
+                <div class="form-group">
+                    <label>ایمیل</label>
+                    <input type="email" name="email" id="edit-email" required placeholder="ایمیل">
+                </div>
+
+                <div class="form-group">
+                    <label>نقش</label>
+                    <select name="role" id="edit-role" required></select>
+                </div>
+
+                <div class="form-group">
+                    <label>وضعیت</label>
+                    <select name="user_status" id="edit-status" required></select>
+                </div>
+
+                <div class="form-group" id="department-field" style="display: none;">
                     <label>دپارتمان مربوطه کارشناس</label>
-                    <select name="department_id">
+                    <select name="department_id" id="edit-department">
                         <option value="">-- دپارتمان را انتخاب کنید --</option>
-                        {% for department in departments %}
-                        <option value="{{ department.id }}"
-                            {% if user.department_id == department.id %}selected{% endif %}>
-                            {{ department.name }}
-                        </option>
-                        {% endfor %}
                     </select>
                 </div>
-                {% endif %}
-            {% endif %}
+            </div>
 
             <button class="submit-btn" type="submit">آپدیت کاربر</button>
 
         </form>
     </section>
-    {% endif %}
 {% endblock %}
 
 {% block js %}
-<script src="{{ url_for('static', path='js/toggle_btn.js') }}"></script>
-<script src="{{ url_for('static', path='js/notification.js') }}"></script>
-<script>
-    //Sending PATCH request using JS
-    document.getElementById("editForm").addEventListener("submit", async function (e) {
-        e.preventDefault();
-
-    const form = e.target;
-    const formData = new FormData(form);
-
-    try {
-        const response = await fetch(form.action, {
-            method: "PATCH",
-            body: formData,
-            credentials: 'include'
-        });
-
-        if (response.ok) {
-            // Store flash message in localStorage instead of cookie
-            localStorage.setItem('update_user_flash_message', 'successful');
-            window.location.href = response.url;
-        } else if (response.status === 403) {
-            window.location.href = '/forbidden';
-        } else {
-            const error = await response.text();
-            alert("Error: " + error);
-        }
-    } catch (err) {
-        console.error(err);
-    }
-    });
-
-    // Delete user
-    document.querySelectorAll(".delete-user-btn").forEach(btn => {
-    btn.addEventListener("click", async () => {
-        const userId = btn.dataset.userId;
-
-        if (!confirm("Are you sure you want to delete this user?")) {
-            return;
-        }
-
-        try {
-            const response = await fetch(`/users/${userId}`, {
-                method: "DELETE"
-            });
-
-            if (response.ok) {
-                window.location.href = response.url;
-            } else {
-                alert("Failed to delete user.");
-            }
-        } catch (err) {
-            console.error(err);
-            alert("An error occurred.");
-        }
-    });
-    });
-</script>
+    <script src="{{ url_for('static', path='js/notification.js') }}"></script>
+    <script src="{{ url_for('static', path='js/show_user.js') }}"></script>
 {% endblock%}

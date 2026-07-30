@@ -3,20 +3,20 @@ async function loadNotifications() {
   const notificationsTrigger = document.querySelector('.notifications-trigger');
 
   try {
-    const response = await fetch('/notifications');
+    const response = await fetch('/api/notifications');
 
     if (!response.ok) {
       throw new Error(`HTTP ${response.status}`);
     }
 
     const data = await response.json();
-    const notifications = Array.isArray(data.response)
-      ? data.response
+    const notifications = Array.isArray(data.notifications)
+      ? data.notifications
       : [];
 
     // Update notification count badge
-    const countNotifications = data.count_notifications || 0;
-    updateNotificationBadge(notificationsTrigger, countNotifications);
+    const unreadCount = data.unread_count || 0;
+    updateNotificationBadge(notificationsTrigger, unreadCount);
 
     notificationsMenu.replaceChildren();
 
@@ -68,7 +68,7 @@ document
     btn.disabled = true;
 
     try {
-      const response = await fetch('/notifications', {
+      const response = await fetch('/api/notifications', {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json'

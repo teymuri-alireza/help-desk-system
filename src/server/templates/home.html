@@ -29,7 +29,7 @@
 
             <div class="auth-buttons">
             {% if user %}
-                <a href="/auth/logout" class="btn register-btn">خروج</a>
+                <a id="logout-btn" class="btn register-btn" style="cursor: pointer;">خروج</a>
             {% else %}
                 <a href="/auth" class="btn register-btn">ورود به سامانه</a>
             {% endif %}
@@ -115,6 +115,8 @@
             تمامی حقوق این وب‌سایت متعلق به دانشگاه دانش و فناوری است.
         </p>
     </footer>
+
+<script src="{{ url_for('static', path='js/logout.js') }}"></script>
 
 </body>
 </html>

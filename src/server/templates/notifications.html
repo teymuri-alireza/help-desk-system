@@ -10,20 +10,11 @@
 {% block aside %}
     <nav class="sidebar-nav">
         <a class="nav-tab" style="text-decoration: none;" href="/dashboard" data-tab="overview">داشبورد</a>
-        {% if user_role == "System Admin" %}
-            <a class="nav-tab" style="text-decoration: none;" href="/users" data-tab="users">تمامی کاربران</a>
-        {% elif user_role == "IT Manager" %}
-            <a class="nav-tab" style="text-decoration: none;" href="/users" data-tab="users">تمامی کارشناسان</a>
-        {% endif %}
-        {% if user_role == "IT Expert" %}
-            <a class="nav-tab" style="text-decoration: none;" href="/tickets" data-tab="tickets">تمامی تیکت‌های کارشناس</a>
-        {% else %}
-            <a class="nav-tab" style="text-decoration: none;" href="/tickets" data-tab="tickets">تمامی تیکت‌ها</a>
-        {% endif %}
-        <a class="nav-tab active" style="text-decoration: none;" data-tab="tickets">تمامی اعلان‌ها</a>
-        {% if user_role in ("System Admin", "IT Manager") %}
-            <a class="nav-tab" style="text-decoration: none;" href="/dashboard/stats" data-tab="stats">آمار‌های سامانه</a>
-        {% endif %}
+        <a class="nav-tab" style="text-decoration: none; display: none;" href="/users" data-tab="users" data-role="System Admin" id="nav-users-admin">تمامی کاربران</a>
+        <a class="nav-tab" style="text-decoration: none; display: none;" href="/users" data-tab="users" data-role="IT Manager" id="nav-users-manager">تمامی کارشناسان</a>
+        <a class="nav-tab" style="text-decoration: none;" href="/tickets" data-tab="tickets" id="nav-tickets">تمامی تیکت‌ها</a>
+        <a class="nav-tab active" style="text-decoration: none;" href="/notifications/all" data-tab="tickets">تمامی اعلان‌ها</a>
+        <a class="nav-tab" style="text-decoration: none; display: none;" href="/dashboard/stats" data-tab="stats" data-role="System Admin,IT Manager" id="nav-stats">آمار‌های سامانه</a>
     </nav>
 {% endblock %}
 
@@ -37,68 +28,11 @@
     </section>
 
     <section class="notifications-list" id="notifications-list">
-        {% for notification in notifications_list %}
-            <article class="notification-card {% if not notification.is_read %}unread{% endif %}">
-                <div id="{{ notification.id }}" class="notification-top">
-                    <span class="notification-date">
-                        ایجاد شده در {{ notification.created_at }}
-                    </span>
-                </div>
-                <h3>{{ notification.title }}</h3>
-                <p>{{ notification.text }}</p>
-                <div class="notification-btn-status">
-                    {% if notification.is_read %}
-                    <div class="notification-status read">
-                        خوانده شده
-                    </div>
-                    {% else %}
-                    <div class="notification-status unread">
-                        خوانده‌نشده
-                    </div>
-                    {% endif %}
-
-                    <a href="{{ notification.url }}" class="notification-btn btn submit-btn show-ticket" style="max-width: 20%;">مشاهده جزییات بیشتر</a>
-                    {% if not notification.is_read %}
-                    <button class="notification-btn" data-id="{{ notification.id }}" class="btn submit-btn show-ticket" style="max-width: 20%;">مشاهده شد</button>
-                    {% endif %}
-                </div>
-            </article>
-        {% endfor %}
+        <p class="loading">در حال بارگذاری اعلان‌ها...</p>
     </section>
 {% endblock %}
 
 {% block js %}
 <script src="{{ url_for('static', path='js/notification.js') }}"></script>
-<script>
-    document.getElementById("notifications-list")
-        .addEventListener("click", async (e) => {
-            const btn = e.target.closest('.notification-btn');
-            if (!btn) return;
-
-            btn.disabled = true;
-
-            try {
-            const response = await fetch('/notifications', {
-                method: 'PATCH',
-                headers: {
-                'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                notification_id: btn.dataset.id,
-                is_read: true
-                })
-            });
-
-            if (!response.ok) {
-                throw new Error(`HTTP ${response.status}`);
-            }
-
-            location.reload();
-
-            } catch (error) {
-            console.error('Failed to update notification:', error);
-            btn.disabled = false;
-            }
-        });
-</script>
+<script src="{{ url_for('static', path='js/all_notifications.js') }}"></script>
 {% endblock%}

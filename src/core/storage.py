@@ -472,6 +472,24 @@ class StorageEngine:
             core_logger.error(f"List notifications failed - {e}")
             raise
 
+    def find_notification(self, notification_id: int) -> Notification | None:
+        """
+        Find a notification by ID.
+
+        Args:
+            notification_id: The notification ID to search for.
+
+        Returns:
+            Notification|None: Notification object if found, otherwise None.
+        """
+        try:
+            with self.session_factory() as session:
+                found_notification = session.query(Notification).filter(Notification.id==notification_id).one_or_none()
+                return found_notification
+        except Exception as e:
+            core_logger.error(f"Find notification failed - {e}")
+            raise
+
     def list_users(self, limit: int | None = None, role: str | None = None, department_id: int | None = None) -> list[User]:
         """
         Retrieve users, optionally filtered by role and department.

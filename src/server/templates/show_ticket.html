@@ -9,19 +9,38 @@
 {% block early_js %}
 <script>
     document.addEventListener("DOMContentLoaded", () => {
-        // Check localStorage for flash message
+        // Check localStorage for flash messages set by JS after an action completes.
         if (localStorage.getItem('ticket_update_flash_message')) {
             const flashDiv = document.getElementById('ticket-flash-alert');
             if (flashDiv) {
                 flashDiv.style.display = 'block';
                 setTimeout(() => {
                     flashDiv.style.opacity = "0";
-                    setTimeout(() => {
-                        flashDiv.remove();
-                    }, 500);
+                    setTimeout(() => flashDiv.remove(), 500);
                 }, 3500);
             }
             localStorage.removeItem('ticket_update_flash_message');
+        }
+
+        // Generic action flash (remove assignee / auto-assign / rate / reopen), stored as JSON {type, text}.
+        const actionFlashRaw = localStorage.getItem('ticket_action_flash');
+        if (actionFlashRaw) {
+            try {
+                const { type, text } = JSON.parse(actionFlashRaw);
+                const flashDiv = document.getElementById('ticket-action-alert');
+                if (flashDiv) {
+                    flashDiv.className = `alert alert-${type === 'success' ? 'success' : 'danger'}`;
+                    flashDiv.textContent = text;
+                    flashDiv.style.display = 'block';
+                    setTimeout(() => {
+                        flashDiv.style.opacity = "0";
+                        setTimeout(() => flashDiv.remove(), 500);
+                    }, 3500);
+                }
+            } catch (e) {
+                console.error(e);
+            }
+            localStorage.removeItem('ticket_action_flash');
         }
 
         if (localStorage.getItem('edit_response_unavailable')) {
@@ -30,9 +49,7 @@
                 responseFlashDiv.style.display = 'block';
                 setTimeout(() => {
                     responseFlashDiv.style.opacity = "0";
-                    setTimeout(() => {
-                        responseFlashDiv.remove();
-                    }, 500);
+                    setTimeout(() => responseFlashDiv.remove(), 500);
                 }, 3500);
             }
             localStorage.removeItem('edit_response_unavailable');
@@ -44,65 +61,14 @@
                 responseFlashDiv.style.display = 'block';
                 setTimeout(() => {
                     responseFlashDiv.style.opacity = "0";
-                    setTimeout(() => {
-                        responseFlashDiv.remove();
-                    }, 500);
+                    setTimeout(() => responseFlashDiv.remove(), 500);
                 }, 3500);
             }
             localStorage.removeItem('edit_response_ok');
         }
 
-        const modal = document.getElementById('ratingModal');
-        const backdrop = document.getElementById('ratingModalBackdrop');
-        const openBtn = document.querySelector('[data-modal-target="ratingModal"]');
-        const closeBtn = document.getElementById('closeRatingModal');
-        const ratingInput = document.getElementById('ratingInput');
-        const stars = document.querySelectorAll('.rating-star');
-
-        function openModal() {
-            if (!modal || !backdrop) return;
-            modal.classList.add('is-open');
-            backdrop.classList.add('is-open');
-            document.body.classList.add('modal-open');
-            modal.setAttribute('aria-hidden', 'false');
-        }
-
-        function closeModal() {
-            if (!modal || !backdrop) return;
-            modal.classList.remove('is-open');
-            backdrop.classList.remove('is-open');
-            document.body.classList.remove('modal-open');
-            modal.setAttribute('aria-hidden', 'true');
-        }
-
-        if (openBtn) {
-            openBtn.addEventListener('click', openModal);
-        }
-
-        if (closeBtn) {
-            closeBtn.addEventListener('click', closeModal);
-        }
-
-        if (backdrop) {
-            backdrop.addEventListener('click', closeModal);
-        }
-
-        document.addEventListener('keydown', (event) => {
-            if (event.key === 'Escape') {
-                closeModal();
-            }
-        });
-
-        stars.forEach((star) => {
-            star.addEventListener('click', () => {
-                const value = star.getAttribute('data-value');
-                ratingInput.value = value;
-
-                stars.forEach((item) => {
-                    item.classList.toggle('active', item.getAttribute('data-value') <= value);
-                });
-            });
-        });
+        // Note: rating-modal open/close/star wiring now happens in show_ticket.js,
+        // after the modal markup is actually rendered (it depends on fetched data).
     });
 </script>
 {% endblock %}
@@ -110,20 +76,10 @@
 {% block aside %}
     <nav class="sidebar-nav">
         <a class="nav-tab" style="text-decoration: none;" href="/dashboard" data-tab="overview">داشبورد</a>
-        {% if user_role == "System Admin" %}
-            <a class="nav-tab" style="text-decoration: none;" href="/users" data-tab="users">تمامی کاربران</a>
-        {% elif user_role == "IT Manager" %}
-            <a class="nav-tab" style="text-decoration: none;" href="/users" data-tab="users">تمامی کارشناسان</a>
-        {% endif %}
-        {% if user_role == "IT Expert" %}
-            <a class="nav-tab" style="text-decoration: none;" href="/tickets" data-tab="tickets">تمامی تیکت‌های کارشناس</a>
-        {% else %}
-            <a class="nav-tab" style="text-decoration: none;" href="/tickets" data-tab="tickets">تمامی تیکت‌ها</a>
-        {% endif %}
+        <a class="nav-tab" style="text-decoration: none; display: none;" href="/users" data-tab="users" id="nav-users">تمامی کاربران</a>
+        <a class="nav-tab" style="text-decoration: none;" href="/tickets" data-tab="tickets" id="nav-tickets">تمامی تیکت‌ها</a>
         <a class="nav-tab" style="text-decoration: none;" href="/notifications/all" data-tab="tickets">تمامی اعلان‌ها</a>
-        {% if user_role in ("System Admin", "IT Manager") %}
-            <a class="nav-tab" style="text-decoration: none;" href="/dashboard/stats" data-tab="stats">آمار‌های سامانه</a>
-        {% endif %}
+        <a class="nav-tab" style="text-decoration: none; display: none;" href="/dashboard/stats" data-tab="stats" id="nav-stats">آمار‌های سامانه</a>
     </nav>
 {% endblock %}
 
@@ -133,29 +89,7 @@
             تیکت با موفقیت آپدیت شد.
         </div>
 
-        {% if ticket_closed_flash_message %}
-        <div id="ticket-closed-flash-alert" class="alert alert-danger">
-            امکان ثبت پاسخ وجود ندارد. تیکت بسته شده است.
-        </div>
-        {% endif %}
-
-        {% if assign_ticket_flash_message %}
-        <div class="alert alert-{% if assign_ticket_flash_message == "اختصاص اتوماتیک کارشناس به تیکت با موفقیت انجام شد" %}success{% else %}danger{% endif %}">
-            {{ assign_ticket_flash_message }}
-        </div>
-        {% endif %}
-
-        {% if ticket_remove_assignee %}
-        <div class="alert alert-success">
-            {{ ticket_remove_assignee }}
-        </div>
-        {% endif %}
-
-        {% if rate_ticket_flash_message %}
-        <div id="ticket-closed-flash-alert" class="alert alert-success">
-            {{ rate_ticket_flash_message }}
-        </div>
-        {% endif %}
+        <div id="ticket-action-alert" class="alert" style="display: none;"></div>
 
         <div id="edit-response-ok-flash-alert" class="alert alert-success" style="display: none;">
             ویرایش پاسخ با موفقیت انجام شد.
@@ -165,315 +99,28 @@
             ویرایش پاسخ ممکن نیست. علت: تیکت بسته شده است
         </div>
 
-        <div id="response-flash-alert" class="alert alert-danger" style="display: none;">
-            تیکت با موفقیت دوباره در وضعیت در حال بررسی قرار گرفت
-        </div>
-
         <div class="section-header">
             <h2>اطلاعات تیکت</h2>
         </div>
 
-        <div class="tickets-container">
-            {% if ticket %}
-                <div class="ticket-item">
-                    <div class="ticket-meta">
-                        <div class="ticket-info">
-                            <p class="ticket-id" id="ticket-id" data-ticket_id="{{ ticket.id }}">#{{ ticket.id }}</p>
-                            <h3>عنوان: {{ ticket.title }}</h3>
-                        </div>
-                        <span class="status alert {% if ticket.status.name == 'NEW' %}alert-success{% elif ticket.status.name == 'IN_PROGRESS' or ticket.status.name == 'WAITING_FOR_USER' %}alert-warning{% elif ticket.status.name == 'RESOLVED' or ticket.status.name == 'CLOSED' %}alert-danger{% endif %}">
-                            وضعیت: {{ ticket.status.fa }}
-                        </span>
-                        <span class="status alert {% if ticket.priority.name == 'NORMAL' %}alert-info{% elif ticket.priority.name == 'WARNING' %}alert-warning{% elif ticket.priority.name == 'CRITICAL' %}alert-danger{% endif %}">
-                            اولویت: {{ ticket.priority.fa }}
-                        </span>
-                    </div>
-                    <p class="ticket-description">توضیحات: {{ ticket.description }}</p>
-                    {% if attachment %}
-                        <a href="/contents/upload/{{ attachment.file_name }}" target="_blank">مشاهده فایل پیوست</a>
-                    {% else %}
-                        <p class="ticket-created">فایل پیوستی یافت نشد</p>
-                    {% endif %}
-                    <div class="ticket-reply" id="ticket-reply" data-current-user-id="{{ user_id }}"></div>
-                    <br />
-
-                    {% if ticket.assignee.username %}
-                        <p>کارشناس بررسی کننده: {{ ticket.assignee.username }}</p>
-
-                        {% if user_role in ("System Admin", "IT Manager") %}
-                        <form action="/tickets/{{ ticket.id }}/remove_assignee" method="post" style="margin-top: 0.5rem;" onsubmit="return confirm('آیا از حذف کارشناس ارجاع داده شده مطمئن هستید؟');">
-                            <input type="hidden" name="checkbox" value="true">
-                            <button type="submit" class="submit-btn btn-small" style="background: #b91c1c; border-color: #b91c1c;">
-                                حذف کارشناس ارجاع داده شده
-                            </button>
-                        </form>
-                    {% endif %}
-
-                    {% else %}
-                        <p>به این تیکت هنوز کارشناسی ارجاع داده نشده.</p>
-                    {% endif %}
-
-                    {% if ticket.category.name %}
-                        <p>دسته بندی تیکت: {{ ticket.category.name }}</p>
-                    {% else %}
-                        <p>برای این تیکت دسته بندی انتخاب نشده.</p>
-                    {% endif %}
-
-                    {% if ticket.department.name %}
-                        <p>دپارتمان تیکت: {{ ticket.department.name }}</p>
-                    {% else %}
-                        <p>برای این تیکت دپارتمان انتخاب نشده.</p>
-                    {% endif %}
-                    <small><p class="ticket-created">ثبت شده در: {{ ticket.created_at }}</p></small>
-                    {% if user_role != "Student" and user_role != "Employee" %}
-                        <small><p class="ticket-created">شناسه کاربر ایجاد کننده: 
-                                <a href="/users/{{ ticket.creator_id }}">{{ ticket.creator_id }}</a>
-                        </p></small>
-                    {% endif %}
-
-                    {% if ticket.status == TicketStatus.IN_PROGRESS and user_role != "Student" or ticket.status == TicketStatus.WAITING_FOR_USER and user_role == "Student" %}
-                    <form action="/tickets/{{ ticket.id }}/responses" method="post" class="ticket-form">
-
-                        <div class="form-group">
-                            <label for="response">متن پاسخ:</label>
-                            <textarea id="response" name="text" placeholder="متن پاسخ خود را وارد کنید..." required></textarea>
-                        </div>
-
-                        <button type="submit" class="submit-btn btn-small">ارسال پاسخ</button>
-                    </form>
-                    {% endif %}
-
-                    {% if ticket.creator.id == user_id %}
-                        {% if ticket.status.name in ("RESOLVED", "CLOSED") %}
-                        <div class="rating-action">
-                            <div class="rating-summary">
-                                {% if ticket.satisfaction_rating %}
-                                    <span>امتیاز ثبت شده: 
-                                        5 / {{ ticket.satisfaction_rating * "★" }}
-                                    </span>
-                                {% else %}
-                                    <span>هنوز امتیازی ثبت نشده است.</span>
-                                {% endif %}
-                            </div>
-
-                            {% if not ticket.satisfaction_rating %}
-                                <button type="button" class="rating-open-btn" data-modal-target="ratingModal">ثبت امتیاز</button>
-                            {% endif %}
-                        </div>
-                        {% endif %}
-
-                        <div class="rating-modal-backdrop" id="ratingModalBackdrop"></div>
-
-                        <div class="rating-modal" id="ratingModal" role="dialog" aria-modal="true" aria-labelledby="ratingModalTitle" aria-hidden="true">
-                            <div class="rating-modal-content">
-                                <button type="button" class="rating-modal-close" id="closeRatingModal" aria-label="بستن">×</button>
-
-                                <h3 id="ratingModalTitle">امتیازدهی به تیکت</h3>
-                                <p>از تجربه‌ی خود درباره‌ی این تیکت امتیاز دهید.</p>
-
-                                <form action="/tickets/{{ ticket.id }}/rate" method="post" class="rating-form">
-                                    <div class="rating-stars" role="radiogroup" aria-label="انتخاب امتیاز">
-                                        <button type="button" class="rating-star" data-value="1" aria-label="۱ ستاره">★</button>
-                                        <button type="button" class="rating-star" data-value="2" aria-label="۲ ستاره">★</button>
-                                        <button type="button" class="rating-star" data-value="3" aria-label="۳ ستاره">★</button>
-                                        <button type="button" class="rating-star" data-value="4" aria-label="۴ ستاره">★</button>
-                                        <button type="button" class="rating-star" data-value="5" aria-label="۵ ستاره">★</button>
-                                    </div>
-
-                                    <input type="hidden" name="rating" id="ratingInput" value="5">
-
-                                    <button type="submit" class="submit-btn btn-small">ثبت امتیاز</button>
-                                </form>
-                            </div>
-                        </div>
-                    {% endif %}
-
-                </div>
-            {% else %}
-                <div class="empty-state">
-                    <p>تیکت مورد نظر یافت نشد</p>
-                </div>
-            {% endif %}
+        <div class="tickets-container" id="ticket-detail-container">
+            <div class="empty-state" id="ticket-detail-loading">
+                <p>در حال بارگذاری...</p>
+            </div>
         </div>
     </section>
 
-    {% if ticket and user_role not in ("Student", "Employee", "IT Expert") %}
-    {% if not ticket.assigned_to %}
-    {% if ticket.status.name != "RESOLVED" and ticket.status.name != "CLOSED" %}
+    <section class="card" id="assign-section" style="display: none;"></section>
 
-    <section class="card">
-        <div class="section-header">
-            <h2>اختصاص اتوماتیک تیکت به کارشناس</h2>
-        </div>
-
-        {% if preview_assign_ticket_flash_message %}
-            <div class="alert alert-info">
-                کارشناس پیشنهادی:
-                    {{ preview_assign_ticket_flash_message }}
-            </div>
-
-            <p>آیا می‌خواهید این کارشناس به این تیکت اختصاص داده شود؟</p>
-
-            <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center;">
-                <form action="/tickets/{{ ticket.id }}/assign" method="post" class="ticket-form" style="margin: 0;">
-                    <button class="submit-btn btn-small" type="submit">بله، انجام شود</button>
-                </form>
-
-                <a href="/tickets/{{ ticket.id }}" class="submit-btn btn-small" style="text-decoration: none; display: inline-block;">
-                    خیر، لغو شود
-                </a>
-            </div>
-        {% else %}
-            <a href="/tickets/{{ ticket.id }}/assign/preview" class="submit-btn btn-small" style="text-decoration: none;">
-                اجرای فرایند اختصاص
-            </a>
-        {% endif %}
-    </section>
-
-    {% endif %}
-    {% endif %}
-    {% endif %}
-
-    {% if ticket.status.name != "RESOLVED" and ticket.status.name != "CLOSED" %}
-    <section class="card">
+    <section class="card" id="edit-ticket-section" style="display: none;">
         <div class="section-header">
             <h2>ویرایش اطلاعات تیکت</h2>
             <button class="toggle-form-btn submit-btn btn-small" id="toggleFormBtn" type="button">نمایش فرم</button>
         </div>
-        <form class="ticket-form" id="editForm" action="/tickets/{{ ticket.id }}" method="post" style="display: none; font-size: 1.5em;">
-        {% if ticket and user_role != "Student" and user_role != "Employee" %}
-
-            {% if user_role != "IT Expert" %}
-            <div class="form-group">
-                <label>عنوان</label>
-                <input type="text" name="title" value="{{ ticket.title }}" required placeholder="عنوان تیکت">
-            </div>
-
-            <div class="form-group">
-                <label>توضیحات</label>
-                <input type="text" name="description" value="{{ ticket.description }}" required placeholder="توضیحات تیکت">
-            </div>
-            {% endif %}
-
-            {% if user_role != "IT Expert" %}
-            <div class="form-group">
-                <label>وضعیت</label>
-                <select name="ticket_status" required>
-                    {% for status in TicketStatus %}
-                    <option value="{{ status.name }}"
-                            {% if ticket.status == status %}selected{% endif %}>
-                        {{ status.fa }}
-                    </option>
-                    {% endfor %}
-                </select>
-            </div>
-            {% else %}
-                <div class="form-group">
-                    <label class="custom-checkbox" for="ticket_status">
-                        <input type="checkbox" id="ticket_status" name="ticket_status" value="RESOLVED">
-                        <span>مشکل تیکت حل شد</span>
-                    </label>
-                </div>
-            {% endif %}
-
-            {% if user_role != "IT Expert" %}
-            <div class="form-group">
-                <label>اولویت</label>
-                <select name="priority" required>
-                    {% for priority in TicketPriority %}
-                    <option value="{{ priority.name }}"
-                            {% if ticket.priority == priority %}selected{% endif %}>
-                        {{ priority.fa }}
-                    </option>
-                    {% endfor %}
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label>کارشناس بررسی کننده</label>
-
-                {% if not it_experts %}
-                    {% if ticket.department_id %}
-                        <div class="alert alert-info">در دپارتمان تعیین شده برای تیکت، کارشناسی فعالیت نمیکند.</div>
-                    {% else %}
-                        <div class="alert alert-info">برای انتخاب کارشناس، ابتدا دپارتمان تیکت را مشخص کنید و دکمه "آپدیت تیکت" را بزنید</div>
-                    {% endif %}
-                {% endif %}
-
-                <select name="assigned_to">
-                    <option value="">-- کارشناس را انتخاب کنید --</option>
-                    {% for it_expert in it_experts %}
-                    <option value="{{ it_expert.id }}"
-                        {% if ticket.assigned_to == it_expert.id %}selected{% endif %}>
-                        {{ it_expert.name }}
-                    </option>
-                    {% endfor %}
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label>دسته بندی تیکت</label>
-                <select name="category_id">
-                    <option value="">-- دسته بندی را انتخاب کنید --</option>
-                    {% for category in categories %}
-                    <option value="{{ category.id }}"
-                        {% if ticket.category_id == category.id %}selected{% endif %}>
-                        {{ category.name }}
-                    </option>
-                    {% endfor %}
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label>دپارتمان تیکت</label>
-                <select name="department_id">
-                    <option value="">-- دپارتمان را انتخاب کنید --</option>
-                    {% for department in departments %}
-                    <option value="{{ department.id }}"
-                        {% if ticket.department_id == department.id %}selected{% endif %}>
-                        {{ department.name }}
-                    </option>
-                    {% endfor %}
-                </select>
-            </div>
-            {% endif %}
-
-        <!-- User access for updating ticket -->
-        {% endif %}
-        {% if ticket and user_role in ("Student", "Employee") %}
-        <div class="form-group">
-            <label class="custom-checkbox" for="ticket_status">
-                <input type="checkbox" id="ticket_status" name="ticket_status" value="CLOSED">
-                <span>آیا میخواهید تیکت را ببندید؟</span>
-            </label>
-        </div>
-        
-        {% endif %}
-        <button class="submit-btn" type="submit">آپدیت تیکت</button>
-    </form>
+        <form class="ticket-form" id="editForm" style="display: none; font-size: 1.5em;"></form>
     </section>
-    {% endif %}
 
-    <!-- Allow re-opening tickets, for system admins, and IT managers -->
-    {% if ticket.status.name in ("RESOLVED", "CLOSED") and user_role in ("System Admin", "IT Manager") %}
-    <section class="card">
-        <div class="section-header">
-            <h2>باز کردن دوباره تیکت</h2>
-        </div>
-        <form class="ticket-form" id="editForm" action="/tickets/{{ ticket.id }}/reopen" method="post" style="font-size: 1.5em;">
-
-            <div class="form-group">
-                <label class="custom-checkbox" for="ticket_status">
-                    <input type="checkbox" id="ticket_status" name="ticket_status" value="IN_PROGRESS">
-                    <span>این تیکت بسته شده است. آیا میخواهید آن را دوباره باز کنید؟ (این کار باعث حذف امتیاز این تیکت میشود)</span>
-                </label>
-            </div>
-
-            <button class="submit-btn" type="submit">آپدیت تیکت</button>
-        </form>
-    </section>
-    {% endif %}
-
+    <section class="card" id="reopen-section" style="display: none;"></section>
 {% endblock %}
 
 {% block js %}
@@ -481,34 +128,5 @@
 <script src="{{ url_for('static', path='js/toggle_btn.js') }}"></script>
 <script src="{{ url_for('static', path='js/responses.js') }}"></script>
 <script src="{{ url_for('static', path='js/alerts.js') }}"></script>
-<script>
-    //Sending PATCH request using JS
-    document.getElementById("editForm").addEventListener("submit", async function (e) {
-        e.preventDefault();
-
-    const form = e.target;
-    const formData = new FormData(form);
-
-    try {
-        const response = await fetch(form.action, {
-            method: "PATCH",
-            body: formData,
-            credentials: 'include'
-        });
-
-        if (response.ok) {
-            // Store flash message in localStorage instead of cookie
-            localStorage.setItem('ticket_update_flash_message', 'successful');
-            window.location.href = response.url;
-        } else if (response.status === 403) {
-            window.location.href = '/forbidden';
-        } else {
-            const error = await response.text();
-            alert("Error: " + error);
-        }
-    } catch (err) {
-        console.error(err);
-    }
-    });
-</script>
-{% endblock%}
+<script src="{{ url_for('static', path='js/show_ticket.js') }}"></script>
+{% endblock %}

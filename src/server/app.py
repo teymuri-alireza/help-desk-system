@@ -7,12 +7,17 @@ from fastapi.staticfiles import StaticFiles
 from fastapi_swagger import patch_fastapi
 from starlette.middleware.sessions import SessionMiddleware
 from contextlib import asynccontextmanager
-from src.server.routes.auth import router as auth_router
-from src.server.routes.tickets import router as tickets_router
-from src.server.routes.responses import router as responses_router
-from src.server.routes.dashboard import router as dashboard_router
-from src.server.routes.users import router as users_router
-from src.server.routes.notifications import router as notifications_router
+from src.server.routes.page.auth import router as page_auth_router
+from src.server.routes.api.auth import router as api_auth_router
+from src.server.routes.page.tickets import router as page_tickets_router
+from src.server.routes.api.tickets import router as api_tickets_router
+from src.server.routes.api.responses import router as api_responses_router
+from src.server.routes.page.dashboard import router as page_dashboard_router
+from src.server.routes.api.dashboard import router as api_dashboard_router
+from src.server.routes.page.users import router as page_users_router
+from src.server.routes.api.users import router as api_users_router
+from src.server.routes.page.notifications import router as page_notifications_router
+from src.server.routes.api.notifications import router as api_notifications_router
 from src.server.routes.contents import router as contents_router
 from src.server.dependencies import get_static_path, set_helpdesk, get_helpdesk, get_current_user
 from src.core.engine import HelpDeskCore
@@ -92,12 +97,17 @@ def courses(request: Request):
 def forbidden(request: Request):
     raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Access denied")
 
-app.include_router(auth_router)
-app.include_router(tickets_router)
-app.include_router(responses_router)
-app.include_router(dashboard_router)
-app.include_router(users_router)
-app.include_router(notifications_router)
+app.include_router(page_auth_router)
+app.include_router(api_auth_router)
+app.include_router(page_tickets_router)
+app.include_router(api_tickets_router)
+app.include_router(api_responses_router)
+app.include_router(page_dashboard_router)
+app.include_router(api_dashboard_router)
+app.include_router(page_users_router)
+app.include_router(api_users_router)
+app.include_router(page_notifications_router)
+app.include_router(api_notifications_router)
 app.include_router(contents_router)
 
 @app.exception_handler(403)

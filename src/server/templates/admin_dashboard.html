@@ -9,217 +9,126 @@
 {% block aside %}
     <nav class="sidebar-nav">
         <a class="nav-tab active" style="text-decoration: none;" data-tab="overview">داشبورد</a>
-        {% if user_role == "System Admin" %}
-            <a class="nav-tab" style="text-decoration: none;" href="/users" data-tab="users">تمامی کاربران</a>
-        {% elif user_role == "IT Manager" %}
-            <a class="nav-tab" style="text-decoration: none;" href="/users" data-tab="users">تمامی کارشناسان</a>
-        {% endif %}
-        <a class="nav-tab" style="text-decoration: none;" href="/tickets" data-tab="tickets">تمامی تیکت‌ها</a>
+        <a class="nav-tab" style="text-decoration: none; display: none;" href="/users" data-tab="users" data-role="System Admin" id="nav-users-admin">تمامی کاربران</a>
+        <a class="nav-tab" style="text-decoration: none; display: none;" href="/users" data-tab="users" data-role="IT Manager" id="nav-users-manager">تمامی کارشناسان</a>
+        <a class="nav-tab" style="text-decoration: none;" href="/tickets" data-tab="tickets" id="nav-tickets">تمامی تیکت‌ها</a>
         <a class="nav-tab" style="text-decoration: none;" href="/notifications/all" data-tab="tickets">تمامی اعلان‌ها</a>
         <a class="nav-tab" style="text-decoration: none;" href="/dashboard/stats" data-tab="stats">آمار‌های سامانه</a>
     </nav>
 {% endblock %}
 
 {% block content %}
-    <!-- KPI CARDS -->
-    <div class="metrics-grid">
-        {% if user_role == "System Admin" %}
-        <div class="metric-card">
-            <span>کاربران کل / کاربران فعال</span>
-            <h2>{{ all_users_count }} / {{ active_users_count }}</h2>
-        </div>
-        {% endif %}
-
-        <div class="metric-card">
-            <span>کل تیکت‌ها / تیکت‌های باز</span>
-            <h2>{{ all_tickets_count }} / {{ active_tickets_count }}</h2>
-        </div>
-
-        <div class="metric-card">
-            <span>تیکت‌های بدون کارشناس</span>
-            <h2>{{ not_assigned_tickets }}</h2>
-        </div>
-
-        <div class="metric-card">
-            <span>تیکت‌های ۲۴ ساعت گذشته</span>
-            <h2>{{ last_created }}</h2>
-        </div>
+    <div class="empty-state" id="dashboard-loading">
+        <p>در حال بارگذاری...</p>
     </div>
 
-    {% if user_role == "System Admin" %}
-    <!-- User Form -->
-    <section class="card">
-        {% if new_user_flash_message %}
-            <div id="user-flash-alert" class="alert alert-success">
-                کاربر با موفقیت ثبت شد
+    <div id="dashboard-content" style="display: none;">
+        <!-- KPI CARDS -->
+        <div class="metrics-grid">
+            <div class="metric-card" id="users-metric-card" style="display: none;">
+                <span>کاربران کل / کاربران فعال</span>
+                <h2 id="users-metric-value">- / -</h2>
             </div>
-        {% endif %}
-        {% if user_exists_flash_message %}
-            <div id="user-flash-alert" class="alert alert-danger">
-                این نام کاربری قبلا استفاده شده است.
-            </div>
-        {% endif %}
 
-        {% if missing_department_id %}
-            <div id="user-flash-alert" class="alert alert-danger">
-                {{ missing_department_id }}
+            <div class="metric-card">
+                <span>کل تیکت‌ها / تیکت‌های باز</span>
+                <h2 id="tickets-metric-value">- / -</h2>
             </div>
-        {% endif %}
 
-        <div class="section-header">
-            <h2>ثبت کاربر جدید</h2>
-            <button class="toggle-form-btn submit-btn btn-small" id="toggleUserFormBtn" type="button">نمایش فرم</button>
-        </div>
-        <form id="newUserForm" class="ticket-form" action="/users" method="POST" enctype="multipart/form-data" style="display: none;">
-            <div class="form-group">
-                <label>نام و نام خانوادگی</label>
-                <input type="text" name="name" required placeholder="نام و نام خانوادگی">
+            <div class="metric-card">
+                <span>تیکت‌های بدون کارشناس</span>
+                <h2 id="unassigned-metric-value">-</h2>
             </div>
-            <div class="form-group">
-                <label>نام کاربری (دانشجویی/کارمندی)</label>
-                <input type="text" name="username" required placeholder="نام کاربری">
-            </div>
-            <div class="form-group">
-                <label>ایمیل</label>
-                <input type="email" name="email" required placeholder="ایمیل">
-            </div>
-            <div class="form-group">
-                <label>نقش کاربر</label>
-                <select name="role" required>
-                    {% for role in Role %}
-                    <option value="{{ role.name }}" id="new-user-status-value">
-                        {{ role.fa }}
-                    </option>
-                    {% endfor %}
-                </select>
-            </div>
-            <div class="form-group" id="new-user-department" style="display: none;">
-                <label>دپارتمان مربوطه کارشناس</label>
-                <select name="department_id">
-                    <option value="">-- دپارتمان را انتخاب کنید --</option>
-                    {% for department in departments %}
-                    <option value="{{ department.id }}">
-                        {{ department.name }}
-                    </option>
-                    {% endfor %}
-                </select>
-            </div>
-            <button class="submit-btn" type="submit">ثبت کاربر</button>
-        </form>
-    </section>
-    {% endif %}
 
-    <!-- Tickets TAB -->
-    <section class="card">
-        <div class="section-header">
-            <h2>تیکت‌های اخیر سامانه</h2>
+            <div class="metric-card">
+                <span>تیکت‌های ۲۴ ساعت گذشته</span>
+                <h2 id="recent-metric-value">-</h2>
+            </div>
         </div>
-        <div class="table-wrapper">
-            <table class="tickets-table">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>عنوان</th>
-                        <th>وضعیت</th>
-                        <th>ایجاد کننده</th>
-                        <th>تاریخ ثبت</th>
-                        <th>عملیات</th>
-                    </tr>
-                </thead>
 
-                <tbody>
-                    {% for ticket in tickets_list %}
-                    <tr>
-                        <td>#{{ ticket.id }}</td>
-                        <td>
-                            <strong>{{ ticket.title }}</strong>
-                        </td>
-                        <td>
-                            <span class="status-badge status-{{ ticket.status.name }}">{{ ticket.status.fa }}</span>
-                        </td>
-                        {% if user_role == "System Admin" %}
-                        <td>
-                            <a href="/users/{{ ticket.creator_id }}">{{ ticket.creator.username }}</a>
-                        </td>
-                        {% else %}
-                        <td>{{ ticket.creator.username }}</td>
-                        {% endif %}
-                        <td>{{ ticket.created_at }}</td>
-                        <td>
-                            <a href="/tickets/{{ ticket.id }}" class="btn-small btn submit-btn">مشاهده</a>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    </section>
+        <!-- User Form (System Admin only) -->
+        <section class="card" id="new-user-section" style="display: none;">
+            <div id="user-flash-alert" class="alert" style="display: none;"></div>
 
-    {% if user_role == "System Admin" %}
-    <!-- Users TAB -->
-    <section class="card">
-        <div class="section-header">
-            <h2>کاربران اخیر سامانه</h2>
-        </div>
-        <div class="table-wrapper">
-            <table>
-                <thead>
-                    <tr>
-                        <th># id</th>
-                        <th>نام کاربری</th>
-                        <th>نام</th>
-                        <th>ایمیل</th>
-                        <th>نقش</th>
-                        <th>عملیات</th>
-                    </tr>
-                </thead>
-                <tbody>
-                {% for user in users_list %}
-                    <tr>
-                        <td>{{ user.id }}</td>
-                        <td>{{ user.username }}</td>
-                        <td>{{ user.name }}</td>
-                        <td>{{ user.email }}</td>
-                        <td>{{ user.role.fa }}</td>
-                        <td>
-                            <a href="/users/{{ user.id }}" class="btn-small btn submit-btn">مشاهده</a>
-                        </td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    </section>
-    {% endif %}
+            <div class="section-header">
+                <h2>ثبت کاربر جدید</h2>
+                <button class="toggle-form-btn submit-btn btn-small" id="toggleUserFormBtn" type="button">نمایش فرم</button>
+            </div>
+            <form id="newUserForm" class="ticket-form" style="display: none;">
+                <div class="form-group">
+                    <label>نام و نام خانوادگی</label>
+                    <input type="text" name="name" required placeholder="نام و نام خانوادگی">
+                </div>
+                <div class="form-group">
+                    <label>نام کاربری (دانشجویی/کارمندی)</label>
+                    <input type="text" name="username" required placeholder="نام کاربری">
+                </div>
+                <div class="form-group">
+                    <label>ایمیل</label>
+                    <input type="email" name="email" required placeholder="ایمیل">
+                </div>
+                <div class="form-group">
+                    <label>نقش کاربر</label>
+                    <select name="role" id="new-user-role" required></select>
+                </div>
+                <div class="form-group" id="new-user-department" style="display: none;">
+                    <label>دپارتمان مربوطه کارشناس</label>
+                    <select name="department_id" id="new-user-department-select">
+                        <option value="">-- دپارتمان را انتخاب کنید --</option>
+                    </select>
+                </div>
+                <button class="submit-btn" type="submit">ثبت کاربر</button>
+            </form>
+        </section>
+
+        <!-- Tickets TAB -->
+        <section class="card">
+            <div class="section-header">
+                <h2>تیکت‌های اخیر سامانه</h2>
+            </div>
+            <div class="table-wrapper">
+                <table class="tickets-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>عنوان</th>
+                            <th>وضعیت</th>
+                            <th>ایجاد کننده</th>
+                            <th>تاریخ ثبت</th>
+                            <th>عملیات</th>
+                        </tr>
+                    </thead>
+                    <tbody id="recent-tickets-body"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Users TAB (System Admin only) -->
+        <section class="card" id="recent-users-section" style="display: none;">
+            <div class="section-header">
+                <h2>کاربران اخیر سامانه</h2>
+            </div>
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th># id</th>
+                            <th>نام کاربری</th>
+                            <th>نام</th>
+                            <th>ایمیل</th>
+                            <th>نقش</th>
+                            <th>عملیات</th>
+                        </tr>
+                    </thead>
+                    <tbody id="recent-users-body"></tbody>
+                </table>
+            </div>
+        </section>
+    </div>
 {% endblock %}
 
 {% block js %}
     <script src="{{ url_for('static', path='js/notification.js') }}"></script>
-    <script src="{{ url_for('static', path='js/alerts.js') }}"></script>
     <script src="{{ url_for('static', path='js/toggle_btn.js') }}"></script>
-    <script src="{{ url_for('static', path='js/ticket_search.js') }}"></script>
-    <script>
-        const userDepartmentField = document.getElementById("new-user-department");
-        const userRoleSelect = document.querySelector('select[name="role"]');
-        const userDepartmentSelect = document.querySelector('select[name="department_id"]');
-
-        function toggleDepartmentField() {
-            if (!userRoleSelect) return;
-            const isExpert = userRoleSelect.value === "IT_EXPERT";
-            if (userDepartmentField) userDepartmentField.style.display = isExpert ? "block" : "none";
-            if (userDepartmentSelect) {
-                if (isExpert) {
-                    userDepartmentSelect.setAttribute('required', 'required');
-                } else {
-                    userDepartmentSelect.removeAttribute('required');
-                    userDepartmentSelect.value = "";
-                }
-            }
-        }
-
-        if (userRoleSelect) {
-            userRoleSelect.addEventListener("change", toggleDepartmentField);
-            toggleDepartmentField();
-        }
-    </script>
+    <script src="{{ url_for('static', path='js/admin_dashboard.js') }}"></script>
 {% endblock%}
