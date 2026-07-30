@@ -78,8 +78,9 @@ def new_response(
             ticket.status = TicketStatus.IN_PROGRESS
             helpdesk.ticket_api.update_ticket(new_ticket=ticket, old_ticket_id=ticket.id)
 
-            notification = Notification(receiver_id=ticket.assigned_to, title="پاسخ جدید", text=f"برای تیکت شماره {ticket.id} پاسخ جدید ثبت شده است.", url=f"/tickets/{ticket_id}")
-            helpdesk.notification_api.new_notification(notification=notification)
+            if ticket.assigned_to is not None:
+                notification = Notification(receiver_id=ticket.assigned_to, title="پاسخ جدید", text=f"برای تیکت شماره {ticket.id} پاسخ جدید ثبت شده است.", url=f"/tickets/{ticket_id}")
+                helpdesk.notification_api.new_notification(notification=notification)
 
         elif current_user.role == Role.IT_EXPERT:
             ticket.status = TicketStatus.WAITING_FOR_USER
@@ -89,8 +90,9 @@ def new_response(
             helpdesk.notification_api.new_notification(notification=notification)
 
         elif current_user.role in (Role.SYSTEM_ADMIN, Role.IT_MANAGER):
-            notification = Notification(receiver_id=ticket.assigned_to, title="پاسخ جدید", text=f"برای تیکت شماره {ticket.id} پاسخ جدید ثبت شده است.", url=f"/tickets/{ticket_id}")
-            helpdesk.notification_api.new_notification(notification=notification)
+            if ticket.assigned_to is not None:
+                notification = Notification(receiver_id=ticket.assigned_to, title="پاسخ جدید", text=f"برای تیکت شماره {ticket.id} پاسخ جدید ثبت شده است.", url=f"/tickets/{ticket_id}")
+                helpdesk.notification_api.new_notification(notification=notification)
 
             notification = Notification(receiver_id=ticket.creator_id, title="پاسخ جدید", text=f"برای تیکت شماره {ticket.id} پاسخ جدید ثبت شده است.", url=f"/tickets/{ticket_id}")
             helpdesk.notification_api.new_notification(notification=notification)
@@ -106,7 +108,8 @@ def new_response(
     except HTTPException:
         raise
 
-    except Exception:
+    except Exception as e:
+        print(e)
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Internal server error")
 
 
