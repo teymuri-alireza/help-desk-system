@@ -40,6 +40,14 @@ uvicorn src.server.app:app
 
 The application will start using the `app` instance defined in `src/server/app.py`.
 
+### 4. Open the Application
+
+Open your web browser and navigate to:
+
+```
+http://127.0.0.1:8000
+```
+
 ## Project Objectives
 
 - Centralized ticket registration and tracking
