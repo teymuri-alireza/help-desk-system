@@ -9,7 +9,7 @@ from src.database.tables import Ticket, Attachment, Notification, Role, TicketSt
 
 core_logger = logging.getLogger("core")
 
-CONTENTS_DIR = FilePath(__file__).parent.parent / "contents"
+CONTENTS_DIR = FilePath(__file__).parent.parent.parent / "contents"
 UPLOAD_DIR = CONTENTS_DIR / "upload"
 
 router = APIRouter(prefix="/api/tickets", tags=["tickets"])
