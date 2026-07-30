@@ -104,6 +104,7 @@ async function handleNewTicketSubmit(e) {
             showFormAlert(alertEl, "تیکت با موفقیت ثبت شد", "alert-success");
             form.reset();
             await refreshDashboardData();
+            window.location.reload(); // to reload notifications
             return;
         }
 

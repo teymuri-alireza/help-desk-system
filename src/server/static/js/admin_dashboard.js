@@ -227,6 +227,7 @@ async function handleNewUserSubmit(e) {
             form.reset();
             document.getElementById("new-user-department").style.display = "none";
             await refreshDashboardData();
+            window.location.reload(); // to reload notifications
             return;
         }
 
