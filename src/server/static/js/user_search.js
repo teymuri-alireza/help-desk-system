@@ -1,24 +1,24 @@
 document.addEventListener('DOMContentLoaded', () => {
     const searchInput = document.getElementById('user-search');
-    
+
     // Check if search input exists
     if (!searchInput) {
         console.warn('User search input not found');
         return;
     }
-    
-    const userItems = document.querySelectorAll('.user-items');
-    
-    // Check if there are any user items to search through
-    if (userItems.length === 0) {
-        console.warn('No user items found to search through');
-        return;
-    }
+
+    // Note: users_list.js populates the table asynchronously (it fetches
+    // /api/users after this handler runs), so `.user-items` rows do not
+    // exist yet at this point. We intentionally do NOT bail out here, and
+    // we re-query the rows fresh inside filterUsers() on every call rather
+    // than caching a NodeList now, so the search works against whatever
+    // rows are in the table at the time the user actually types.
 
     function filterUsers(searchTerm) {
         const term = searchTerm.toLowerCase().trim();
+        const userItems = document.querySelectorAll('.user-items');
         let visibleCount = 0;
-        
+
         userItems.forEach(user => {
             const userId = user.querySelector('.user-id')?.textContent.toLowerCase() || '';
             const userUsername = user.querySelector('.user-username')?.textContent.toLowerCase() || '';
@@ -40,20 +40,13 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         
         // Show or hide empty state based on results
-        const container = document.querySelector('.user-container');
-        if (!container) return;
-        
-        let emptyMessage = container.querySelector('.search-empty-state');
-        
+        const emptyMessage = document.querySelector('.search-empty-state');
+        if (!emptyMessage) return;
+
         if (visibleCount === 0 && term) {
-            if (!emptyMessage) {
-                emptyMessage = document.createElement('div');
-                emptyMessage.className = 'empty-state search-empty-state';
-                emptyMessage.textContent = 'نتیجه‌ای برای جستجو پیدا نشد';
-                container.appendChild(emptyMessage);
-            }
+            emptyMessage.textContent = 'نتیجه‌ای برای جستجو پیدا نشد';
             emptyMessage.style.display = 'block';
-        } else if (emptyMessage) {
+        } else {
             emptyMessage.style.display = 'none';
         }
     }
