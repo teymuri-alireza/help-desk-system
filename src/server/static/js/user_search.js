@@ -22,12 +22,16 @@ document.addEventListener('DOMContentLoaded', () => {
         userItems.forEach(user => {
             const userId = user.querySelector('.user-id')?.textContent.toLowerCase() || '';
             const userUsername = user.querySelector('.user-username')?.textContent.toLowerCase() || '';
+            const userName = user.querySelector('.user-name')?.textContent.toLowerCase() || '';
+            const userEmail = user.querySelector('.user-email')?.textContent.toLowerCase() || '';
             const userRole = user.querySelector('.user-role')?.textContent.toLowerCase() || '';
             const userStatus = user.querySelector('.user-status')?.textContent.toLowerCase() || '';
             
             // Check if search term matches any of the fields
             const isMatch = userId.includes(term) || 
                            userUsername.includes(term) || 
+                           userName.includes(term) ||
+                           userEmail.includes(term) ||
                            userRole.includes(term) ||
                            userStatus.includes(term);
             

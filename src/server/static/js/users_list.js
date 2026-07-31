@@ -87,8 +87,8 @@ function renderUsers(usersList, isSystemAdmin) {
 
         row.appendChild(buildCell(user.id, "user-id"));
         row.appendChild(buildCell(user.username, "user-username"));
-        row.appendChild(buildCell(user.name));
-        row.appendChild(buildCell(user.email));
+        row.appendChild(buildCell(user.name, "user-name"));
+        row.appendChild(buildCell(user.email, "user-email"));
         row.appendChild(buildCell(user.role, "user-role"));
         row.appendChild(buildCell(user.status, "user-status"));
         row.appendChild(buildCell(user.department_name || "-", "user-department"));
