@@ -113,7 +113,12 @@ docs/
 └── 03-design/
 
 src/
+├── ai/
 ├── core/
+├── data/
 ├── database/
-└── server/
+├── server/
+└── utilities/
+
+tests/
 ```
