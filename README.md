@@ -2,7 +2,7 @@
 
 A Help Desk system designed for managing Information Technology (IT) support requests within a university environment.
 
-This project is developed as part of a Systems Analysis and Design course and covers the complete software development lifecycle, including business analysis, system modeling, database design, software architecture, and implementation.
+In addition to core ticket management functions such as tracking, assignment, and communication, the system integrates AI-assisted features including request classification, priority prediction, and intelligent support recommendations
 
 ## How to Run
 
