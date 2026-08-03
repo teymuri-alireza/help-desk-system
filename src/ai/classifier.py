@@ -1,7 +1,3 @@
-import os
-
-os.environ["HF_HUB_OFFLINE"] = "1" # Force the model to load offline
-
 from logging import getLogger
 from sentence_transformers import SentenceTransformer
 from sentence_transformers.util import cos_sim
