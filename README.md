@@ -4,6 +4,8 @@ A Help Desk system designed for managing Information Technology (IT) support req
 
 In addition to core ticket management functions such as tracking, assignment, and communication, the system integrates AI-assisted features including request classification, priority prediction, and intelligent support recommendations
 
+**[راهنمای فارسی (Persian)](README_FA.md)**
+
 ## How to Run
 
 ### 1. Create a Python Virtual Environment
