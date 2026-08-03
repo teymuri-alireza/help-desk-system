@@ -48,6 +48,17 @@ Open your web browser and navigate to:
 http://127.0.0.1:8000
 ```
 
+## Testing
+
+Use the login page to test role-based access with the following users:
+
+- `405100`: admin
+- `405101`: IT manager
+- `405300`: IT expert
+- `405500`: student
+
+Each role has its own access and controls.
+
 ## Project Objectives
 
 - Centralized ticket registration and tracking
