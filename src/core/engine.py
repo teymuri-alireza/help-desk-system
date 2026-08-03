@@ -7,6 +7,7 @@ from src.core.services.response_sesrvice import ResponseService
 from src.core.services.attachment_service import AttachmentService
 from src.core.services.notification_service import NotificationService
 from src.core.services.stats_service import StatsService
+from src.ai.engine import AIEngine
 
 
 class HelpDeskCore:
@@ -25,13 +26,23 @@ class HelpDeskCore:
         self.database_engine = DatabaseEngine(database_path)
         self.session_factory = self.database_engine.get_session_factory()
 
+        self.ai_engine = AIEngine()
+
         self.storage = StorageEngine(self.session_factory)
         self.storage.initialize_default_departments_and_categories()
 
         self.admin_api = AdminService(storage=self.storage)
         self.authentication_api = AuthenticationService(storage=self.storage)
-        self.ticket_api = TicketService(storage=self.storage)
         self.response_api = ResponseService(storage=self.storage)
+
+        self.ticket_api = TicketService(
+            storage=self.storage,
+            response_api=self.response_api,
+            ai_classifier=self.ai_engine.ai_classifier,
+            ai_suggester=self.ai_engine.ai_suggester,
+            ai_priority_predictor=self.ai_engine.ai_priority_predictor
+        )
+
         self.attachment_api = AttachmentService(storage=self.storage)
         self.notification_api = NotificationService(storage=self.storage)
 
